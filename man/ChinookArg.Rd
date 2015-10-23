@@ -3,20 +3,23 @@
 \docType{data}
 \name{ChinookArg}
 \alias{ChinookArg}
-\title{Lengths and weights of Chinook Salmon from three locations in Argentina.}
+\title{Lengths and weights for Chinook Salmon from three locations in Argentina.}
 \format{A data frame with 112 observations on the following 3 variables:
  \describe{
    \item{tl}{Total length (cm)}
    \item{w}{Weight (kg)}
-   \item{loc}{Capture location (Argentina, Petrohue, Puyehue)}
+   \item{loc}{Capture location (\code{Argentina}, \code{Petrohue}, \code{Puyehue})}
  }}
+\source{
+From Figure 4 in Soto, D., I. Arismendi, C. Di Prinzio, and F. Jara.  2007.  Establishment of Chinook salmon (\emph{Oncorhynchus tshawytscha}) in Pacific basins of southern South America and its potential ecosystem implications.  Revista Chilena d Historia Natural, 80:81-98.  [Was (is?) from http://www.scielo.cl/pdf/rchnat/v80n1/art07.pdf.]
+}
 \description{
-Lengths and weights of Chinook Salmon from three locations in Argentina.
+Lengths and weights for Chinook Salmon from three locations in Argentina.
 }
 \section{Topic(s)}{
 
  \itemize{
-   \item Length-weight
+   \item Weight-Length
  }
 }
 \examples{
@@ -30,7 +33,7 @@ plot(w~tl,data=ChinookArg,subset=loc=="Puyehue")
 par(op)
 }
 \concept{
-'Length-Weight'
+'Weight-Length'
 }
 \keyword{datasets}
 
