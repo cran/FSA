@@ -115,10 +115,7 @@ chooseColors <- function(pal=paletteChoices(),num,...) {
   grey.colors <- grDevices::colorRampPalette(c("grey20","grey80"))
   ## Get the colors according to the palette
   switch(pal,
-         rich={
-           if (!requireNamespace("gplots")) stop("The 'gplots' package is required for 'rich' colors.",call.=FALSE)
-           else clrs <- gplots::rich.colors(num,...)
-         },
+         rich={clrs <- gplots::rich.colors(num,...)},
          cm={clrs <- grDevices::cm.colors(num,...)},
          default={clrs <- 1:num},
          gray=,grey={clrs <- grey.colors(num)},
@@ -440,7 +437,6 @@ hoCoef <- function(object,term=2,bo=0,alt=c("two.sided","less","greater")) {
 #' lagratio(10:1,2,2,direction="forward")
 #'
 #' @export
-#'
 lagratio <- function(x,lag=1L,recursion=1L,differences=recursion,direction=c("backward","forward"),...) {
   ## Some checks
   direction <- match.arg(direction)
@@ -790,40 +786,33 @@ NULL
 #' @rdname Subset
 #' @export
 Subset <- function(x,subset,select,drop=FALSE,resetRownames=TRUE,...) {
-  if (!requireNamespace("gdata")) stop("'filterD' requires the 'gdata' package to be installed!",call.=FALSE)
+  if (!is.data.frame(x)) stop("Subset should only be used with data frames.  See ?subset for other structures.",call.=FALSE)
+  if (missing(subset)) r <- TRUE
   else {
-    if (!is.data.frame(x)) stop("Subset should only be used with data frames.  See ?subset for other structures.",call.=FALSE)
-    if (missing(subset)) r <- TRUE
-    else {
-      e <- substitute(subset)
-      r <- eval(e, x, parent.frame())
-      if (!is.logical(r)) stop("'subset' must evaluate to logical.",call.=FALSE)
-      r <- r & !is.na(r)
-    }
-    if (missing(select)) vars <- TRUE
-    else {
-      nl <- as.list(1:ncol(x))
-      names(nl) <- names(x)
-      vars <- eval(substitute(select),nl,parent.frame())
-    }
-    res <- gdata::drop.levels(x[r,vars,drop = drop],reorder=FALSE)
-    if (resetRownames) rownames(res) <- NULL
-    if (nrow(res)==0) warning("The resultant data.frame has 0 rows.  Try str() on the result.\n",call.=FALSE)
-    res
+    e <- substitute(subset)
+    r <- eval(e, x, parent.frame())
+    if (!is.logical(r)) stop("'subset' must evaluate to logical.",call.=FALSE)
+    r <- r & !is.na(r)
   }
+  if (missing(select)) vars <- TRUE
+  else {
+    nl <- as.list(1:ncol(x))
+    names(nl) <- names(x)
+    vars <- eval(substitute(select),nl,parent.frame())
+  }
+  res <- gdata::drop.levels(x[r,vars,drop = drop],reorder=FALSE)
+  if (resetRownames) rownames(res) <- NULL
+  if (nrow(res)==0) warning("The resultant data.frame has 0 rows.  Try str() on the result.\n",call.=FALSE)
+  res
 }
 
 #' @rdname Subset
 #' @export
 filterD <- function(x,...) {
-  if (!requireNamespace("dplyr")) stop("'filterD' requires the 'dplyr' package to be installed!",call.=FALSE)
-  else if (!requireNamespace("gdata")) stop("'filterD' requires the 'gdata' package to be installed!",call.=FALSE)
-  else {
-    res <- dplyr::filter(x,...)
-    res <- gdata::drop.levels(res,reorder=FALSE)
-    if (nrow(res)==0) warning("The resultant data.frame has 0 rows.  Try str() on the result.\n",call.=FALSE)
-    res
-  }
+  res <- dplyr::filter(x,...)
+  res <- gdata::drop.levels(res,reorder=FALSE)
+  if (nrow(res)==0) warning("The resultant data.frame has 0 rows.  Try str() on the result.\n",call.=FALSE)
+  res
 }
 
 
@@ -871,4 +860,69 @@ validn <- function(object) {
     else stop("'object' cannot be a matrix with more than one column.",call.=FALSE)
   }
   sum(!is.na(object))
+}
+
+
+#' @title Calculates the geometric mean or geometric standard deviation.
+#' 
+#' @description Calculates the geometric mean or standard deviation of a vector of numeric values.
+#' 
+#' @details The geometric mean is computed by log transforming the raw data in \code{x}, computing the arithmetic mean of the transformed data, and back-transforming this mean to the geometric mean by exponentiating.
+#' 
+#' The geometric standard deviation is computed by log transforming the raw data in \code{x}, computing the arithmetic standard deviation of the transformed data, and back-transforming this standard deviation to the geometric standard deviation by exponentiating.
+#' 
+#' @param x Vector of numeric values.
+#' @param na.rm Logical indicating whether to remove missing values or not.
+#' @param zneg.rm Logical indicating whether to ignore or remove zero or negative values found in \code{x}.
+#' 
+#' @return A numeric value that is the geometric mean or geometric standard deviation of the numeric values in \code{x}.
+#' 
+#' @note This function is largely an implementation of the code suggested by Russell Senior on R-help in November, 1999.
+#' 
+#' @seealso See \code{\link[psych]{geometric.mean}} in \pkg{psych} and \code{\link[DescTools]{Gmean}} for geometric mean calculators.  See \code{\link[DescTools]{Gsd}} for geometric standard deviation calculators.
+#' 
+#' @keywords misc
+#' 
+#' @aliases geomean geosd
+#' 
+#' @examples
+#' ## generate random lognormal data
+#' d <- rlnorm(500,meanlog=0,sdlog=1)
+#' # d has a mean on log scale of 0; thus, gm should be exp(0)~=1
+#' # d has a sd on log scale of 1; thus, gsd should be exp(1)~=2.7
+#' geomean(d)
+#' geosd(d)
+#' 
+#' ## Demonstrate handling of zeroes and negative values
+#' x <- seq(0,5)
+#' # this will given an error
+#' try(geomean(x))
+#' # this will only give a warning, but might not be what you want
+#' geomean(x,zneg.rm=TRUE)
+#' 
+#' @rdname geomean
+#' @export
+geomean <- function(x,na.rm=FALSE,zneg.rm=FALSE) {
+  x <- iChk4Geos(x,na.rm,zneg.rm)
+  exp(mean(log(x),na.rm=na.rm))
+}
+
+#' @rdname geomean
+#' @export
+geosd <- function(x,na.rm=FALSE,zneg.rm=FALSE) {
+  x <- iChk4Geos(x,na.rm,zneg.rm)
+  exp(stats::sd(log(x),na.rm=na.rm))
+}
+
+
+iChk4Geos <- function(x,na.rm,zneg.rm) {
+  if (!is.vector(x)) stop("'x' must be a vector.",call.=FALSE)
+  if (!is.numeric(x)) stop("'x' must be a numeric vector.",call.=FALSE)
+  if (any(x<=0,na.rm=na.rm) & !zneg.rm) stop("'x' must contain all positive values.",call.=FALSE)
+  if (any(x<=0,na.rm=na.rm) & zneg.rm) {
+    warning("Some non-positive values were ignored/removed.",call.=FALSE)
+    # remove non-positive values
+    x <- x[x>0]
+  }
+  x
 }
