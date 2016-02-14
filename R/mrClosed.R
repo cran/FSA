@@ -93,7 +93,7 @@
 #' 
 #' @seealso See \code{\link{capHistSum}} for generating input data from capture histories.  See \code{\link{poiCI}}, \code{\link{binCI}}, and \code{\link{hyperCI}} for specifics on functions used in confidence interval constructuion.  See \code{\link{mrOpen}} for handling mark-recapture data in an open population.  See \code{\link[FSAdata]{SunfishIN}} in \pkg{FSAdata} for an example to test matching of results with Ricker (1975)'  See \code{\link[fishmethods]{mrN.single}} and \code{\link[fishmethods]{schnabel}} in \pkg{fishmethods} for similar functionality.
 #' 
-#' @references Ogle, D.H.  2015.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
+#' @references Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
 #' 
 #' Krebs, C.J.  1989.  Ecological Methodology.  Addison-Welsey Educational Publishing.
 #'
@@ -188,7 +188,8 @@ mrClosed <- function(M=NULL,n=NULL,m=NULL,R=NULL,
     if (!is.null(R)) {
       ## R not used in single census methods.  If nothing else
       ##   is supplied then just throw an error
-      if (is.null(c(M,n,m))) stop("'R' not used in single census methods; must supply 'M', 'n', and 'm'.",call.=FALSE)
+      if (is.null(c(M,n,m))) stop("'R' not used in single census methods; must supply 'M', 'n', and 'm'.",
+                                  call.=FALSE)
       ## Otherwise warn that it will be ignored
       warning("'R' not used in single census methods; It will be ignored.",call.=FALSE)
     }
@@ -211,7 +212,8 @@ iMRCSingle <- function(M,n,m,method,labels) {
     n <- M$sum$n
     M <- M$sum$M    
   } else {
-    if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing without 'M' from capHistSum().",call.=FALSE)
+    if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing without 'M' from capHistSum().",
+                                      call.=FALSE)
     # Make sure that the vectors are of the same size
     lengths <- c(length(M),length(n),length(m))
     if (any(diff(lengths)!=0)) stop("'M', 'n', or 'm' vectors must have same length.",call.=FALSE)
@@ -253,7 +255,8 @@ iMRCSingle <- function(M,n,m,method,labels) {
 summary.mrClosed1 <- function(object,digits=0,incl.SE=FALSE,incl.all=TRUE,verbose=FALSE,...) {
   # Put descriptive label of input values at top of output if the user asked for it.
   if(verbose) {
-    if (is.null(object$labels)) message("Used ",object$methodLbl," with M=",object$M,", n=",object$n,", and m=",object$m,".\n",sep="")
+    if (is.null(object$labels)) message("Used ",object$methodLbl," with M=",object$M,", n=",object$n,
+                                        ", and m=",object$m,".\n",sep="")
     else {
       message("Used ",object$methodLbl," with observed inputs of:\n",sep="")
       message(paste(object$labels,"- M=",object$M,", n=",object$n,", and m=",object$m,".\n",sep=""))
@@ -427,19 +430,39 @@ iMRCMultiple <- function(M,n,m,R,method,chapman.mod) {
   # Initial Checks
   if (!is.null(M)) {
     if (class(M)=="CapHist") {
+      ## Results come from capHistSum
       n <- M$sum$n
       m <- M$sum$m
       R <- M$sum$R
       M <- cumsum(R-m)-(R-m)
     } else {
-      if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing without 'M' from capHistSum().",call.=FALSE)
+      ## Results not from capHistSum and values of M provided.
+      # check if M has an NA in first position
+      if (is.na(M[1])) {
+        warning("NA for first sample of 'M' was ignored.",call.=FALSE)
+        M[1] <- 0
+      }
+      if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing without 'M' from capHistSum().",
+                                        call.=FALSE)
       else if (!is.null(R)) warning("Only need one of 'M' or 'R'.  'R' is ignored.",call.=FALSE)
       R <- n
       R[length(R)] <- 0
     }
   } else {
+    ## M not provided and results not from capHistSum
     if (is.null(R)) stop("One of 'M' or 'R' must be supplied by user",call.=FALSE)
     if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing.",call.=FALSE)
+    # check if R has NA in last position
+    if (is.na(R[length(R)])) {
+      warning("NA for last sample of 'R' was ignored.",call.=FALSE)
+      R[length(R)] <- 0
+    }
+    # check if m has NA in first position
+    if (is.na(m[1])) {
+      warning("NA for first sample of 'm' was ignored.",call.=FALSE)
+      m[1] <- 0
+    }
+    # find M from R and m
     M <- cumsum(R-m)-(R-m)
   }
   # calculate intermediate values
