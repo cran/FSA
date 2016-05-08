@@ -25,12 +25,7 @@ residPlot(object, ...)
 
 \method{residPlot}{POLY}(object, ...)
 
-\method{residPlot}{IVR}(object, xlab = "Fitted Values", ylab = "Residuals",
-  main = NULL, pch = c(16, 21, 15, 22, 17, 24, c(3:14)), col = "rich",
-  lty.ref = 3, lwd.ref = 1, col.ref = "black", resid.type = c("raw",
-  "standardized", "studentized"), outlier.test = TRUE, alpha = 0.05,
-  loess = TRUE, lty.loess = 2, lwd.loess = 1, col.loess = "black",
-  trans.loess = 4, legend = "topright", inclHist = TRUE, ...)
+\method{residPlot}{IVR}(object, legend = "topright", ...)
 
 \method{residPlot}{ONEWAY}(object, xlab = "Fitted Values",
   ylab = "Residuals", main = NULL, pch = 16, col = "black",
@@ -65,7 +60,7 @@ residPlot(object, ...)
 
 \item{ylab}{A string for labelling the y-axis.}
 
-\item{main}{A string for the main label to the plot.  Defaults to the model call.}
+\item{main}{A string for the main label to the plot.  See details.}
 
 \item{pch}{A numeric that indicates the plotting charachter to be used or a vector of numerics that indicates what plotting charachters codes to use for the levels of the second factor.  See \code{par}.}
 
@@ -108,23 +103,28 @@ None.  However, a residual plot is produced.
 Constructs a residual plot for \code{lm} or \code{nls} objects.  Different symbols for different groups can be added to the plot if an indicator variable regression is used.
 }
 \details{
-If the user chooses to add a legend without identifying coordinates for the upper-left corner of the legend (i.e., \code{legend=TRUE}) then the R console is suspended until the user places the legend by clicking on the produced graphic at the point where the upper-left corner of the legend should appear.  A legend will only be placed if the \code{mdl} is an indicator variable regression, even if \code{legend=TRUE}.
-
 Three types of residuals are allowed for most model types.  Raw residuals are simply the difference between the observed response variable and the predicted/fitted value.  Standardized residuals are internally studentized residuals returned by \code{\link{rstandard}} for linear models and are the raw residual divided by the standard deviation of the residuals for nonlinear models (as is done by \code{\link[nlstools]{nlsResiduals}} from \pkg{nlstools}).  Studentized residuals are the externally studentized residuals returned by \code{\link{rstudent}} for linear models and are not available for nonlinear models.
 
 Externally Studentized residuals are not supported for \code{nls} or \code{nlme} objects.  The
 
 If \code{outlier.test=TRUE} then significant outliers are detected with \code{\link[car]{outlierTest}} from the \pkg{car} package.  See the help for this function for more details.
+
+The user can include the model call as a title to the residual plot by using \code{main="MODEL"}.
+
+If the user chooses to add a legend without identifying coordinates for the upper-left corner of the legend (i.e., \code{legend=TRUE}) then the R console is suspended until the user places the legend by clicking on the produced graphic at the point where the upper-left corner of the legend should appear.  A legend will only be placed if the \code{mdl} is an indicator variable regression, even if \code{legend=TRUE}.
 }
 \note{
 This function is meant to allow newbie students the ability to easily construct residual plots for one-way ANOVA, two-way ANOVA, simple linear regression, and indicator variable regressions.  The plots can be constructed by submitting a saved linear model to this function which allows students to interact with and visualize moderately complex linear models in a fairly easy and efficient manner.
 }
 \examples{
 data(Mirex)
-Mirex$year <- factor(Mirex$year)
+# create year as a factor variable
+Mirex$fyear <- factor(Mirex$year)
+# reduce number of years for visual simplicity
+Mirex2 <- filterD(Mirex,fyear \%in\% c(1977,1992))
 
 ## Indicator variable regression with two factors
-lm1 <- lm(mirex~weight*year*species,data=Mirex)
+lm1 <- lm(mirex~weight*fyear*species,data=Mirex2)
 # defaults
 residPlot(lm1)
 # remove the histogram
@@ -141,6 +141,8 @@ residPlot(lm1,pch=16,col="black",legend=FALSE,inclHist=FALSE)
 residPlot(lm1,legend=FALSE,inclHist=FALSE)
 # modify the reference line
 residPlot(lm1,col.ref="blue",lwd.ref=5,inclHist=FALSE)
+# include model in the title
+residPlot(lm1,main="MODEL")
 # use Studentized residuals
 residPlot(lm1,resid.type="studentized",inclHist=FALSE)
 # use Standardized residuals
@@ -148,15 +150,20 @@ residPlot(lm1,resid.type="standardized",inclHist=FALSE)
 
 ## Indicator variable regression with same two factors but in different order
 ##   (notice use of colors and symbols)
-lm1a <- lm(mirex~weight*species*year,data=Mirex)
+lm1a <- lm(mirex~weight*species*fyear,data=Mirex2)
 residPlot(lm1a)
 
 ## Indicator variable regression with only one factor
-lm2 <- lm(mirex~weight*year,data=Mirex)
+lm2 <- lm(mirex~weight*fyear,data=Mirex)
 residPlot(lm2)
+residPlot(lm2,inclHist=FALSE)
+residPlot(lm2,inclHist=FALSE,pch=19)
+residPlot(lm2,inclHist=FALSE,pch=19,col="black")
+residPlot(lm2,inclHist=FALSE,legend=FALSE)
+residPlot(lm2,inclHist=FALSE,pch=2,col="red",legend=FALSE)
 
 ## Indicator variable regression (assuming same slope)
-lm3 <- lm(mirex~weight+year,data=Mirex)
+lm3 <- lm(mirex~weight+fyear,data=Mirex)
 residPlot(lm3)
 
 ## Simple linear regression
@@ -164,14 +171,14 @@ lm4 <- lm(mirex~weight,data=Mirex)
 residPlot(lm4)
 
 ## One-way ANOVA
-lm5 <- lm(mirex~year,data=Mirex)
+lm5 <- lm(mirex~fyear,data=Mirex)
 # default (uses boxplots)
 residPlot(lm5)
 # use points rather than boxplot
 residPlot(lm5,bp=FALSE)
 
 ## Two-Way ANOVA
-lm6 <- lm(mirex~species*year,data=Mirex)
+lm6 <- lm(mirex~species*fyear,data=Mirex)
 # default (uses boxplots)
 residPlot(lm6)
 # No boxplots
@@ -183,7 +190,7 @@ y <- c(7,runif(99))
 lma <- lm(y~x)
 residPlot(lma)
 # with studentized residuals
-residPlot(lm1,resid.type="studentized")
+residPlot(lma,resid.type="studentized")
 
 ## Nonlinear regression
 # from first example in nls()
