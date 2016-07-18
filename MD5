@@ -1,7 +1,7 @@
 46aaf69a91703493b666f212a04f2d8d *COPYING
-bce03a37629790e5e85710da19f1b133 *DESCRIPTION
+b2612163da9829c265d3bf16271fe2bd *DESCRIPTION
 6ff1b2e8f99e6f3d534dffaf10c724b9 *NAMESPACE
-a63fca240c35772578f9861a83a0cabc *NEWS.md
+989ca9f76c52fa70406a7af4f14a7e6a *NEWS.md
 756b2352d263f5291f1cd1ed630c398d *R/BluegillJL.R
 192e6936e42d37ddcd0674099ddd4c63 *R/BrookTroutTH.R
 7a7a0d603286557cda9e6b19ab367049 *R/CIDists.R
@@ -42,7 +42,7 @@ a70f2d73bd80749cb04e05ee2461a018 *R/expandLenFreq.R
 964148ace59d0f823c92a67d01fd93c1 *R/extraTests.R
 ec8313bfb7811789d4805e1adbe3e933 *R/fitPlot.R
 c97d1c04038da672ce718f411b4cae73 *R/growthDataUtils.R
-286e34bc6638ed1d054bd81eeb6395c3 *R/growthModels.R
+0a98601efdc83db0755fc7b8236e4e03 *R/growthModels.R
 10e442c0dd62687a00627b7ec9eae98b *R/hist.formula.R
 baaa1cf60b88042e9c4113386a39c38e *R/histFromSum.R
 2a10b25bbad12818a501937bc518bca8 *R/knitUtil.R
@@ -65,7 +65,7 @@ eeca1d8871b3179a0db5ddfd74a3c2b2 *R/residPlot.R
 bb1db6f42f159b06dcac5a0287329c6e *R/stockRecruitment.R
 16ea516bb70f033f76853b20eef27ed5 *R/sumTable.R
 6e5e6288d811e00382781259f67338a4 *R/tictactoe.R
-e446fd09ac06730c7fb08a6734f2112e *R/vbStarts.R
+0640a8b5d9411ac0a8f8dca3b3d626a4 *R/vbStarts.R
 d6d44f4d0c98727ad2c0aadc48238d71 *R/wrAdd.R
 8af06a0ddced20b4f1d71cacab7556c9 *R/wsVal.R
 4a5ed92fa451d3b77eb226ecff7fe4a6 *data/BluegillJL.rdata
@@ -101,7 +101,7 @@ c9e1d38eb6913ff1660fb7c2e148baa2 *man/FSAUtils.Rd
 c0e928a933aaa23867b4f54cf260a1ac *man/PikeNYPartial1.Rd
 025843b0ee26b235927ad3923076ae8d *man/SMBassLS.Rd
 916a1c0aed1f3c2764ea6d0815966974 *man/SMBassWB.Rd
-193b6474d04e8e5b2580b3bf60563186 *man/Schnute.Rd
+7b461ab39fc6a73698a08f833ebb29e3 *man/Schnute.Rd
 6fd26198598f672610ca8ae17f7048ba *man/SpotVA1.Rd
 c1a2fd8cf3b9312b265292f6fc180f55 *man/Subset.Rd
 a72bd19fef39323322640d70423eeee6 *man/Summarize.Rd
@@ -138,7 +138,7 @@ ab0bfaed600ed6f33616ad380877fa7b *man/fitPlot.Rd
 dcb9ee4f2ab115b600941be25b71634e *man/fsaNews.Rd
 4d613ebfedd74a2f72fcc3acf4d577d8 *man/gConvert.Rd
 8f884caed4a1e363631e823590abeb27 *man/geomean.Rd
-442f479005a1b749f014062212f62a24 *man/growthModels.Rd
+c3b5498fb08130284c38af62be7605d0 *man/growthModels.Rd
 7745d6e3763cd9910449a6249bf61f93 *man/headtail.Rd
 7e6e8a2ea98e43af56bf112774892983 *man/hist.formula.Rd
 92a2581d32aaa289c50ae0a8911fdcdb *man/histFromSum.Rd
@@ -173,11 +173,11 @@ ca9e1073204481ea019be7c1da66f185 *man/residPlot.Rd
 d54c3758cd60f89eefa5516f723f653a *man/sumTable.Rd
 f2ca6b0e00dc434d790895cf0af26ef3 *man/tictactoe.Rd
 6cd712a004aa9e3ce76e8a702fac3bfa *man/validn.Rd
-8953d4372b60a8254be63f0fa51118f4 *man/vbStarts.Rd
+a2cef8067cfbc9e9fce73081be0120fe *man/vbStarts.Rd
 8893df468d41e14505ee509b13ef91af *man/wrAdd.Rd
 8df9b879a9517ff5320c590461687566 *man/wsVal.Rd
 1f015cda362b7f2dd73103d3eb48d4b3 *tests/test-all.R
-23f3bf8f8cf92b46a54eefea484ca87e *tests/testthat/Rplots.pdf
+da1c88d6f9b570078799129587d78619 *tests/testthat/Rplots.pdf
 3c3b6662611e17cb501102cb7fe3766f *tests/testthat/test_AgeComparisons.R
 dfe890eadf3497cff99111ab90b0d299 *tests/testthat/test_AgeLengthKey.R
 451ebcd5dfead14d90cefde8f4cc4407 *tests/testthat/test_CatchCurve_ChapmanRobson.R
@@ -187,7 +187,7 @@ dfe890eadf3497cff99111ab90b0d299 *tests/testthat/test_AgeLengthKey.R
 19e4b1b71637b3bc3108488d8466d218 *tests/testthat/test_PSD.R
 c0dbc722e118f988a8f57fbd821929ba *tests/testthat/test_StockRecruit.R
 ca3acaca03bc7e47d1efb9235efa7914 *tests/testthat/test_Summarize.R
-a67aa8d99ab3d7adcfa93fa5ce9bfb16 *tests/testthat/test_VonBertalanffy.R
+f85049672adbcbb19802ff84b0f64e15 *tests/testthat/test_VonBertalanffy.R
 0bfe40da0f8b2f067a3da1d096a07c92 *tests/testthat/test_WSWR.R
 2742c17323af9301ce8377891ffcdb40 *tests/testthat/test_addZeroCatch.R
 2b62e579660091cbe17371bbc022c8c8 *tests/testthat/test_bcFuns.R
@@ -199,7 +199,7 @@ d25af6a69219c48be96ee6e1d420a57a *tests/testthat/test_dunnTest.R
 412028b4f7fa7f42854fa063a10b8a72 *tests/testthat/test_expandLenFreq.R
 d81a32c58bed95c00257df07b09d70bf *tests/testthat/test_extraTests.R
 c21ba2f1c81a5e3df20cd6ef66fc8bff *tests/testthat/test_fitResidPlots.R
-ecd3915c519c5177e5395086298d62f4 *tests/testthat/test_growthFuns.R
+5137337e61032af47ec2bf08a75547cf *tests/testthat/test_growthFuns.R
 c6961527c0a1e77c2361e7602b514ab3 *tests/testthat/test_growthUtils.R
 b2958a491ba360485a3a61169e71369e *tests/testthat/test_histFormula.R
 31e3f04b53b08fd6877a6a69ec77acfc *tests/testthat/test_histFromSum.R

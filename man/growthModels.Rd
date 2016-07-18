@@ -12,8 +12,8 @@
 vbFuns(param = c("Typical", "typical", "Traditional", "traditional",
   "BevertonHolt", "Original", "original", "vonBertalanffy", "GQ",
   "GallucciQuinn", "Mooij", "Weisberg", "Schnute", "Francis", "Laslett",
-  "Polacheck", "Somers", "Somers2", "Fabens", "Fabens2", "Wang", "Wang2",
-  "Wang3"), simple = FALSE, msg = FALSE)
+  "Polacheck", "Somers", "Somers2", "Pauly", "Fabens", "Fabens2", "Wang",
+  "Wang2", "Wang3"), simple = FALSE, msg = FALSE)
 
 GompertzFuns(param = c("Ricker1", "Ricker2", "Ricker3", "QuinnDeriso1",
   "QuinnDeriso2", "QuinnDeriso3", "QD1", "QD2", "QD3", "Original", "original",
@@ -25,16 +25,18 @@ logisticFuns(param = c("CJ1", "CJ2", "Karkach", "Haddon", "CampanaJones1",
   "CampanaJones2"), simple = FALSE, msg = FALSE)
 
 growthFunShow(type = c("vonBertalanffy", "Gompertz", "Richards", "Logistic",
-  "Schnute"), param = NULL, plot = FALSE, ...)
+  "Schnute"), param = NULL, case = param, plot = FALSE, ...)
 }
 \arguments{
-\item{param}{A string (for von Bertalanffy, Gompertz, and logistic) or numeric (for Richards) that indicates the specific parameterization of the growth function See details.}
+\item{param}{A string (for von Bertalanffy, Gompertz, and logistic) or numeric (for Richards) that indicates the specific parameterization of the growth function.  See details.}
 
 \item{simple}{A logical that indicates whether the function will accept all parameter values in the first parameter argument (\code{=FALSE}; DEFAULT) or whether all individual parameters must be specified in separate arguments (\code{=TRUE}).}
 
 \item{msg}{A logical that indicates whether a message about the growth function and parameter definitions should be output (\code{=TRUE}) or not (\code{=FALSE}; DEFAULT).}
 
 \item{type}{A string (in \code{growthFunShow}) that indicates the type of growth function to show.}
+
+\item{case}{A numeric that indicates the specific case of the Schnute function to use.  See details.}
 
 \item{plot}{A logical that indicates whether the growth function expression should be shown as an equation in a simple plot.}
 

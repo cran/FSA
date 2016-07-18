@@ -5,7 +5,8 @@
 #' @description Creates a function for a specific parameterizations of the von Bertalanffy, Gompertz, Richards, and logistic growth functions.  Use \code{growthFunShow()} to see the equations for each growth function.
 #'
 #' @param type A string (in \code{growthFunShow}) that indicates the type of growth function to show.
-#' @param param A string (for von Bertalanffy, Gompertz, and logistic) or numeric (for Richards) that indicates the specific parameterization of the growth function See details.
+#' @param param A string (for von Bertalanffy, Gompertz, and logistic) or numeric (for Richards) that indicates the specific parameterization of the growth function.  See details.
+#' @param case A numeric that indicates the specific case of the Schnute function to use.  See details.
 #' @param simple A logical that indicates whether the function will accept all parameter values in the first parameter argument (\code{=FALSE}; DEFAULT) or whether all individual parameters must be specified in separate arguments (\code{=TRUE}).
 #' @param msg A logical that indicates whether a message about the growth function and parameter definitions should be output (\code{=TRUE}) or not (\code{=FALSE}; DEFAULT).
 #' @param plot A logical that indicates whether the growth function expression should be shown as an equation in a simple plot.
@@ -280,7 +281,7 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
                           "Original","original","vonBertalanffy",
                           "GQ","GallucciQuinn","Mooij","Weisberg",
                           "Schnute","Francis","Laslett","Polacheck",
-                          "Somers","Somers2",
+                          "Somers","Somers2","Pauly",
                           "Fabens","Fabens2","Wang","Wang2","Wang3"),
                    simple=FALSE,msg=FALSE) {
   Typical <- typical <- Traditional <- traditional <- BevertonHolt <- function(t,Linf,K=NULL,t0=NULL) {
@@ -377,6 +378,23 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
   SSomers2 <- function(t,Linf,K,t0,C,WP) {
     Linf*(1-exp(-K*(t-t0)-(C*K)/(2*pi)*sin(2*pi*(t-WP+0.5))+(C*K)/(2*pi)*sin(2*pi*(t0-WP+0.5))))
   }
+  Pauly <- function(t,Linf,Kpr=NULL,t0=NULL,ts=NULL,NGT=NULL) {
+    if (length(Linf)==5) { Kpr <- Linf[[2]]; t0 <- Linf[[3]]
+    ts <- Linf[[4]]; NGT <- Linf[[5]]
+    Linf <- Linf[[1]] }
+    tpr <- iCalc_tpr(t,ts,NGT)
+    q <- Kpr*(tpr-t0) +
+      (Kpr*(1-NGT)/(2*pi))*sin((2*pi)/(1-NGT)*(tpr-ts)) -
+      (Kpr*(1-NGT)/(2*pi))*sin((2*pi)/(1-NGT)*(t0-ts))
+    Linf*(1-exp(-q))
+  }
+  SPauly <- function(t,Linf,Kpr,t0,ts,NGT) {
+    tpr <- iCalc_tpr(t,ts,NGT)
+    q <- Kpr*(tpr-t0) +
+      (Kpr*(1-NGT)/(2*pi))*sin((2*pi)/(1-NGT)*(tpr-ts)) -
+      (Kpr*(1-NGT)/(2*pi))*sin((2*pi)/(1-NGT)*(t0-ts))
+    Linf*(1-exp(-q))
+  }
   Fabens <- function(Lm,dt,Linf,K) {
   if (length(Linf)==2) { K <- Linf[[2]]; Linf <- Linf[[1]] }
   Lm+(Linf-Lm)*(1-exp(-K*dt))
@@ -417,14 +435,14 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
   if (msg) {
     switch(param,
       Typical=,typical=,Traditional=,traditional=,BevertonHolt= {
-        message("You have chosen the 'Typical'/'typical', 'Traditional'/'traditional', or 'BevertonHolt' parameterization.\n\n",
+        message("You have chosen the 'Typical', 'Traditional', or 'BevertonHolt' parameterization.\n\n",
                 "  E[L|t] = Linf*(1-exp(-K*(t-t0)))\n\n",
                 "  where Linf = asymptotic mean length\n",
                 "           K = exponential rate of approach to Linf\n",
                 "          t0 = the theoretical age when length = 0 (a modeling artifact)\n\n")
       },
       Original=,original=,vonBertalanffy={
-        message("You have chosen the 'Original'/'original' or 'vonBertalanffy` parameterization.\n\n",
+        message("You have chosen the 'Original' or 'vonBertalanffy` parameterization.\n\n",
                 "  E[L|t] = Linf-(Linf-L0)*exp(-K*t)\n\n",
                 "  where Linf = asymptotic mean length\n",
                 "          L0 = the mean length at age-0 (i.e., hatching or birth)\n",
@@ -503,6 +521,17 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
                 "        t0 = the theoretical age when length = 0 (a modeling artifact)\n",
                 "         C = proportional growth depression at 'winter peak'\n",
                 "        WP = the 'winter peak' (point of slowest growth).\n\n")
+      },
+      Pauly={
+        message("You have chosen the 'Pauly Seasonal Cessation' parameterization.\n\n",
+                "  E[L|t] = Linf*(1-exp(-K'*(t'-to)-Vt'+St0))\n\n",
+                "  where vt' = (K'(1-NGT)/2*pi)*sin(2*pi*(t'-ts)/(1-NGT)) and\n",
+                "        vt0 = (K'(1-NGT)/2*pi)*sin(2*pi*(t0-ts)/(1-NGT)) and\n\n",
+                "  and Linf = asymptotic mean length\n",
+                "        K' = exponential rate of approach to Linf during growth period\n",
+                "        t0 = the theoretical age when length = 0 (a modeling artifact)\n",
+                "        ts = time from t=0 until the first growth oscillation begins\n",
+                "       NGT = length of no-growth period.\n\n")
       },
       Fabens={
         message("You have chosen the 'Fabens' parameterization for tag-return data.\n\n",
@@ -905,7 +934,7 @@ logisticFuns <- function(param=c("CJ1","CJ2","Karkach","Haddon","CampanaJones1",
 
 #' @title The four-parameter growth function from Schnute (1981).
 #'
-#' @description The four-parameter growth function from Schnute (1981).  Use \code{SchnuteModels()} to see the equations for each growth function.
+#' @description The four-parameter growth function from Schnute (1981).
 #'
 #' @param t A numeric vector of ages over which to model growth.
 #' @param case A string that indicates the case of the Schnute growth function to use.
@@ -988,14 +1017,14 @@ Schnute <- function(t,case=1,t1=NULL,t3=NULL,L1=NULL,L3=NULL,a=NULL,b=NULL) {
 #' @rdname growthModels
 #' @export
 growthFunShow <- function(type=c("vonBertalanffy","Gompertz","Richards","Logistic","Schnute"),
-                        param=NULL,plot=FALSE,...) {
+                        param=NULL,case=param,plot=FALSE,...) {
   type <- match.arg(type)
   switch(type,
          vonBertalanffy = { expr <- iSGF_VB(param) },
          Gompertz = { expr <- iSGF_GOMP(param) },
          Richards = { expr <- iSGF_RICHARDS(param) },
          Logistic = { expr <- iSGF_LOGISTIC(param) },
-         Schnute = { expr <- iSGF_SCHNUTE(param) })
+         Schnute = { expr <- iSGF_SCHNUTE(case) })
   if (plot) {
     op <- graphics::par(mar=c(0.1,0.1,0.1,0.1))
     graphics::plot(0,type="n",ylim=c(0,1),xlim=c(0,1),xaxt="n",yaxt="n",
@@ -1013,7 +1042,7 @@ iSGF_VB <- function(param=c("Original","original","vonBertalanffy",
                            "Typical","typical","Traditional","traditional","BevertonHolt",
                            "GallucciQuinn","GQ","Mooij","Weisberg",
                            "Schnute","Francis","Laslett","Polacheck",
-                           "Somers","Somers2",
+                           "Somers","Somers2","Pauly",
                            "Fabens","Fabens2","Wang","Wang2","Wang3")) {
   if(!is.character(param)) stop("'param' must be a character string.",call.=FALSE)
   param <- match.arg(param)
@@ -1053,6 +1082,10 @@ iSGF_VB <- function(param=c("Original","original","vonBertalanffy",
     Somers2= {
       expr <- expression(atop(E(L[t])==L[infinity]*bgroup("(",1-e^{-K*(t~-~t[0])-R(t)+R(t[0])},")"),
                               plain("where" )~R(t)==bgroup("(",frac(C*K,2*~pi),")")*~sin(2*pi*(t-WP+0.5))))
+    },
+    Pauly= {
+      expr <- expression(atop(E(L[t])==L[infinity]*bgroup("(",1-e^{-Kpr*(tpr~-~t[0])-V(tpr)+V(t[0])},")"),
+                              plain("where" )~V(t)==bgroup("(",frac(Kpr(1-NGT),2*~pi),")")*~sin(frac(2*pi,1-NGT)*(t-t[s]))))
     },
     Fabens= {
       expr <- expression(E(L[r]-L[m])==(L[infinity]-L[m])*bgroup("(",1-e^{-K*Delta*t},")"))
@@ -1154,3 +1187,19 @@ iSGF_SCHNUTE <- function(case=1:4) {
   }
   expr
 }
+
+################################################################################
+## internal function to compute t-prime
+################################################################################
+iCalc_tpr <- function(t,ts,NGT) {
+  ## Step 1
+  SNG <- ts+(1-NGT)/2
+  tmp.t <- t-SNG
+  ## Step 2 (in parentheses) and Step 3
+  tmp.t2 <- (tmp.t-floor(tmp.t))-NGT
+  ## Step 4
+  tmp.t2[tmp.t2<0] <- 0
+  ## Step 5 (in parentheses) and Step 6 (also returns value)
+  (floor(tmp.t)*(1-NGT)+tmp.t2) + SNG
+}
+
