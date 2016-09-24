@@ -32,7 +32,7 @@ removal(catch, method = c("CarleStrub", "Zippin", "Seber3", "Seber2",
 
 \item{just.ests}{A logical that indicates whether just the estimates (\code{=TRUE}) or the return list (\code{=FALSE}; default; see below) is returned.}
 
-\item{Tmult}{A single numeric that will be multiplied by the total catch in all samples to set the upper value for the range of population sizes when minimizing the log-likelihood and creating confidence intervals for the Moran and Schnute method.  Large values are much slower to compute, but too low of value can result in missing the best estimate.}
+\item{Tmult}{A single numeric that will be multiplied by the total catch in all samples to set the upper value for the range of population sizes when minimizing the log-likelihood and creating confidence intervals for the Moran and Schnute method.  Large values are much slower to compute, but too low of a value can result in missing the best estimate.  A warning is issued if too low of a value is suspected.}
 
 \item{object}{An object saved from \code{removal()}.}
 

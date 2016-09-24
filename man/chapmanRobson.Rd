@@ -4,6 +4,7 @@
 \alias{chapmanRobson}
 \alias{chapmanRobson.default}
 \alias{chapmanRobson.formula}
+\alias{coef.chapmanRobson}
 \alias{confint.chapmanRobson}
 \alias{plot.chapmanRobson}
 \alias{summary.chapmanRobson}
@@ -17,13 +18,17 @@ chapmanRobson(x, ...)
 \method{chapmanRobson}{formula}(x, data, ages2use = age,
   zmethod = c("Smithetal", "Hoenigetal", "original"), ...)
 
-\method{summary}{chapmanRobson}(object, verbose = FALSE, ...)
+\method{summary}{chapmanRobson}(object, parm = c("all", "both", "Z", "S"),
+  verbose = FALSE, ...)
+
+\method{coef}{chapmanRobson}(object, parm = c("all", "both", "Z", "S"), ...)
 
 \method{confint}{chapmanRobson}(object, parm = c("all", "both", "S", "Z"),
   level = conf.level, conf.level = 0.95, ...)
 
 \method{plot}{chapmanRobson}(x, pos.est = "topright", cex.est = 0.95,
-  ylab = "Catch", xlab = "Age", col.pt = "gray30", ...)
+  ylab = "Catch", xlab = "Age", col.pt = "gray30", axis.age = c("both",
+  "age", "recoded age"), ...)
 }
 \arguments{
 \item{x}{A numerical vector of the assigned ages in the catch curve or a formula of the form \code{catch~age} when used in \code{chapmanRobson}.  An object saved from \code{chapmanRobson} (i.e., of class \code{chapmanRobson}) when used in the methods.}
@@ -38,9 +43,9 @@ chapmanRobson(x, ...)
 
 \item{object}{An object saved from the \code{chapmanRobson} call (i.e., of class \code{chapmanRobson}).}
 
-\item{verbose}{A logical that indicates whether the method should return just the estimate (\code{FALSE}; default) or a more verbose statement.}
-
 \item{parm}{A numeric or string (of parameter names) vector that specifies which parameters are to be given confidence intervals  If missing, all parameters are considered.}
+
+\item{verbose}{A logical that indicates whether the method should return just the estimate (\code{FALSE}; default) or a more verbose statement.}
 
 \item{level}{Same as \code{conf.level}.  Used for compatability with the generic \code{confint} function.}
 
@@ -54,7 +59,9 @@ chapmanRobson(x, ...)
 
 \item{xlab}{A label for the x-axis (\code{"Age"} is the default).}
 
-\item{col.pt}{a string that indicates the color of the plotted points.}
+\item{col.pt}{A string that indicates the color of the plotted points.}
+
+\item{axis.age}{A string that indicates the type of x-axis to display.  The \code{age} will disply only the original ages, \code{recoded age} will display only the recoded ages, and \code{both} (DEFAULT) displays the original ages on the main axis and the recoded ages on the secondary axis.}
 
 \item{\dots}{Additional arguments for methods.}
 }
@@ -98,6 +105,8 @@ summary(cr1)
 summary(cr1,verbose=TRUE)
 confint(cr1)
 plot(cr1)
+plot(cr1,axis.age="age")
+plot(cr1,axis.age="recoded age")
 
 ## demonstration of excluding ages2use
 cr2 <- chapmanRobson(catch~age,data=BrookTroutTH,ages2use=-c(0,1))
