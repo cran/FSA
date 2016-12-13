@@ -17,7 +17,7 @@ residPlot(object, ...)
 \method{residPlot}{lm}(object, ...)
 
 \method{residPlot}{SLR}(object, xlab = "Fitted Values", ylab = "Residuals",
-  main = NULL, pch = 16, col = "black", lty.ref = 3, lwd.ref = 1,
+  main = "", pch = 16, col = "black", lty.ref = 3, lwd.ref = 1,
   col.ref = "black", resid.type = c("raw", "standardized", "studentized"),
   outlier.test = TRUE, alpha = 0.05, loess = TRUE, lty.loess = 2,
   lwd.loess = 1, col.loess = "black", trans.loess = 4, inclHist = TRUE,
@@ -25,21 +25,22 @@ residPlot(object, ...)
 
 \method{residPlot}{POLY}(object, ...)
 
-\method{residPlot}{IVR}(object, legend = "topright", ...)
+\method{residPlot}{IVR}(object, legend = "topright", cex.leg = 1,
+  box.lty.leg = 0, ...)
 
 \method{residPlot}{ONEWAY}(object, xlab = "Fitted Values",
-  ylab = "Residuals", main = NULL, pch = 16, col = "black",
-  lty.ref = 3, lwd.ref = 1, col.ref = "black", resid.type = c("raw",
-  "standardized", "studentized"), bp = TRUE, outlier.test = TRUE,
-  alpha = 0.05, loess = TRUE, lty.loess = 2, lwd.loess = 1,
-  col.loess = "black", trans.loess = 4, inclHist = TRUE, ...)
+  ylab = "Residuals", main = "", pch = 16, col = "black", lty.ref = 3,
+  lwd.ref = 1, col.ref = "black", resid.type = c("raw", "standardized",
+  "studentized"), bp = TRUE, outlier.test = TRUE, alpha = 0.05,
+  loess = TRUE, lty.loess = 2, lwd.loess = 1, col.loess = "black",
+  trans.loess = 4, inclHist = TRUE, ...)
 
 \method{residPlot}{TWOWAY}(object, xlab = "Fitted Values",
-  ylab = "Residuals", main = NULL, pch = 16, col = "black",
-  lty.ref = 3, lwd.ref = 1, col.ref = "black", resid.type = c("raw",
-  "standardized", "studentized"), bp = TRUE, outlier.test = TRUE,
-  alpha = 0.05, loess = TRUE, lty.loess = 2, lwd.loess = 1,
-  col.loess = "black", trans.loess = 4, inclHist = TRUE, ...)
+  ylab = "Residuals", main = "", pch = 16, col = "black", lty.ref = 3,
+  lwd.ref = 1, col.ref = "black", resid.type = c("raw", "standardized",
+  "studentized"), bp = TRUE, outlier.test = TRUE, alpha = 0.05,
+  loess = TRUE, lty.loess = 2, lwd.loess = 1, col.loess = "black",
+  trans.loess = 4, inclHist = TRUE, ...)
 
 \method{residPlot}{nls}(object, xlab = "Fitted Values", ylab = "Residuals",
   main = "", pch = 16, col = "black", lty.ref = 3, lwd.ref = 1,
@@ -92,6 +93,10 @@ residPlot(object, ...)
 
 \item{legend}{If \code{TRUE}, draw a legend and the user must click in the upper-left corner of where the legend should be placed; if \code{FALSE} do not draw a legend.  If a vector of length 2 then draw the upper left corner of the legend at the coordinates given in the vector of length 2.}
 
+\item{cex.leg}{A single numeric values used to represent the character expansion value for the legend.  Ignored if \code{legend=FALSE}.}
+
+\item{box.lty.leg}{A single numeric values used to indicate the type of line to use for the box around the legend.  The default is to not plot a box.}
+
 \item{bp}{A logical that indicates if the plot for the one-way and two-way ANOVA will be a boxplot (\code{TRUE}; default) or not.}
 
 \item{\dots}{Other arguments to the generic \code{plot} function.}
@@ -109,7 +114,7 @@ Externally Studentized residuals are not supported for \code{nls} or \code{nlme}
 
 If \code{outlier.test=TRUE} then significant outliers are detected with \code{\link[car]{outlierTest}} from the \pkg{car} package.  See the help for this function for more details.
 
-The user can include the model call as a title to the residual plot by using \code{main="MODEL"}.
+The user can include the model call as a title to the residual plot by using \code{main="MODEL"}.  This only works for models created wtih \code{lm()}.
 
 If the user chooses to add a legend without identifying coordinates for the upper-left corner of the legend (i.e., \code{legend=TRUE}) then the R console is suspended until the user places the legend by clicking on the produced graphic at the point where the upper-left corner of the legend should appear.  A legend will only be placed if the \code{mdl} is an indicator variable regression, even if \code{legend=TRUE}.
 }

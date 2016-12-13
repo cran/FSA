@@ -11,7 +11,7 @@
 \usage{
 vbFuns(param = c("Typical", "typical", "Traditional", "traditional",
   "BevertonHolt", "Original", "original", "vonBertalanffy", "GQ",
-  "GallucciQuinn", "Mooij", "Weisberg", "Schnute", "Francis", "Laslett",
+  "GallucciQuinn", "Mooij", "Weisberg", "Ogle", "Schnute", "Francis", "Laslett",
   "Polacheck", "Somers", "Somers2", "Pauly", "Fabens", "Fabens2", "Wang",
   "Wang2", "Wang3"), simple = FALSE, msg = FALSE)
 
@@ -55,7 +55,7 @@ Take note of the following for parameterizations (i.e., \code{param}) of each gr
 \itemize{
   \item von Bertalanffy
   \itemize{
-    \item The \sQuote{Original} and \sQuote{vonBertalanffy} are synonymous as are \sQuote{Typical}, \sQuote{Traditional}, and \sQuote{BevertonHolt}.
+    \item The \sQuote{Original} and \sQuote{vonBertalanffy} are synonymous as are \sQuote{Typical}, \sQuote{Traditional}, and \sQuote{BevertonHolt}.  Further note that the \sQuote{Ogle} parameterization has the \sQuote{Original}/\sQuote{vonBertalanffy} and \sQuote{Typical}/\sQuote{Traditional}/\sQuote{BevertonHolt} parameterizations as special cases.
   }
   \item Gompertz
   \itemize{
@@ -135,7 +135,7 @@ plot(log3(ages,L0=10,Linf=800,gninf=0.5)~ages,type="b",pch=19)
 ##   However, observe the correlations in the summary() results.
 
 ## Von B
-data(SpotVA1) 
+data(SpotVA1)
 # Fitting the typical paramaterization of the von B function
 fit1 <- nls(tl~vb1(age,Linf,K,t0),data=SpotVA1,start=vbStarts(tl~age,data=SpotVA1))
 summary(fit1,correlation=TRUE)

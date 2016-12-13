@@ -61,9 +61,10 @@
 #' ## demonstration of formula notation
 #' cc1 <- catchCurve(catch~age,data=BrookTroutTH,ages2use=2:6)
 #' summary(cc1)
+#' cbind(Est=coef(cc1),confint(cc1))
 #' plot(cc1)
-#' coef(cc1)
-#' confint(cc1)
+#' summary(cc1,parm="Z")
+#' cbind(Est=coef(cc1,parm="Z"),confint(cc1,parm="Z"))
 #' 
 #' ## demonstration of excluding ages2use
 #' cc2 <- catchCurve(catch~age,data=BrookTroutTH,ages2use=-c(0,1))
@@ -77,8 +78,7 @@
 #'
 #' ## demonstration of returning the linear model results
 #' summary(cc3,parm="lm")
-#' coef(cc3,parm="lm")
-#' confint(cc3,parm="lm")
+#' cbind(Est=coef(cc3,parm="lm"),confint(cc3,parm="lm"))
 #' 
 #' ## demonstration of ability to work with missing age classes
 #' df <- data.frame(age=c(  2, 3, 4, 5, 7, 9,12),
@@ -108,11 +108,11 @@ catchCurve.default <- function(x,catch,ages2use=age,weighted=FALSE,...) {
   age <- x
   
   ## Some Checks
-  if (!is.numeric(x)) stop("'x' must be numeric.",call.=FALSE)
-  if (!is.numeric(catch)) stop("'catch' must be numeric.",call.=FALSE)
-  if (length(age)!=length(catch)) stop("'age' and 'catch' have different lengths.",call.=FALSE)
+  if (!is.numeric(x)) STOP("'x' must be numeric.")
+  if (!is.numeric(catch)) STOP("'catch' must be numeric.")
+  if (length(age)!=length(catch)) STOP("'age' and 'catch' have different lengths.")
   # Check to make sure enough ages and catches exist
-  if (length(age)<2) stop("Fewer than 2 data points.",call.=FALSE)
+  if (length(age)<2) STOP("Fewer than 2 data points.")
 
   ## Isolate the ages and catches to be used  
   # Find rows to use according to ages to use
@@ -121,7 +121,7 @@ catchCurve.default <- function(x,catch,ages2use=age,weighted=FALSE,...) {
   age.e <- age[rows2use]
   catch.e <- catch[rows2use]
   # Check to make sure enough ages and catches exist
-  if (length(age.e)<2) stop("Fewer than 2 data points after applying 'ages2use'.",call.=FALSE)
+  if (length(age.e)<2) STOP("Fewer than 2 data points after applying 'ages2use'.")
   
   ## Fit the model to descending limb
   log.catch.e <- log(catch.e)
@@ -134,7 +134,7 @@ catchCurve.default <- function(x,catch,ages2use=age,weighted=FALSE,...) {
     # minimum of positive weights.  Send a warning.
     tmp <- which(W<=0)
     if (length(tmp)>0) {
-      warning("Some weights were non-positive and were changed to minimum of positive weights.",call.=TRUE)
+      WARN("Some weights were non-positive and were changed to minimum of positive weights.")
       W[tmp] <- min(W[which(W>0)])
     } 
     # and then fit the weighted regression
@@ -155,10 +155,10 @@ catchCurve.default <- function(x,catch,ages2use=age,weighted=FALSE,...) {
 catchCurve.formula <- function(x,data,ages2use=age,weighted=FALSE,...) {
   ## Handle the formula and perform some checks
   tmp <- iHndlFormula(x,data,expNumR=1,expNumE=1)
-  if (!tmp$metExpNumR) stop("'catchCurve' must have only one LHS variable.",call.=FALSE)
-  if (!tmp$Rclass %in% c("numeric","integer")) stop("LHS variable must be numeric.",call.=FALSE)
-  if (!tmp$metExpNumE) stop("'catchCurve' must have only one RHS variable.",call.=FALSE)
-  if (!tmp$Eclass %in% c("numeric","integer")) stop("RHS variable must be numeric.",call.=FALSE)
+  if (!tmp$metExpNumR) STOP("'catchCurve' must have only one LHS variable.")
+  if (!tmp$Rclass %in% c("numeric","integer")) STOP("LHS variable must be numeric.")
+  if (!tmp$metExpNumE) STOP("'catchCurve' must have only one RHS variable.")
+  if (!tmp$Eclass %in% c("numeric","integer")) STOP("RHS variable must be numeric.")
   ## Get variables from model frame
   age <- tmp$mf[,tmp$Enames]
   catch <- tmp$mf[,tmp$Rname]
@@ -176,8 +176,7 @@ summary.catchCurve <- function(object,parm=c("both","all","Z","A","lm"),...) {
     Z[c(1,3)] <- -Z[c(1,3)]
     A <- c(100*(1-exp(-Z[1])),NA,NA,NA)
     tmp <- rbind(Z,A)
-    if (parm=="Z") tmp <- tmp[1,,drop=FALSE]
-    else if (parm=="A") tmp <- tmp[2,drop=FALSE]
+    if (!parm %in% c("both","all")) tmp <- tmp[parm,,drop=FALSE]
   }
   tmp
 }
@@ -192,8 +191,7 @@ coef.catchCurve <- function(object,parm=c("all","both","Z","A","lm"),...) {
     A <- 100*(1-exp(-Z))
     tmp <- c(Z,A)
     names(tmp) <- c("Z","A")
-    if (parm=="Z") tmp <- tmp[1]
-    else if (parm=="A") tmp <- tmp[2]
+    if (!parm %in% c("both","all")) tmp <- tmp[parm]
   } 
   tmp
 }
@@ -209,15 +207,12 @@ anova.catchCurve <- function(object,...) {
 confint.catchCurve <- function(object,parm=c("all","both","Z","A","lm"),
                                level=conf.level,conf.level=0.95,...) {
   parm <- match.arg(parm)
-  if (conf.level<=0 | conf.level>=1) stop("'conf.level' must be between 0 and 1",call.=FALSE)
+  if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
   ci <- stats::confint(object$lm,conf.level=level,...)
   if (parm=="lm") res <- ci
   else {
-    Zres <- rbind(Z=-ci[2,2:1])
-    Ares <- rbind(A=100*(1-exp(ci[2,2:1])))
-    if (parm %in% c("all","both")) res <- rbind(Zres,Ares)
-      else if (parm=="Z") res <- Zres
-        else res <- Ares
+    res <- rbind(Z=-ci[2,2:1],A=100*(1-exp(ci[2,2:1])))
+    if (!parm %in% c("all","both")) res <- res[parm,,drop=FALSE]
   }
   colnames(res) <- iCILabel(conf.level)
   res
@@ -241,7 +236,8 @@ plot.catchCurve <- function(x,pos.est="topright",cex.est=0.95,
   if (!is.null(pos.est)) {
     Z <- -stats::coef(x$lm)[2]
     A <- 100*(1-exp(-Z))
-    graphics::legend(pos.est,legend=paste("Z=",round(Z,3),"\nA=",round(A,1),"%",sep=""),bty="n",cex=cex.est)
+    graphics::legend(pos.est,legend=paste0("Z=",round(Z,3),"\nA=",round(A,1),"%"),
+                     bty="n",cex=cex.est)
   }
 } # nocov end
 
@@ -258,7 +254,7 @@ plot.catchCurve <- function(x,pos.est="topright",cex.est=0.95,
 #=============================================================
 iCheck_ages2use <- function(ages2use,ages) {
   ## Can't have both positive and negative ages
-  if (any(ages2use<0) & any(ages2use>0)) stop("'ages2use' must be all positive or negative.",call.=FALSE)
+  if (any(ages2use<0) & any(ages2use>0)) STOP("'ages2use' must be all positive or negative.")
   ## If all negative then those are ages not to use
   ##   create a vector of ages to use
   if (all(ages2use<=0)) {
@@ -270,7 +266,7 @@ iCheck_ages2use <- function(ages2use,ages) {
   rows2use <- match(ages2use,ages)
   ## Send a warning if the user asked for ages that don't exist
   if (!all(ages[rows2use] %in% ages)) {
-    warning("Some 'ages2use' not in observed ages.",call.=FALSE)
+    WARN("Some 'ages2use' not in observed ages.")
     rows2use <- rows2use[!is.na(rows2use)]
   }
   ## return the ROWS (not the ages) to use

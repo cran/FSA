@@ -1,3 +1,46 @@
+# FSA 0.8.11 ongoing
+* Changed all `stop()`s to `STOP()`s and all `warning()`s to `WARN()`. This modified nearly all functions.
+* Changed all `paste()`s that used `sep=""` to `paste0()`s.
+* Removed several `sep=""`s from `message()`s.
+* Removed `Hmisc` from, but added `epitools` to, imports. Removed all links to `Hmisc` to remove CRAN check warnings.
+* Reorganized testing files. Added many tests.
+* `.onAttach()`: Modified. Streamlined package startup message.
+* `addZeroCatch()`: Modified. Added more "catches" for bad data types or arguments.
+* `ageBias()`: Modified. Changed all `message()`s in `summary()` to `cat()`s.
+* `agePrecision()`: Modified. Changed all `message()`s in `summary()` to `cat()`s.
+* `binCI()`: Modified. Changed from using `binconf()` in `Hmisc` to `binom.exact()`, `binom.wilson()`, and `binom.approx()` from `epitools` (this removes dependency on `Hmisc` which was causing problems). Allowed multiple `type`s to be chosen. Now only accepts whole numbers for `x` and `n`. Added `verbose=` so that the result can be include all of the information return from the `epitools` functions. Added a catch for bad `conf.level`s. Added some more tests.
+* `catchCurve()`: Modified. Made sure that `coef()` method returned a vector (addresses [#19](https://github.com/droglenc/FSA/issues/19)). Modified `confint()` code for efficiency, made sure matrix is always returned.
+* `chapmanRobson()`: Modified. Made sure that `coef()` method returned a vector (addresses [#19](https://github.com/droglenc/FSA/issues/19)). Modified `confint()` code for efficiency, made sure matrix is always returned.
+* `chooseColors()`: Modified.  Added `rev=` for returned reverse ordered (from default) colors.
+* `depletion()`: Modified. Changed `coef()` method so that it returned a named vector (addresses [#19](https://github.com/droglenc/FSA/issues/19)). Modified `confint()` code for efficiency, made sure matrix is always returned. Removed `type=` to match other functions (incorporated that functionality into `parm=`). Removed `digits=` to match other functions.
+* `expandLenFreq()`: Modified. Changed all `message()`s to `cat()`s. Removed "names" from printed items for a cleaner look.
+* `fitPlot()`: Modified.  Added `cex.leg=` and `box.lty.leg=` to IVR plots.
+* `hist.formula()`: Modified.  Fixed a bug with adding the horizontal line at 0 when the user uses `plot=FALSE`, which occurs with `hist.bootCase()`.
+* `hyperCI()`: Modified. Now only accepts whole numbers for `M`, `n`, or `m`. Added catch for bad `conf.level`s and multiple values of `M`, `n`, or `m`.
+* `iAddLoessLine()`: Modified. Changed used of `iMakeColor()` to `col2rgbt()`.
+* `iGetDecimals()`: Modified. Added warning for situations where `x` will be presented in exponential notation. Also returned a decimal of zero in this situation. Helps with a bug in `hist.formula()`.
+* `iHndlCols2use()`: Deleted. Changed to `iHndlCols2UseIgnore()`.
+* `iHndlCols2UseIgnore()`: Added.  Previously was `iHndlCols2use()`. Completely reworked to catch more problems including having both positive and negative indices (fixes [#24](https://github.com/droglenc/FSA/issues/24)) and choosing variable names that don't exist (fixes [#25](https://github.com/droglenc/FSA/issues/25)).
+* `iHndlFormula()`: Modified. Added code to deal with a formula that is a single "variable" sent in an array.  Addresses [#21](https://github.com/droglenc/FSA/issues/21) for the simple situation of single "variable."
+* `iHndlMultWhat()`: Modified. Added `type=` to allow use with `message()` or `cat()`.
+* `iPlotExists()`: Added.  Helps with bug fix in `hist.formula()`.
+* `is.wholenumber()`: Added.  Needed for changes to `binCI()`, `hyperCI()`, and `poiCI()`.
+* `kCounts()`: Modified.  Fixed bug with `capitalize=` and `zero`. Streamlined code. Added tests.
+* `metaM()`: Modified. Fixed bug with the way messages were output when multiple `methods` were provided and `justM=FALSE`. Added more tests.
+* `mrClosed()`: Modified. Added `poi.type=` to handle new choices for Poisson confidence interals. Added some checks for non-vector uses of `M=` and `R=` (partially addresses [#22](https://github.com/droglenc/FSA/issues/22)). Fixed bug in how inputs for subgroups were output from `summary()` when `verbose=TRUE`.
+* `mrOpen()`: Modified. Changed all `message()`s in `summary()` to `cat()`s. Fixed bug where returned value from `summary()` was not a data.frame if only one parameter was selected.
+* `nlsTracePlot()`: Added.
+* `plotBinResp()`: Modified. Changed used of `iMakeColor()` to `col2rgbt()`.
+* `poiCI()`: Modified. Completely rebuilt to use the functions from `epitools`. Now only accepts whole numbers for `x`.
+* `predict.bootCase()`: Modified. Modified so that situations where other than values of the dependent variable are in the dots argument (as would occur if making predictions for the Francis parameterization of the VBGF).
+* `predict.nlsBoot()`: Modified. See note for `predict.bootCase()`.
+* `psdCalc()`: Modified. Fixed bug in output if more than two additional lengths were supplied.
+* `removal()`: Modified. Added a check and a returned error if `method="Schnute"` and the last of three catches is zero (addresses [#26](https://github.com/droglenc/FSA/issues/26)) Fixed bug related to sending catches in a one column data.frame. Fixed bug related to selecting only one `parm=` in `confint()`.  Added tests.
+* `residPlot()`: Modified.  Added `cex.leg=` and `box.lty.leg=` to IVR plots. Removed extra spaces in main title if `main="MODEL"`. Added some tests.
+* `tictactoe()`: Modified. Changed used of `iMakeColor()` to `col2rgbt()`.
+* `vbFuns()`: Modified.  Added `Ogle` to list of parameterizations. Changed order of `L0` and `K` parameters in returned function when `param="Original"`.
+* `vbStarts()`: Modified.  Added the `methLinf=` argument that allows the user to choose if Linf is estimated from a Walford plot (`methLinf="Walford"`; the default and old functionality), as the mean of fish in a certain number of old ages (`methLinf="oldAge"`), or as the mean of a certain number of the longest fish (`methLinf="longFish"`).  The number of ages or long fish is given in `num4Linf=`.  Added methods for `type="Ogle"`.
+
 # FSA 0.8.10 24-Sep-16
 * `alkIndivAge()`: Modified.  Added `na.rm=TRUE` to the checks on the minimum and maximum length data.
 * `catchCurve()`: Modified.  Removed `type=` and blended that functionality into `parm=` for methods.  Made `parm=` consistent across methods.

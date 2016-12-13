@@ -6,7 +6,7 @@
 #'
 #' @details \code{confint} finds the two quantiles that have the (1-\code{conf.level})/2 proportion of bootstrapped parameter estimates below and above.  This is an approximate 100\code{conf.level}\% confidence interval.
 #' 
-#' \code{predict} applies a user-supplied function to each row of \code{object} and then finds the median and the two quantiles that have the proportion (1-\code{conf.level})/2 of the bootstrapped predictions below and above.  The median is returned as the predicted value and the quantiles are returned as an approximate 100\code{conf.level}\% confidence interval for that prediction.
+#' \code{predict} applies a user-supplied function to each row of \code{object} and then finds the median and the two quantiles that have the proportion (1-\code{conf.level})/2 of the bootstrapped predictions below and above.  The median is returned as the predicted value and the quantiles are returned as an approximate 100\code{conf.level}\% confidence interval for that prediction. Values for the independent variable in \code{FUN} must be a named argument sent in the \dots argument (see examples).  Note that if other arguments are needed in \code{FUN} besides values for the independent variable, then these are included in the \dots argument AFTER the values for the independent variable.
 #'
 #' In \code{htest} the \dQuote{direction} of the alternative hypothesis is identified by a string in the \code{alt=} argument.  The strings may be \code{"less"} for a \dQuote{less than} alternative, \code{"greater"} for a \dQuote{greater than} alternative, or \code{"two.sided"} for a \dQuote{not equals} alternative (the DEFAULT).  In the one-tailed alternatives the p-value is the proportion of bootstrapped parameter estimates in \code{object$coefboot} that are extreme of the null hypothesized parameter value in \code{bo}.  In the two-tailed alternative the p-value is twice the smallest of the proportion of bootstrapped parameter estimates above or below the null hypothesized parameter value in \code{bo}.
 #'
@@ -28,7 +28,7 @@
 #' @param same.ylim A logical that indicates whether the same limits for the y-axis should be used on each histogram.  Defaults to \code{TRUE}.  Ignored if \code{ylmts} is non-null.
 #' @param ymax A single value that sets the maximum y-axis limit for each histogram or a vector of length equal to the number of groups that sets the maximum y-axis limit for each histogram separately.
 #' @param col A named color for the histogram bars.
-#' @param \dots Additional items to send to functions.
+#' @param \dots Additional items to send to functions.  See details.
 #'
 #' @return If \code{object} is a matrix, then \code{confint} returns a matrix with as many rows as columns (i.e., parameter estimates) in \code{object} and two columns of the quantiles that correspond to the approximate confidence interval.  If \code{object} is a vector, then \code{confint} returns a vector with the two quantiles that correspond to the approximate confidence interval.
 #'
@@ -229,17 +229,15 @@ iCIBoot <- function(object,parm,conf.level,plot,err.col,err.lwd,rows,cols,...) {
   else {
     if (is.numeric(parm)) {
       # check numeric parm
-      if (any(parm<0) & any(parm>0)) stop("Numbers in 'parm' cannot be both positive and negative.",
-                                          call.=FALSE)
-      if (max(abs(parm))>ncol(object)) stop("Number in 'parm' exceeds number of columns.",call.=FALSE)
+      if (any(parm<0) & any(parm>0)) STOP("Numbers in 'parm' cannot be both positive and negative.")
+      if (max(abs(parm))>ncol(object)) STOP("Number in 'parm' exceeds number of columns.")
     } else {
       # check named parm
-      if (!all(parm %in% colnames(object))) stop("Name in 'parm' does not exist in 'object'.",
-                                                 call.=FALSE)
+      if (!all(parm %in% colnames(object))) STOP("Name in 'parm' does not exist in 'object'.")
     }
   }
   ## Check on conf.level
-  if (conf.level<=0 | conf.level>=1) stop("'conf.level' must be between 0 and 1",call.=FALSE)
+  if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
   ## Reduce object to have only the parm columns in it
   object <- object[,parm,drop=FALSE]
   ## Compute CIs for each column, but handle differently if vector or matrix
@@ -271,8 +269,8 @@ iCIBoot <- function(object,parm,conf.level,plot,err.col,err.lwd,rows,cols,...) {
 ## ===========================================================
 iPredictBoot <- function(object,FUN,MARGIN,conf.level,digits,...) {
   ## Some checks
-  if (class(FUN)!="function") stop("'FUN' is not a function.",call.=FALSE)
-  if (conf.level<=0 | conf.level>=1) stop("'conf.level' must be between 0 and 1",call.=FALSE)
+  if (class(FUN)!="function") STOP("'FUN' is not a function.")
+  if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
   ## Get items in the dots
   tmp <- list(...)
   ## Prep the results matrix
@@ -281,19 +279,20 @@ iPredictBoot <- function(object,FUN,MARGIN,conf.level,digits,...) {
   ## Loop through the items in the dots variable
   for (i in 1:n) {
     # set arguments for apply
-    args <- list(object,MARGIN,FUN,tmp[[1]][i])
-    names(args) <- c("X","MARGIN","FUN",names(tmp)[1])
+    tmp1 <- c(tmp[[1]][i],unlist(tmp[-1]))
+    names(tmp1) <- names(tmp)
+    args <- c(list(X=object,MARGIN=MARGIN,FUN=FUN),tmp1)
     # get the bootstrap results for one set of values in the dots variable
     tmpres <- do.call(apply,args)
     # get median, LCI, and UCI and put in results matrix (with dots variable value)
-    res[i,] <- c(tmp[[1]][i],stats::quantile(tmpres,c(0.5,0.5-conf.level/2,0.5+conf.level/2)))
+    res[i,] <- c(tmp1[[1]],stats::quantile(tmpres,c(0.5,0.5-conf.level/2,0.5+conf.level/2)))
   }
   ## Potentially round the median and CI results
   if (!is.null(digits)) {
-    if (digits<=0) stop("'digits' must be positive.",call.=FALSE)
+    if (digits<=0) STOP("'digits' must be positive.")
     res[,2:4] <- round(res[,2:4],digits)
   }
-  colnames(res) <- c(names(tmp)[1],"Median",iCILabel(conf.level))
+  colnames(res) <- c(names(tmp1)[1],"Median",iCILabel(conf.level))
   ## Return the matrix
   res
 }
@@ -308,19 +307,18 @@ iHTestBoot <- function(object,parm,bo=0,alt=c("two.sided","less","greater"),plot
   ## Multiple parm values in object, make sure a parm was selected
   ## if it was then reduce object to vector of that parm
   if (!is.null(dim(object))) {
-    if (is.null(parm)) stop("You must select a parameter to test with `parm`.",call.=FALSE)
+    if (is.null(parm)) STOP("You must select a parameter to test with `parm`.")
     else {
       # check parm
-      if (length(parm)>1) stop("'parm' must be of length 1.",call.=FALSE)
+      if (length(parm)>1) STOP("'parm' must be of length 1.")
       else {
         if (is.numeric(parm)) {
           # the column number was too small or too big
-          if (parm>ncol(object)) stop("Number in 'parm' exceeds number of columns.",call.=FALSE)
-          if (parm<=0) stop("Number in 'parm' must be positive.",call.=FALSE)
+          if (parm>ncol(object)) STOP("Number in 'parm' exceeds number of columns.")
+          if (parm<=0) STOP("Number in 'parm' must be positive.")
         } else {
           # column name does not exist in the matrix
-          if (!parm %in% colnames(object)) stop("Name in 'parm' does not exist in 'object'.",
-                                                call.=FALSE)
+          if (!parm %in% colnames(object)) STOP("Name in 'parm' does not exist in 'object'.")
         }
       }
     }

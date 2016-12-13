@@ -51,19 +51,6 @@
 #' psdCalc(~yepmm,data=yepdf,species="Yellow perch",digits=1)
 #' psdCalc(~yepmm,data=yepdf,species="Yellow perch",digits=1,drop0Est=TRUE)
 #'
-#' ## all values above stock value (troubleshooting a problem)
-#' yepdf2 <- subset(yepdf,yepmm>=130)
-#' psdCalc(~yepmm,data=yepdf2,species="Yellow perch")
-#' 
-#' ## all values above quality value (troubleshooting a problem)
-#' yepdf3 <- subset(yepdf,yepmm>=200)
-#' psdCalc(~yepmm,data=yepdf3,species="Yellow perch")
-#' psdCalc(~yepmm,data=yepdf3,species="Yellow perch",drop0Est=TRUE)
-#' 
-#' ## all values below memorable value (troubleshooting a problem)
-#' yepdf4 <- subset(yepdf,yepmm<300)
-#' psdCalc(~yepmm,data=yepdf4,species="Yellow perch")
-#' 
 #' ## add a length
 #' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=150)
 #' 
@@ -77,10 +64,10 @@
 #' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=c("minLen"=150),justAdds=TRUE)
 #' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=c("minLen"=150),justAdds=TRUE,
 #'         what="traditional")
-#' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=c(150,275),addNames=c("minSlot","maxSlot"),
-#'         justAdds=TRUE)
-#' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=c(150,275),addNames=c("minSlot","maxSlot"),
-#'         justAdds=TRUE,what="traditional")
+#' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=c(150,275),
+#'         addNames=c("minSlot","maxSlot"),justAdds=TRUE)
+#' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=c(150,275),
+#'         addNames=c("minSlot","maxSlot"),justAdds=TRUE,what="traditional")
 #' 
 #' ## different output types
 #' psdCalc(~yepmm,data=yepdf,species="Yellow perch",addLens=150,what="traditional")
@@ -105,7 +92,7 @@ psdCalc <- function(formula,data,species,units=c("mm","cm","in"),
   what <- match.arg(what)
   units <- match.arg(units)
   ## make sure species is not missing
-  if (missing(species)) stop("Must include a species name in 'species'.",call.=FALSE)
+  if (missing(species)) STOP("Must include a species name in 'species'.")
   ## find psd lengths for this species
   brks <- psdVal(species,units=units,incl.zero=FALSE,addLens=addLens,addNames=addNames)
   ## perform checks and initial preparation of the data.frame
@@ -137,7 +124,7 @@ psdCalc <- function(formula,data,species,units=c("mm","cm","in"),
     # additional lengths that the user is asking for
     tmp <- NULL
     for (i in names(addLens)) tmp <- c(tmp,grep(i,rownames(res)))
-    res <- res[sort(tmp),]
+    res <- res[sort(unique(tmp)),]
   }
   ## Invisibly return the matrix if requested to do so
   if (what=="none") invisible(res)
@@ -151,10 +138,10 @@ psdCalc <- function(formula,data,species,units=c("mm","cm","in"),
 # ============================================================
 iPrepData4PSD <- function(formula,data,stock.len,units) {
   ## check if the data.frame has data
-  if (nrow(data)==0) stop("'data' does not contain any rows.",call.=FALSE)
+  if (nrow(data)==0) STOP("'data' does not contain any rows.")
   ## get name of length variable from the formula
   cl <- iGetVarFromFormula(formula,data,expNumVars=1)
-  if (!is.numeric(data[,cl])) stop("Variable in 'formula' must be numeric.",call.=FALSE)
+  if (!is.numeric(data[,cl])) STOP("Variable in 'formula' must be numeric.")
   ## restrict data to above the stock length
   data <- data[data[,cl]>=stock.len,]
   ## assure that NA values in the length variable are removed
@@ -163,7 +150,7 @@ iPrepData4PSD <- function(formula,data,stock.len,units) {
   if (nrow(data)==0) {
     msg <- "There are no stock-length fish in the sample.\n"
     msg <- paste0(msg,"Note that units='",units,"' was used.\n")
-    stop(msg,call.=FALSE)
+    STOP(msg)
   }
   # return new data.frame
   data
@@ -197,7 +184,7 @@ iMakePSDIV <- function(ptbl) {
   ## make identify matrix for incremental PSD
   tmp2 <- matrix(0,nrow=(k-1),ncol=k)
   diag(tmp2) <- 1
-  rownames(tmp2) <- paste("PSD ",abb[1:(k-1)],"-",abb[2:k],sep="")
+  rownames(tmp2) <- paste0("PSD ",abb[1:(k-1)],"-",abb[2:k])
   ## put together and return
   rbind(tmp1,tmp2)
 }
@@ -208,7 +195,7 @@ iGetAllPSD <- function(ptbl,n,method,conf.level=0.95,digits) {
   ## check if sample size is >20 (see Brenden et al. 2008), warn if not
   # do this here and suppress warnings for psdCI so that there is only one warning
   ns <- n*ptbl
-  if (any(ns>0 & ns<20)) warning("Some category sample size <20, some CI coverage may be\n lower than ",100*conf.level,"%.",call.=FALSE)
+  if (any(ns>0 & ns<20)) WARN("Some category sample size <20, some CI coverage may be\n lower than ",100*conf.level,"%.")
   ## Compute all PSDs
   suppressWarnings(res <- t(apply(id1,MARGIN=1,FUN=psdCI,ptbl=ptbl,n=n,method=method,conf.level=conf.level,digits=digits)))
   ## Add the numerator (number in category) and denominator (stock) columns

@@ -2,19 +2,23 @@
 % Please edit documentation in R/FSA-internals.R
 \name{.onAttach}
 \alias{.onAttach}
+\alias{STOP}
+\alias{WARN}
 \alias{iAddLoessLine}
 \alias{iCILabel}
 \alias{iCheckALK}
 \alias{iCheckStartcatW}
 \alias{iGetDecimals}
 \alias{iGetVarFromFormula}
-\alias{iHndlCols2use}
+\alias{iHndlCols2UseIgnore}
 \alias{iHndlFormula}
 \alias{iHndlMultWhat}
 \alias{iLegendHelp}
 \alias{iListSpecies}
 \alias{iMakeColor}
+\alias{iPlotExists}
 \alias{iTypeoflm}
+\alias{is.wholenumber}
 \title{Internal functions.}
 \usage{
 .onAttach(lib, pkg, ...)

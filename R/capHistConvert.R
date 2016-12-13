@@ -278,11 +278,11 @@ capHistConvert <- function(df,cols2use=NULL,cols2ignore=NULL,
   # initial argument checks
   in.type <- match.arg(in.type)
   out.type <- match.arg(out.type)
-  if (in.type==out.type) stop("'in.type' and 'out.type' cannot be the same.",call.=FALSE)
+  if (in.type==out.type) STOP("'in.type' and 'out.type' cannot be the same.")
   # make sure df is a data.frame (could be sent as a matrix)
   df <- as.data.frame(df)
   # change data.frame based on cols2use or cols2ignore
-  df <- iHndlCols2use(df,cols2use,cols2ignore)
+  df <- iHndlCols2UseIgnore(df,cols2use,cols2ignore)
 
   ## Convert from other forms to individual form
   switch(in.type,
@@ -318,16 +318,16 @@ iMakeDefaultCHLabels <- function(ch.df,var.lbls.pre) {
   ## check var.lbls.pre
   # check of only one is given
   if (length(var.lbls.pre)>1) {
-    warning("'var.lbls.pre' contains more than one prefix, only first was used.",call.=FALSE) 
+    WARN("'var.lbls.pre' contains more than one prefix, only first was used.") 
     var.lbls.pre <- var.lbls.pre[1]
   }
   # check that it does not start with a number
   if (!is.na(suppressWarnings(as.numeric(substring(var.lbls.pre,1,1))))) {
-    warning("'var.lbls.pre' cannot begin with a number, changed to 'event'.",call.=FALSE)
+    WARN("'var.lbls.pre' cannot begin with a number, changed to 'event'.")
     var.lbls.pre <- "event"
   }
   ## make labels
-  paste(var.lbls.pre,1:(ncol(ch.df)-1),sep="")
+  paste0(var.lbls.pre,1:(ncol(ch.df)-1))
 }
 
 #=============================================================
@@ -340,7 +340,7 @@ iMakeVarLabels <- function(ch.df,in.type,id,var.lbls,var.lbls.pre) {
     if (length(var.lbls)>=(ncol(ch.df)-1)) var.lbls <- var.lbls[1:(ncol(ch.df)-1)]
     else {
       ## too few var.lbls ... warn and build default labels
-      warning("Too few labels in 'var.lbls'; default labels will be used.",call.=FALSE)
+      WARN("Too few labels in 'var.lbls'; default labels will be used.")
       var.lbls <- iMakeDefaultCHLabels(ch.df,var.lbls.pre)
     }
   } else { ## var.lbls not given
@@ -364,7 +364,7 @@ iMakeVarLabels <- function(ch.df,in.type,id,var.lbls,var.lbls.pre) {
 #=============================================================
 iEvent2Indiv <- function(df,id,event.ord) {
   # See if there is an id variable
-  if (is.null(id)) stop("No variable with unique fish identification information given in 'id'.",call.=FALSE)
+  if (is.null(id)) STOP("No variable with unique fish identification information given in 'id'.")
   # All other variables are "events"
   event <- names(df)[which(names(df)!=id)]
   # Control the event order if told to do so by the user
@@ -390,7 +390,7 @@ iFrequency2Indiv <- function(df,freq) {
   if (is.null(freq)) {
     tmp <- "No 'freq' given; assumed frequencies were 1 for each capture history."
     if (any(c("freq","Freq","FREQ") %in% names(df))) tmp <- paste0(tmp,"\nHowever, one variable appears to contain frequencies.")
-    warning(tmp,call.=FALSE)
+    WARN(tmp)
     nfreq <- rep(1,nrow(df))
   } else {
     # isolate frequencies and create a df without them
@@ -428,7 +428,7 @@ iMark2Indiv <- function(df,freq) {
   if (is.null(freq)) {
     tmp <- "No 'freq' given; assumed frequencies were 1 for each capture history."
     if (any(c("freq","Freq","FREQ") %in% names(df))) tmp <- paste0(tmp,"\nHowever, one variable appears to contain frequencies.")
-    warning(tmp,call.=FALSE)
+    WARN(tmp)
     nfreq <- rep(1,nrow(df))
   } else {
     # isolate frequencies and create a df without them
@@ -447,12 +447,12 @@ iRMark2Indiv <- function(df,id,freq) {
   # force to be a data.frame (likely comes as a vector)
   df <- as.data.frame(df)
   # can't supply both id and freq
-  if (!is.null(id) & !is.null(freq)) stop("Only one of 'id' or 'freq' can be used with the RMark format.",call.=FALSE)
+  if (!is.null(id) & !is.null(freq)) STOP("Only one of 'id' or 'freq' can be used with the RMark format.")
   # if neither id nor freq then create a freq=1 column and use it
   if (is.null(id) & is.null(freq)) {
     tmp <- "No 'freq' or 'id' given; assumed frequencies were 1 for each capture history."
     if (any(c("freq","Freq","FREQ") %in% names(df))) tmp <- paste0(tmp,"\nHowever, one variable appears to contain frequencies.")
-    warning(tmp,call.=FALSE)
+    WARN(tmp)
     df$freq <- rep(1,nrow(df))
     freq <- "freq"
   }
@@ -523,7 +523,7 @@ iOutEvent <- function(ch.df,id) {
     v.ev <- c(v.ev,rep(events[i],length(tmp)))
   }
   # put ids and events together in a data.frame
-  tmp <- data.frame(v.id,v.ev)
+  tmp <- data.frame(v.id,v.ev,stringsAsFactors=FALSE)
   # and name the colums
   if (is.null(id)) names(tmp) <- c("id","event")
   else names(tmp) <- c(id,"event")
@@ -541,7 +541,7 @@ iOutFrequency <- function(ch.df) {
     ch1 <- as.numeric(noquote(unlist(strsplit(as.character(ch.df[i,1]),""))))
     ch.df1[i,] <- ch1
   }
-  ch.df <- data.frame(ch.df1,ch.df[,"freq"])
+  ch.df <- data.frame(ch.df1,ch.df[,"freq"],stringsAsFactors=FALSE)
   names(ch.df) <- var.lbls
   ch.df
 }
@@ -563,11 +563,11 @@ iOutRMark <- function(ch.df,include.id) {
   chtmp <- ch.df[-1]
   # combine the capture histories into a string
   ch <- apply(as.matrix(chtmp),1,paste,sep="",collapse="")
-  dftmp <- data.frame(ch=ch)
+  dftmp <- data.frame(ch=ch,stringsAsFactors=FALSE)
   dftmp$ch <- as.character(dftmp$ch)
   # add id variable back on if asked for
   if (include.id) {
-    dftmp <- data.frame(idtmp,dftmp)
+    dftmp <- data.frame(idtmp,dftmp,stringsAsFactors=FALSE)
     names(dftmp)[1] <- names(ch.df)[1]
   }
   # return the new data.frame
@@ -578,7 +578,7 @@ iOutRMark <- function(ch.df,include.id) {
 #=============================================================
 iOutMARK <- function(ch.df) {
   ch.df <- iPrepCapHistSum(ch.df)
-  ch.df[,ncol(ch.df)] <- paste(ch.df[,ncol(ch.df)],";",sep="")
+  ch.df[,ncol(ch.df)] <- paste0(ch.df[,ncol(ch.df)],";")
   names(ch.df)[1] <- "ch"
   ch.df
 }
@@ -589,7 +589,7 @@ iPrepCapHistSum <- function(ch.df) {
   # get capture history summary without the id column
   chsum <- capHistSum(ch.df,cols2use=2:ncol(ch.df))
   # convert to a data.frame and re-label columns
-  ch.df <- as.data.frame(chsum$caphist)
+  ch.df <- as.data.frame(chsum$caphist,stringsAsFactors=FALSE)
   rownames(ch.df) <- 1:nrow(ch.df)
   colnames(ch.df) <- c("caphist","freq")
   # return the data.frame

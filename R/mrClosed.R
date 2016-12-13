@@ -1,6 +1,6 @@
 #' @title Estimate initial population size for single or multiple census mark-recapture data.
 #'
-#' @description Estimates of the initial population size, along with associated confidence intervals, are constructed from single or multiple census mark-recapture data using a variety of methods.  For single census data, the initial population size (N) is estimated from the number of marked animals from a first sample (M), number of captured animals in a second sample (n), and the number of recaptured marked animals in the second sample (m) using either the \sQuote{naive} Petersen method or Chapman, Ricker, or Bailey modifications of the Petersen method.  Single census data can also be separated by group (e.g., size class) to estimate the initial population size by class and for the overall population size.  For multiple census data, the initial population size is estimated from the number of captured animals (n), number of recaptured marked animals (m), the number of marked animals that are marked and returned to the population (R), or the number of extant marked animals prior to the sapmle (M) on each of several samples using either the Schnabel (1938) or Schumacher-Eschmeyer (1943) method.
+#' @description Estimates of the initial population size, along with associated confidence intervals, are constructed from single or multiple census mark-recapture data using a variety of methods.  For single census data, the initial population size (N) is estimated from the number of marked animals from a first sample (M), number of captured animals in a second sample (n), and the number of recaptured marked animals in the second sample (m) using either the \sQuote{naive} Petersen method or Chapman, Ricker, or Bailey modifications of the Petersen method.  Single census data can also be separated by group (e.g., size class) to estimate the initial population size by class and for the overall population size.  For multiple census data, the initial population size is estimated from the number of captured animals (n), number of recaptured marked animals (m), the number of marked animals that are marked and returned to the population (R), or the number of extant marked animals prior to the sample (M) on each of several samples using either the Schnabel (1938) or Schumacher-Eschmeyer (1943) method.
 #'
 #' @details For single census data, the following methods can be used:
 #' \itemize{
@@ -55,7 +55,8 @@
 #' @param parm Not used here (included in \code{confint} generic).
 #' @param level Same as \code{conf.level} but used for compatability with \code{confint} generic.
 #' @param conf.level A numeric representing the level of confidence to use for confidence intervals.
-#' @param bin.type A string that identifies the method used to construct binomial confidence intervals (default is \code{"wilson"}).  This is only used if \code{type="binomial"} in \code{confint}.  See details of \code{binCI}
+#' @param bin.type A string that identifies the method used to construct binomial confidence intervals (default is \code{"wilson"}).  This is only used if \code{type="binomial"} in \code{confint}.  See details of \code{\link{binCI}}.
+#' @param poi.type A string that identifies the method used to construct Poisson confidence intervals (default is \code{"exact"}).  This is only used if \code{type="Poisson"} in \code{confint}.  See details of \code{\link{poiCI}}.
 #' @param pch A numeric used to indicate the type of plotting character.
 #' @param col.pt a string used to indicate the color of the plotted points.
 #' @param xlab A label for the x-axis.
@@ -186,12 +187,10 @@ mrClosed <- function(M=NULL,n=NULL,m=NULL,R=NULL,
   method <- match.arg(method)
   if (method %in% c("Petersen","Chapman","Ricker","Bailey")) {
     if (!is.null(R)) {
-      ## R not used in single census methods.  If nothing else
-      ##   is supplied then just throw an error
-      if (is.null(c(M,n,m))) stop("'R' not used in single census methods; must supply 'M', 'n', and 'm'.",
-                                  call.=FALSE)
+      ## R not in single methods.  If nothing else, throw error
+      if (is.null(c(M,n,m))) STOP("'R' not used in single census methods;\n must supply 'M', 'n', and 'm'.")
       ## Otherwise warn that it will be ignored
-      warning("'R' not used in single census methods; It will be ignored.",call.=FALSE)
+      WARN("'R' not used in single census methods and will be ignored.")
     }
     iMRCSingle(M,n,m,method,labels)
   } else iMRCMultiple(M,n,m,R,method,chapman.mod)
@@ -205,29 +204,28 @@ mrClosed <- function(M=NULL,n=NULL,m=NULL,R=NULL,
 #===========================================================================
 iMRCSingle <- function(M,n,m,method,labels) {
   # initial checks
-  if (is.null(M)) stop("Missing 'M'.",call.=FALSE)
+  if (is.null(M)) STOP("'M' is missing; must be from 'capHistSum()' or value(s).")
   if (class(M)=="CapHist") {
-    if (!is.null(m) | !is.null(n)) warning("'m' and 'n' ignored when 'M' from capHistSum().",call.=FALSE)
+    if (!is.null(m) | !is.null(n)) WARN("'m' and 'n' ignored when 'M' from capHistSum().")
     m <- M$sum$m
     n <- M$sum$n
     M <- M$sum$M    
   } else {
-    if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing without 'M' from capHistSum().",
-                                      call.=FALSE)
+    if (is.null(n) | is.null(m)) STOP("One or both of 'n' or 'm' is missing without 'M' from capHistSum().")
     # Make sure that the vectors are of the same size
     lengths <- c(length(M),length(n),length(m))
-    if (any(diff(lengths)!=0)) stop("'M', 'n', or 'm' vectors must have same length.",call.=FALSE)
+    if (any(diff(lengths)!=0)) STOP("'M', 'n', or 'm' vectors must be same length.")
   }
   # Make sure that recapture number makes sense relative to sample size
   if (any((n-m)<0)) {
-    if (length(n)==1) stop ("Can't have more recaptures (m) then total individuals (n).",call.=FALSE)
-    else stop(paste("Row",which((n-m)<0),"has more recaptures (m) then total individuals (n)."),call.=FALSE)
+    if (length(n)==1) STOP("Can't have more recaptures (m) then total individuals (n).")
+    else STOP("Row ",which((n-m)<0)," has more recaptures (m) then total individuals (n).")
   } 
   # If no labels then assign letters, if labels then make sure size is correct
   if (is.null(labels)) {
     if (length(M)>1) labels=LETTERS[1:length(M)]
   } else {
-    if (length(M) != length(labels)) stop("'labels' must have same length as 'M', 'n', and 'm'.")
+    if (length(M) != length(labels)) STOP("'labels' must be same length as 'M', 'n', and 'm'.")
   }
   # handle modifications for simplicity of calculation below  
   switch(method,
@@ -255,11 +253,13 @@ iMRCSingle <- function(M,n,m,method,labels) {
 summary.mrClosed1 <- function(object,digits=0,incl.SE=FALSE,incl.all=TRUE,verbose=FALSE,...) {
   # Put descriptive label of input values at top of output if the user asked for it.
   if(verbose) {
-    if (is.null(object$labels)) message("Used ",object$methodLbl," with M=",object$M,", n=",object$n,
-                                        ", and m=",object$m,".\n",sep="")
+    if (is.null(object$labels)) message("Used ",object$methodLbl," with M=",
+                                        object$M,", n=",object$n,
+                                        ", and m=",object$m,".\n")
     else {
-      message("Used ",object$methodLbl," with observed inputs of:\n",sep="")
-      message(paste(object$labels,"- M=",object$M,", n=",object$n,", and m=",object$m,".\n",sep=""))
+      message("Used ",object$methodLbl," with observed inputs (by group) of:")
+      tmp <- paste0("  ",object$labels,": M=",object$M,", n=",object$n,", and m=",object$m)
+      for (i in tmp) message(i)
     }
   }
   # Put the PE into a vector to return
@@ -314,12 +314,14 @@ iMRCSingleVar <- function(object) {
 confint.mrClosed1 <- function(object,parm=NULL,level=conf.level,conf.level=0.95,digits=0,
                               type=c("suggested","binomial","hypergeometric","normal","Poisson"),
                               bin.type=c("wilson","exact","asymptotic"),
+                              poi.type=c("exact","daly","byar","asymptotic"),
                               incl.all=TRUE,verbose=FALSE,...) {
   # Initial checks
   type <- match.arg(type)
   bin.type <- match.arg(bin.type)
+  poi.type <- match.arg(poi.type)
   parm <- iCI.CheckParm(parm)
-  if (conf.level<=0 | conf.level>=1) stop("'conf.level' must be between 0 and 1",call.=FALSE)
+  if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
   # Construct the CIs, loop is for handling multiple groups
   ci <- NULL
   for (i in 1:length(object$N)) {
@@ -327,7 +329,7 @@ confint.mrClosed1 <- function(object,parm=NULL,level=conf.level,conf.level=0.95,
                  list(M=M[i],n=n[i],m=m[i],M1=M1[i],n1=n1[i],m1=m1[i],cf=cf[i],
                       method=method,methodLbl=methodLbl,N=N[i],labels=labels[i])
     )
-    ci <- rbind(ci,iCI.MRCSingle(temp,conf.level,type,bin.type,verbose,...))
+    ci <- rbind(ci,iCI.MRCSingle(temp,conf.level,type,bin.type,poi.type,verbose,...))
   }
   # Add labels to the matrix
   rownames(ci) <- object$labels
@@ -350,7 +352,7 @@ confint.mrClosed1 <- function(object,parm=NULL,level=conf.level,conf.level=0.95,
 #===========================================================================
 iCI.CheckParm <- function(parm) { # also used for multiple
   if(!is.null(parm)) {
-    warning("'parm' is meaningless for this class of object; reset to NULL.\n\n",call.=FALSE)
+    WARN("'parm' is meaningless for this class of object; reset to NULL.\n\n")
     parm <- NULL
   }
   parm
@@ -363,17 +365,19 @@ iCI1.HandleSuggested <- function(object) {
   type
 }
 
-iCI1.HandleVerbose <- function(object,type) {
+iCI1.HandleVerbose <- function(object,type,bin.type,poi.type) {
+  if (type=="binomial") type <- paste0("binomial (",bin.type," method)")
+  if (type=="Poisson") type <- paste0("Poisson (",poi.type," method)")
   msg <- paste("The",type,"distribution was used.")
   if (!is.null(object$labels)) msg <- paste(object$labels,"-",msg)
   message(msg)  
 }
 
-iCI.MRCSingle <- function(object,conf.level,type,bin.type,verbose,...) {
+iCI.MRCSingle <- function(object,conf.level,type,bin.type,poi.type,verbose,...) {
   # Follow Sebers' suggestions if asked to
   if (type=="suggested") type <- iCI1.HandleSuggested(object)
   # Put message at top of output if asked for
-  if (verbose) iCI1.HandleVerbose(object,type)
+  if (verbose) iCI1.HandleVerbose(object,type,bin.type,poi.type)
   # Construct CIs according to type=
   switch(type,
          hypergeometric={
@@ -388,7 +392,7 @@ iCI.MRCSingle <- function(object,conf.level,type,bin.type,verbose,...) {
          },
          Poisson={
            # Poisson CI for m
-           m.ci <- poiCI(object$m,conf.level)
+           m.ci <- poiCI(object$m,conf.level,type=poi.type)
            # Convert to CI for m1
            if (object$method!="Petersen") m.ci <- m.ci+1
            # Put endpoints back in N formula to get CI for N
@@ -438,29 +442,31 @@ iMRCMultiple <- function(M,n,m,R,method,chapman.mod) {
       M <- cumsum(R-m)-(R-m)
     } else {
       ## Results not from capHistSum and values of M provided.
+      # check if M is a vector
+      if (!is.vector(M)) STOP("If given, 'M' must be a vector or from 'capHistSum()`.")
       # check if M has an NA in first position
       if (is.na(M[1])) {
-        warning("NA for first sample of 'M' was ignored.",call.=FALSE)
+        WARN("NA for first sample of 'M' was ignored.")
         M[1] <- 0
       }
-      if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing without 'M' from capHistSum().",
-                                        call.=FALSE)
-      else if (!is.null(R)) warning("Only need one of 'M' or 'R'.  'R' is ignored.",call.=FALSE)
+      if (is.null(n) | is.null(m)) STOP("One or both of 'n' or 'm' is missing without 'M' from capHistSum().")
+      else if (!is.null(R)) WARN("Only need one of 'M' or 'R'.  'R' is ignored.")
       R <- n
       R[length(R)] <- 0
     }
   } else {
     ## M not provided and results not from capHistSum
-    if (is.null(R)) stop("One of 'M' or 'R' must be supplied by user",call.=FALSE)
-    if (is.null(n) | is.null(m)) stop("One or both of 'n' or 'm' is missing.",call.=FALSE)
+    if (is.null(R)) STOP("One of 'M' or 'R' must be supplied by user")
+    if (!is.vector(R)) STOP("If given, 'R' must be a vector.")
+    if (is.null(n) | is.null(m)) STOP("One or both of 'n' or 'm' is missing.")
     # check if R has NA in last position
     if (is.na(R[length(R)])) {
-      warning("NA for last sample of 'R' was ignored.",call.=FALSE)
+      WARN("NA for last sample of 'R' was ignored.")
       R[length(R)] <- 0
     }
     # check if m has NA in first position
     if (is.na(m[1])) {
-      warning("NA for first sample of 'm' was ignored.",call.=FALSE)
+      WARN("NA for first sample of 'm' was ignored.")
       m[1] <- 0
     }
     # find M from R and m
@@ -498,8 +504,8 @@ iMRCMultiple <- function(M,n,m,R,method,chapman.mod) {
 summary.mrClosed2 <- function(object,digits=0,verbose=FALSE,...) {
   # Put descriptive label of input values at top of output if the user asked for it.
   if(verbose) {
-    msg <- paste("Used ",object$methodLbl,sep="")
-    ifelse(object$chapman.mod,msg <- paste(msg,"with Chapman modification.\n"),msg <- paste(msg,".\n",sep=""))
+    msg <- paste0("Used ",object$methodLbl)
+    ifelse(object$chapman.mod,msg <- paste(msg,"with Chapman modification.\n"),msg <- paste0(msg,".\n"))
     message(msg)
   }
   # Put the PE into a matrix to return
@@ -514,18 +520,26 @@ summary.mrClosed2 <- function(object,digits=0,verbose=FALSE,...) {
 #' @rdname mrClosed
 #' @export
 confint.mrClosed2 <- function(object,parm=NULL,level=conf.level,conf.level=0.95,digits=0,
-                              type=c("suggested","normal","Poisson"),verbose=FALSE,...) {
+                              type=c("suggested","normal","Poisson"),
+                              poi.type=c("exact","daly","byar","asymptotic"),
+                              verbose=FALSE,...) {
   # Initial Checks
   type <- match.arg(type)
-  if (type=="suggested") type <- iCI2.HandleSuggested(object)
-  if (verbose) message("The ",type," distribution was used.")
   parm <- iCI.CheckParm(parm)
-  if (conf.level<=0 | conf.level>=1) stop("'conf.level' must be between 0 and 1",call.=FALSE)
+  if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
   # Construct the confidence intervals
   switch(object$method,
-         Schnabel= { ci <- iCI2.MRCSchnabel(object,conf.level,type,verbose,...) },
-         SchumacherEschmeyer= { ci <- iCI2.MRCSchumacher(object,conf.level,type,verbose,...) }
+         Schnabel= {
+           if (type=="suggested") type <- iCI2.HandleSuggested(object)
+           ci <- iCI2.MRCSchnabel(object,conf.level,type,poi.type,verbose,...)
+         },
+         SchumacherEschmeyer= {
+           if (type=="Poisson") WARN("'type' changed to 'normal' for Schumacher-Eschmeyer method.")
+           type <- "normal"
+           ci <- iCI2.MRCSchumacher(object,conf.level,type,verbose,...)
+         }
          ) # end switch
+  if (verbose) message("The ",type," distribution was used.")
   # CI labels for the materix
   colnames(ci) <- iCILabel(conf.level)
   # print out the CIs
@@ -541,12 +555,11 @@ iCIt <- function(est,SE,obsdf,conf.level) {
 }
 
 iCI2.HandleSuggested <- function(object) {
-  if (object$sum.m < 50) type <- "Poisson"
-  else type <- "normal"
-  type
+  if (object$sum.m < 50) "Poisson"
+  else "normal"
 }
 
-iCI2.MRCSchnabel <- function(object,conf.level,type,...) {
+iCI2.MRCSchnabel <- function(object,conf.level,type,poi.type,...) {
   if (type=="normal") {
     # Get df (from Krebs p. 32)
     df <- length(object$n)-1
@@ -559,7 +572,7 @@ iCI2.MRCSchnabel <- function(object,conf.level,type,...) {
     ci <- rbind((1/invN.ci)[2:1])
   } else {
     # Get Poisson CI for sum m
-    ci1 <- poiCI(object$sum.m,conf.level)
+    ci1 <- poiCI(object$sum.m,conf.level,poi.type)
     # Change if chapman modification was used
     ifelse(object$chapman.mod,N.poi <- object$sum.nM/(ci1+1),
            N.poi <- object$sum.nM/ci1)
@@ -569,10 +582,6 @@ iCI2.MRCSchnabel <- function(object,conf.level,type,...) {
 }
 
 iCI2.MRCSchumacher <- function(object,conf.level,type,...) {
-  # check type
-  if (object$method=="SchumacherEschmeyer" & type!="normal") {
-    warning("'type' changed to 'normal' for the Schumacher-Eschmeyer method.",call.=FALSE)
-  }
   # Get df (from from Krebs p. 32)
   df <- length(object$n)-2
   # Compute SE for inverse of N (from Krebs 2.14)
@@ -593,10 +602,8 @@ plot.mrClosed2 <- function(x,pch=19,col.pt="black",
                            xlab="Marked in Population",
                            ylab="Prop. Recaptures in Sample",
                            loess=FALSE,lty.loess=2,lwd.loess=1,
-                           col.loess="gray20",trans.loess=10,span=0.9,...) {
+                           col.loess="gray20",trans.loess=10,span=0.9,...) { # nocov start
   graphics::plot(x$M,x$m/x$n,pch=pch,col=col.pt,xlab=xlab,ylab=ylab,...)
   # add loess line if asked for
   if (loess) iAddLoessLine(x$m/x$n,x$M,lty.loess,lwd.loess,col.loess,trans.loess,span=span)
-}
-
-
+} # nocov end

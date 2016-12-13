@@ -86,9 +86,9 @@
 #'
 #' Evans, G.T. and J.M. Hoenig.  1998.  Testing and viewing symmetry in contingency tables, with application to readers of fish ages.  Biometrics 54:620-629.
 #'
-#' Hoenig, J.M., M.J. Morgan, and C.A. Brown. 1995.  Analysing differences between two age determination methods by tests of symmetry.  Canadian Journal of Fisheries And Aquatic Systems 52:364-368.
+#' Hoenig, J.M., M.J. Morgan, and C.A. Brown. 1995.  Analysing differences between two age determination methods by tests of symmetry.  Canadian Journal of Fisheries and Aquatic Sciences 52:364-368.
 #' 
-#' McBride, R.S.  2015. Diagnosis of paired age agreement: A simulation approach of accuracy and precision effects. ICES Journal of Marine Science, 72:2149-2167.
+#' McBride, R.S.  2015. Diagnosis of paired age agreement: A simulation approach of accuracy and precision effects. ICES Journal of Marine Science 72:2149-2167.
 #'
 #' Muir, A.M., M.P. Ebener, J.X. He, and J.E. Johnson.  2008.  A comparison of the scale and otolith methods of age estimation for lake whitefish in Lake Huron.  North American Journal of Fisheries Management 28:625-635.  [Was (is?) available from http://www.tandfonline.com/doi/abs/10.1577/M06-160.1]
 #'
@@ -138,10 +138,10 @@ ageBias <- function(formula,data,ref.lab=tmp$Enames,nref.lab=tmp$Rname,
                     method=stats::p.adjust.methods,sig.level=0.05,min.n.CI=3) {
   ## Perform some checks on the formula
   tmp <- iHndlFormula(formula,data,expNumR=1,expNumE=1)
-  if (!tmp$metExpNumR) stop("'ageBias' must have only one LHS variable.",call.=FALSE)
-  if (!tmp$Rclass %in% c("numeric","integer")) stop("LHS variable must be numeric.",call.=FALSE)
-  if (!tmp$metExpNumE) stop("'ageBias' must have only one RHS variable.",call.=FALSE)
-  if (!tmp$Eclass %in% c("numeric","integer")) stop("RHS variable must be numeric.",call.=FALSE)
+  if (!tmp$metExpNumR) STOP("'ageBias' must have only one LHS variable.")
+  if (!tmp$Rclass %in% c("numeric","integer")) STOP("LHS variable must be numeric.")
+  if (!tmp$metExpNumE) STOP("'ageBias' must have only one RHS variable.")
+  if (!tmp$Eclass %in% c("numeric","integer")) STOP("RHS variable must be numeric.")
   ## get variable names separately (r=ref, nr=nonref)
   nref.name <- tmp$Rname
   ref.name <- tmp$Enames
@@ -190,36 +190,37 @@ summary.ageBias <- function(object,
   showmsg <- ifelse (length(what)>1,TRUE,FALSE)
   if ("n" %in% what) {
     res <- sum(object$agree)
-    message("Sample size in the age agreement table is ",res,".",sep="")
-    what <- iHndlMultWhat(what,"n")
+    cat("Sample size in the age agreement table is ",res,".",sep="")
+    if (length(what)>1) cat("\n")
+    what <- iHndlMultWhat(what,"n","cat")
   }
   if ("bias" %in% what) {
-    if (showmsg) message("Summary of ",object$nref.lab," by ",object$ref.lab)
+    if (showmsg) cat("Summary of",object$nref.lab,"by",object$ref.lab,"\n")
     res <- object$bias[-ncol(object$bias)]
     print(res,row.names=FALSE,digits=digits)
-    what <- iHndlMultWhat(what,"bias")
+    what <- iHndlMultWhat(what,"bias","cat")
   }
   if ("diff.bias" %in% what) {
-    if (showmsg) message("Summary of ",object$nref.lab,"-",object$ref.lab," by ",object$ref.lab)
+    if (showmsg) cat("Summary of ",object$nref.lab,"-",object$ref.lab," by ",object$ref.lab,"\n",sep="")
     res <- object$bias.diff[-ncol(object$bias.diff)]
     print(res,row.names=FALSE,digits=digits)
-    what <- iHndlMultWhat(what,"diff.bias")
+    what <- iHndlMultWhat(what,"diff.bias","cat")
   }
   if ("table" %in% what) {
     # show the age-agreement table
     if (!flip.table) {
-      if (showmsg) message("Raw agreement table (square)")
+      if (showmsg) cat("Raw agreement table (square)\n")
       res <- object$agree
       print(res,zero.print=zero.print)
     } else {
-      if (showmsg) message("Raw agreement table (square & flipped)")
+      if (showmsg) cat("Raw agreement table (square & flipped)\n")
       # flip the rows
       res <- object$agree[nrow(object$agree):1,]
       # for printing purposes
       class(res) <- "table"
       print(res,zero.print=zero.print)
     }
-    what <- iHndlMultWhat(what,"table")
+    what <- iHndlMultWhat(what,"table","cat")
   }
   if (any(c("symmetry","Bowker","EvansHoenig","McNemar") %in% what)) {
     # always return the results
@@ -230,7 +231,7 @@ summary.ageBias <- function(object,
     res <- rbind(res,iBowker(object))
     # if what="symmetry" print all results, otherwise only print what is asked for
     
-    if (showmsg) message("Age agreement table symmetry test results")
+    if (showmsg) cat("Age agreement table symmetry test results\n")
     if (!"symmetry" %in% what) res <- Subset(res,grepl(what,symTest))
     print(res)
   }
@@ -331,7 +332,7 @@ iMcNemar <- function(obj,cont.cor) {
   } else if (cont.cor== "Edwards") {
     title <- "McNemar (Edwards Correction)"
     cc <- 1
-  } else stop("Continuity correction is incorrect",call.=FALSE)
+  } else STOP("Continuity correction is incorrect")
   AAT <- iHandleAgreeTable(obj)
   # Chi-sq parts (Evans and Hoenig's eq 2, but include the correction factor)
   top <- (abs(sum((AAT$lo-t(AAT$up)),na.rm=TRUE))-cc)^2
@@ -656,7 +657,7 @@ agePrecision <- function(formula,data) {
   formula <- stats::as.formula(paste("~",paste(tmp,collapse="+")))
   tmp <- iHndlFormula(formula,data)
   
-  if (!tmp$Etype=="numeric") stop("All variables must be numeric.",call.=FALSE)
+  if (!tmp$Etype=="numeric") STOP("All variables must be numeric.")
   # get dataframe of just ages (for simplicity)
   d <- tmp$mf
   # number of structures, complete sample size, and valid n (all non-NA values)
@@ -740,16 +741,16 @@ summary.agePrec <- function(object,what=c("precision","difference","absolute dif
   retres <- ifelse(length(what)==1,TRUE,FALSE)
   showmsg <- ifelse (length(what)>1,TRUE,FALSE)
   if ("precision" %in% what) {
-    if (showmsg) message("Precision summary statistics")
+    if (showmsg) cat("Precision summary statistics\n")
     tmp <- with(object,data.frame(n=n,validn=validn,R=R,ACV=ACV,APE=APE,PercAgree=PercAgree)) 
     print(tmp,row.names=FALSE,digits=digits)
-    what <- iHndlMultWhat(what,"precision")
+    what <- iHndlMultWhat(what,"precision","cat")
   }
   if ("absolute difference" %in% what) {
     tmp <- object$absdiff
     ## potentially convert to truncated distribution
     if (!is.null(trunc.diff)) {
-      if(trunc.diff<=0) stop("'trunc.diff' must be positive.",call.=FALSE)
+      if(trunc.diff<=0) STOP("'trunc.diff' must be positive.")
       if (length(dim(tmp))==1) {
         # find positions in vector to be truncated
         trpos <- as.numeric(names(tmp))>=trunc.diff
@@ -769,35 +770,35 @@ summary.agePrec <- function(object,what=c("precision","difference","absolute dif
         tmp <- as.table(tmp)
       }
     }
-    msg <- "of fish by absolute differences in ages\n between pairs of assignments"
+    msg <- "of fish by absolute differences in ages\n between pairs of assignments\n"
     if (percent) {
       msg <- paste("Percentage",msg)
       # need to check if 1-D, then handle as a vector
       if (length(dim(tmp))==1) tmp <- tmp/sum(tmp)*100 
       else tmp <- prop.table(tmp,margin=1)*100      
     } else msg <- paste("Frequency",msg)
-    if (showmsg) message(msg)
+    if (showmsg) cat(msg)
     print(tmp,digits=digits)
-    what <- iHndlMultWhat(what,"absolute difference")
+    what <- iHndlMultWhat(what,"absolute difference","cat")
   }  
   if ("difference" %in% what) {
     tmp <- object$rawdiff
-    msg <- "of fish by differences in ages\n between pairs of assignments"
+    msg <- "of fish by differences in ages\n between pairs of assignments\n"
     if (percent) {
       msg <- paste("Percentage",msg)
       # need to check if 1-D, then handle as a vector
       if (length(dim(tmp))==1) tmp <- tmp/sum(tmp)*100
       else tmp <- prop.table(tmp,margin=1)*100      
     } else msg <- paste("Frequency",msg)
-    if (showmsg) message(msg)
+    if (showmsg) cat(msg)
     print(tmp,digits=digits)
-    what <- iHndlMultWhat(what,"difference")
+    what <- iHndlMultWhat(what,"difference","cat")
   }
   if ("details" %in% what) {
-    if (showmsg) message("Intermediate calculations for each individual")
+    if (showmsg) cat("Intermediate calculations for each individual\n")
     tmp <- object$detail 
     print(tmp,digits=digits)
-    what <- iHndlMultWhat(what,"detail")
+    what <- iHndlMultWhat(what,"detail","cat")
   }
   if (retres) invisible(tmp)
 }
