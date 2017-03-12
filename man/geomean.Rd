@@ -3,6 +3,7 @@
 \name{geomean}
 \alias{geomean}
 \alias{geosd}
+\alias{geosd}
 \title{Calculates the geometric mean or geometric standard deviation.}
 \usage{
 geomean(x, na.rm = FALSE, zneg.rm = FALSE)
@@ -38,7 +39,7 @@ d <- rlnorm(500,meanlog=0,sdlog=1)
 geomean(d)
 geosd(d)
 
-## Demonstrate handling of zeroes and negative values
+## Demonstrate handling of zeros and negative values
 x <- seq(0,5)
 # this will given an error
 try(geomean(x))
@@ -50,4 +51,3 @@ geomean(x,zneg.rm=TRUE)
 See \code{\link[psych]{geometric.mean}} in \pkg{psych} and \code{\link[DescTools]{Gmean}} for geometric mean calculators.  See \code{\link[DescTools]{Gsd}} for geometric standard deviation calculators.
 }
 \keyword{misc}
-

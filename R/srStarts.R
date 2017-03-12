@@ -1,4 +1,4 @@
-#' @title Finds reasonable starting values for parameters in specific paramaterizations of common stock-recruitment models.
+#' @title Finds reasonable starting values for parameters in specific parameterizations of common stock-recruitment models.
 #'
 #' @description Finds reasonable starting values for parameters in specific parameterizations of the \dQuote{Beverton-Holt}, \dQuote{Ricker},  \dQuote{Shepherd}, or \dQuote{Saila-Lorda} stock-recruitment models.  Use \code{srFunShow()} to see the equations of each model.
 #'
@@ -104,7 +104,7 @@ srStarts <- function(formula,data=NULL,type=c("BevertonHolt","Ricker","Shepherd"
   ## make the static plot if asked for
   if (plot) iSRStartsPlot(S,R,type,param,sv,col.mdl,lwd.mdl,lty.mdl,cex.main,col.main)
   ## Check if user wants to choose starting values from an interactive plot
-  if (dynamicPlot) WARN("The 'dynamicPlot' functionality has been moved to 'srStartsDP' in the 'FSASims' package.")
+  if (dynamicPlot) WARN("The 'dynamicPlot' functionality has been moved to 'srStartsDP' in the 'FSAsim' package.")
   ## return the list of starting values
   sv
 }

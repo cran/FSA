@@ -3,6 +3,7 @@
 \name{capHistSum}
 \alias{capHistSum}
 \alias{plot.CapHist}
+\alias{plot.CapHist}
 \title{Summarize capture histories in individual fish format.}
 \usage{
 capHistSum(df, cols2use = NULL, cols2ignore = NULL)
@@ -39,14 +40,14 @@ If the capture history data file represents only two samples, then a list with t
 If the capture history data file represents more than two samples, then a list with the following five components is returned
  \itemize{
    \item \code{caphist} A vector summarizing the frequency of fish with each capture history.
-   \item \code{sum} A data frame that contains the the number of captured fish in the ith sample (\code{n}), the number of recaptured (i.e. previously marked) fish in the ith sample (\code{m}), the number of marked fish returned to the population following the ith sample (\code{R}; this will equal \code{n} as the function currently does not handle mortalities); the number of marked fish in the population prior to the ith sample (\code{M}); the number of fish first seen in the ith sample (\code{u}); the number of fish lasst seen in the ith sample (\code{v}); and the number of fish seen i times (\code{f}).
+   \item \code{sum} A data frame that contains the the number of captured fish in the ith sample (\code{n}), the number of recaptured (i.e. previously marked) fish in the ith sample (\code{m}), the number of marked fish returned to the population following the ith sample (\code{R}; this will equal \code{n} as the function currently does not handle mortalities); the number of marked fish in the population prior to the ith sample (\code{M}); the number of fish first seen in the ith sample (\code{u}); the number of fish last seen in the ith sample (\code{v}); and the number of fish seen i times (\code{f}).
    \item \code{methodB.top} A matrix that contains the top of the Method B table used for the Jolly-Seber method (i.e., a contingency table of capture sample (columns) and last seen sample (rows)).
    \item \code{methodB.bot} A data.frame that contains the bottom of the Method B table used for the Jolly-Seber method (i.e., the number of marked fish in the sample (\code{m}), the number of unmarked fish in the sample (\code{u}), the total number of fish in the sample (\code{n}), and the number of marked fish returned to the population following the sample (\code{R}).
-   \item \code{m.array} A matrix that contains the the so-called \dQuote{m-array}.  The first column contains the number of fish captured on the ith event.  The columns labelled with \dQuote{cX} prefix show the number of fish originally captured in the ith row that were captured in the Xth event.  The last column shows the number of fish originally captured in the ith row that were never recaptured.
+   \item \code{m.array} A matrix that contains the the so-called \dQuote{m-array}.  The first column contains the number of fish captured on the ith event.  The columns labeled with \dQuote{cX} prefix show the number of fish originally captured in the ith row that were captured in the Xth event.  The last column shows the number of fish originally captured in the ith row that were never recaptured.
  }
 }
 \description{
-Use to summarize a capture history data file that is in the \dQuote{individual} fish format (see \code{\link{capHistConvert}} for a discussion of data file format types).  Summarized capture history results may be used in the Lincoln-Petersent, Schnabel, Schumacher-Eschmeyer, or Jolly-Seber methods for estimating population abundance (see \code{\link{mrClosed}} and \code{\link{mrOpen}}).
+Use to summarize a capture history data file that is in the \dQuote{individual} fish format (see \code{\link{capHistConvert}} for a discussion of data file format types).  Summarized capture history results may be used in the Lincoln-Petersen, Schnabel, Schumacher-Eschmeyer, or Jolly-Seber methods for estimating population abundance (see \code{\link{mrClosed}} and \code{\link{mrOpen}}).
 }
 \details{
 This function requires the capture history data file to be in the \dQuote{individual} fish format.  See \code{\link{capHistConvert}} for a description of this (and other) formats and for methods to convert from other formats to the \dQuote{individual} fish format.  In addition, this function requires only the capture history portion of the data file.  Thus, if \code{df} contains columns with non-capture history information (e.g., fish ID, length, location, etc.) then use \code{cols2use=} to identify which columns contain only the capture history information.  Columns to use can be identified by listing the column numbers (e.g., columns 2 through 7 could be included with \code{cols2use=2:7}).  In many instances it may be easier to identify columns to \emph{exclude} which can be done by preceding the column number by a negative sign (e.g., columns 1 through 3 are excluded with \code{cols2use=-(1:3)}).
@@ -61,6 +62,7 @@ This function assumes that all unmarked captured fish are marked and returned to
 \section{IFAR Chapter}{
  9-Abundance from Capture-Recapture Data.
 }
+
 \examples{
 # data.frame with IDs in the first column
 data(PikeNYPartial1)
@@ -80,9 +82,6 @@ plot(ch1,what="u")
 ( ch2 <- capHistSum(PikeNYPartial1,cols2use=-c(1,4:5)) )
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \references{
 Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
 
@@ -91,5 +90,7 @@ Baillargeon, S. and Rivest, L.-P. (2007). Rcapture: Loglinear models for capture
 \seealso{
 See \code{\link[Rcapture]{descriptive}} in \pkg{Rcapture} for \code{m.array} and some of the same values in \code{sum}.  See \code{\link{capHistConvert}} for a descriptions of capture history data file formats and how to convert between them.  See \code{\link{mrClosed}} and \code{\link{mrOpen}} for how to estimate abundance from the summarized capture history information.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{manip}
-

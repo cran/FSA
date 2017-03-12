@@ -1,6 +1,6 @@
 #' @title Compute and view possible biases between paired sets of ages.
 #'
-#' @description Constructs age-agreement tables, statistical tests to detect bias, and plots to visualize potential bias in paired age assignments.  Ages may be from, for example, two readers of the same structure, one reader at two times, two stuctures (e.g., scales, spines, otoliths), or one structure and known ages.
+#' @description Constructs age-agreement tables, statistical tests to detect bias, and plots to visualize potential bias in paired age assignments.  Ages may be from, for example, two readers of the same structure, one reader at two times, two structures (e.g., scales, spines, otoliths), or one structure and known ages.
 #'
 #' @param formula A formula of the form \code{nrefvar~refvar}, where \code{nrefvar} and \code{refvar} generically represent the variables that contain the paired \dQuote{nonreference} and \dQuote{reference} age assignments, respectively.  See details.
 #' @param data A data.frame that minimally contains the paired age assignments given in \code{formula}.
@@ -11,7 +11,7 @@
 #' @param min.n.CI A numeric value (default is 3) that indicates the smallest sample size for which a confidence interval should be computed.
 #' @param what A string that indicates what type of summary to print or plot to construct.  See details.
 #' @param flip.table A logical that indicates whether the age-agreement table should be \sQuote{flipped} (i.e., rows are reversed so that younger ages are at the bottom of the table).  This makes the table more directly comparable to the age-bias plot.
-#' @param zero.print A string that indicates what should be printed in place of the zeroes on an age-agreement table.  The default is to print a single dash.
+#' @param zero.print A string that indicates what should be printed in place of the zeros on an age-agreement table.  The default is to print a single dash.
 #' @param digits A numeric value that indicates the minimum number of digits to print when showing \code{what="bias"} or \code{what="diff.bias"} in \code{summary}.
 #' @param cont.corr A string that indicates the continuity correction method to be used with (only) McNemar test.  If \code{"none"} (default) then no continuity correction is used, if \code{"Yates"} then 0.5 is used, and if \code{"Edwards"} then 1 is used. 
 #' @param x,object An object of class \code{ageBias}, usually a result from \code{ageBias}.
@@ -42,9 +42,9 @@
 #' @param xaxt,yaxt A string which specifies the x- and y-axis types. Specifying \dQuote{n} suppresses plotting of the axis.  See \code{?par}.
 #' @param \dots Additional arguments for methods.
 #'
-#' @details Generally, one of the two age estimates will be identified as the \dQuote{reference} set.  In some cases this may be the true ages, the ages from the more experience reader, the ages from the first reading, or the ages from the structure gnerally thought to provide the most accurate results.  In other cases, such as when comparing two novice readers, the choice may be arbitrary.  The reference ages will form the columns of the age-agreement table and will be the \dQuote{constant} age used in the t-tests and age-bias plots (i.e., the x-axis).  See further details below.
+#' @details Generally, one of the two age estimates will be identified as the \dQuote{reference} set.  In some cases this may be the true ages, the ages from the more experience reader, the ages from the first reading, or the ages from the structure generally thought to provide the most accurate results.  In other cases, such as when comparing two novice readers, the choice may be arbitrary.  The reference ages will form the columns of the age-agreement table and will be the \dQuote{constant} age used in the t-tests and age-bias plots (i.e., the x-axis).  See further details below.
 #' 
-#' The age-agreement table is constructed with  \code{what="table"} in \code{summary}.  The agreement table can be \dQuote{flipped} (i.e., the rows in descending rather than ascending order) with \code{flip.table=TRUE}.  By default, the tables are shown with zeroes replaced by dashes.  This behavior can be changed with \code{zero.print}.
+#' The age-agreement table is constructed with  \code{what="table"} in \code{summary}.  The agreement table can be \dQuote{flipped} (i.e., the rows in descending rather than ascending order) with \code{flip.table=TRUE}.  By default, the tables are shown with zeros replaced by dashes.  This behavior can be changed with \code{zero.print}.
 #'
 #' Three statistical tests of symmetry for the age-agreement table can be computed with \code{what=} in \code{summary}.  The \dQuote{unpooled} or Bowker test as described in Hoenig et al. (1995) is constructed with \code{what="Bowker"}, the \dQuote{semi-pooled} or Evans-Hoenig test as described in Evans and Hoenig (1998) is constructed with \code{what="EvansHoenig"}, and the \dQuote{pooled} or McNemar test as described in Evans and Hoenig (1998) is constructed with \code{what="McNemar"}.  All three tests are run simultaneously with \code{what="symmetry"}.
 #'
@@ -56,13 +56,13 @@
 #'
 #' A \dQuote{sunflower plot}, which contains a symbol for each unique (x,y) coordinate with as many \dQuote{petals} as observations at that point, is constructed with \code{what="sunflower"} in \code{plot}.  A sunflower plot with differences between the two structures can be constructed by also including \code{difference=TRUE}.
 #'
-#' Individual t-tests to determine if the mean age of the non-reference set at a particular age of the reference set is equal to the reference age (e.g., is the mean age of the non-reference set at age-3 of the reference set statistically equal to 3?) are shown with \code{what="bias"} in \code{summary}.  The results provide a column that indicates whether the difference is significant or not as determined by adjusted p-values from the t-tests and using the signficance level provided in \code{sig.level} (defaults to 0.05).  Similar results for the difference in ages (e.g., is the mean row variable age minus column variable age at column variable age-3 equal to 0?) are constructed with \code{what="diff.bias"} in \code{summary}.
+#' Individual t-tests to determine if the mean age of the non-reference set at a particular age of the reference set is equal to the reference age (e.g., is the mean age of the non-reference set at age-3 of the reference set statistically equal to 3?) are shown with \code{what="bias"} in \code{summary}.  The results provide a column that indicates whether the difference is significant or not as determined by adjusted p-values from the t-tests and using the significance level provided in \code{sig.level} (defaults to 0.05).  Similar results for the difference in ages (e.g., is the mean row variable age minus column variable age at column variable age-3 equal to 0?) are constructed with \code{what="diff.bias"} in \code{summary}.
 #'
 #' The sample size present in the age-agreement table is found with \code{what="n"}.
 #'
 #' @return \code{ageBias} returns a list with the following items:
 #' \itemize{
-#'   \item data A data.frame with the original paired age assignments and the difference between those assignements.
+#'   \item data A data.frame with the original paired age assignments and the difference between those assignments.
 #'   \item agree The age-agreement table.
 #'   \item bias A data.frame that contains the bias statistics.
 #'   \item bias.diff A data.frame that contains the bias statistics for the differences.
@@ -109,7 +109,7 @@
 #' summary(ab1,what="diff.bias")
 #' summary(ab1,what="n")
 #' summary(ab1,what=c("n","symmetry","table"))
-#' # show the zeroes (rather than dashes)
+#' # show the zeros (rather than dashes)
 #' summary(ab1,what="table",zero.print="0")
 #' # flip the table -- ease of comparison to age-bias plot
 #' summary(ab1,what="table",flip.table=TRUE)
@@ -469,7 +469,7 @@ iAgeBiasPlot <- function(obj,difference,xlab,ylab,show.n,nYpos,cex.n,
 iAgeBiasNumPlot <- function(obj,xlab,ylab,xlim,ylim,
                             lwd.agree,lty.agree,col.agree,
                             cex.numbers,yaxt,xaxt,...) { # nocov start
-  # convert age-agreement table into a data frame with all zeroes removed
+  # convert age-agreement table into a data frame with all zeros removed
   # y,x in d[,1] and d[,2], respectively
   # lables in d[,3]
   d <- as.data.frame(obj$agree)
@@ -553,7 +553,7 @@ iabAxisLmts <- function(d,xlim,ylim,difference,show.range,show.pts,show.CIs=TRUE
 
 #' @title Compute measures of precision among sets of ages.
 #'
-#' @description Computes overall measures of precision for multiple age assignments made on the same individuals.  Ages may be from two or more readers of the same structure, one reader at two or more times, or two or more stuctures (e.g., scales, spines, otoliths).  Measures of precision include ACV (Average Coefficient of Variation), APE (Average Percent Error), and various percentage difference values.
+#' @description Computes overall measures of precision for multiple age assignments made on the same individuals.  Ages may be from two or more readers of the same structure, one reader at two or more times, or two or more structures (e.g., scales, spines, otoliths).  Measures of precision include ACV (Average Coefficient of Variation), APE (Average Percent Error), and various percentage difference values.
 #'
 #' @param formula A formula of the form \code{~var1+var2+var3+...} or, alternatively, \code{var1~var2+var3+...}, where the \code{varX} generically represent the variables that contain the age assignments.  The alternative formula allows for similar code as used in \code{\link{ageBias}} and can have only one variable on the left-hand side.
 #' @param data A data.frame that minimally contains the variables in \code{formula}.
@@ -569,8 +569,8 @@ iabAxisLmts <- function(d,xlim,ylim,difference,show.range,show.pts,show.CIs=TRUE
 #'   \item n Number of fish in \code{data}.
 #'   \item validn Number of fish in \code{data} that have non-\code{NA} data for all R age estimates.
 #'   \item R Number of age estimates given in \code{formula}.
-#'   \item ACV The mean coefficient of variation.  See the \href{http://derekogle.com/IFAR}{IFAR chapter} for calculational details.
-#'   \item APE The mean average percent error.  See the \href{http://derekogle.com/IFAR}{IFAR chapter} for calculational details.
+#'   \item ACV The mean coefficient of variation.  See the \href{http://derekogle.com/IFAR}{IFAR chapter} for calculation details.
+#'   \item APE The mean average percent error.  See the \href{http://derekogle.com/IFAR}{IFAR chapter} for calculation details.
 #'   \item PercAgree The percentage of fish for which all age assignments perfectly agree.
 #' }
 #'
@@ -578,9 +578,9 @@ iabAxisLmts <- function(d,xlim,ylim,difference,show.range,show.pts,show.CIs=TRUE
 #'
 #' If \code{what="absolute difference"} is used in \code{summary}, then a table that describes either the percentage (if \code{percent=TRUE}, default) or frequency of fish by the absolute value of the difference in paired age assignments.  This table has one row for each possible pair of age assignments.  The \dQuote{1} column, for example, represents age assignments that disagree by one year (in either direction).
 #'
-#' If \code{what="detail"} is used in \code{summary}, then a data frame of the original \code{data} along with the intermediate caculations of the average age, standard deviation of age, APE, and ACV for each individual will be printed.  These details are generally only used to check or to understand calculations.
+#' If \code{what="detail"} is used in \code{summary}, then a data frame of the original \code{data} along with the intermediate calculations of the average age, standard deviation of age, APE, and ACV for each individual will be printed.  These details are generally only used to check or to understand calculations.
 #' 
-#' All percentage calulations above use the \code{validn} value in the denominator.
+#' All percentage calculations above use the \code{validn} value in the denominator.
 #' 
 #' @return The main function returns a list with the following items:
 #' \itemize{
@@ -704,7 +704,7 @@ agePrecision <- function(formula,data) {
   # relabel rows and columns of agreement table
   rownames(ragree) <- apply(prs,1,paste,collapse=" - ")
   colnames(ragree) <- poss.lvls
-  # delete right- and left-most columns that contain all zeroes
+  # delete right- and left-most columns that contain all zeros
   tmp <- c(which(rcumsum(colSums(ragree))==0),which(cumsum(colSums(ragree))==0))
   if (length(tmp>0)) ragree <- ragree[,-tmp]
   
@@ -722,7 +722,7 @@ agePrecision <- function(formula,data) {
   # relabel rows and columns of agreement table
   rownames(aagree) <- apply(prs,1,paste,collapse=" v. ")
   colnames(aagree) <- poss.lvls
-  # delete right-most columns that contain all zeroes
+  # delete right-most columns that contain all zeros
   tmp <- which(rcumsum(colSums(aagree))==0)
   if (length(tmp>0)) aagree <- aagree[,-tmp]
   

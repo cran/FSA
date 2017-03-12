@@ -2,15 +2,24 @@
 % Please edit documentation in R/fitPlot.R
 \name{fitPlot}
 \alias{fitPlot}
-\alias{fitPlot.IVR}
-\alias{fitPlot.ONEWAY}
-\alias{fitPlot.POLY}
-\alias{fitPlot.SLR}
-\alias{fitPlot.TWOWAY}
-\alias{fitPlot.glm}
 \alias{fitPlot.lm}
-\alias{fitPlot.logreg}
+\alias{fitPlot.SLR}
+\alias{fitPlot.IVR}
+\alias{fitPlot.POLY}
+\alias{fitPlot.ONEWAY}
+\alias{fitPlot.TWOWAY}
 \alias{fitPlot.nls}
+\alias{fitPlot.glm}
+\alias{fitPlot.logreg}
+\alias{fitPlot.lm}
+\alias{fitPlot.SLR}
+\alias{fitPlot.IVR}
+\alias{fitPlot.POLY}
+\alias{fitPlot.ONEWAY}
+\alias{fitPlot.TWOWAY}
+\alias{fitPlot.nls}
+\alias{fitPlot.glm}
+\alias{fitPlot.logreg}
 \title{Fitted model plot for an lm, glm, or nls object.}
 \usage{
 fitPlot(object, ...)
@@ -56,9 +65,11 @@ fitPlot(object, ...)
 \arguments{
 \item{object}{An \code{lm} or \code{nls} object (i.e., returned from fitting a model with either \code{lm} or \code{nls}).}
 
+\item{\dots}{Other arguments to be passed to the plot functions.}
+
 \item{plot.pts}{A logical that indicates (\code{TRUE} (default)) whether the points are plotted along with the fitted lines.  Set to \code{FALSE} to plot just the fitted lines.}
 
-\item{pch}{A numeric or vector of numerics that indicates what plotting characther codes should be used.  In SLR this is the single value to be used for all points.  In IVR a vector is used to identify the characters for the levels of the second factor.}
+\item{pch}{A numeric or vector of numerics that indicates what plotting character codes should be used.  In SLR this is the single value to be used for all points.  In IVR a vector is used to identify the characters for the levels of the second factor.}
 
 \item{col.pt}{A string used to indicate the color of the plotted points.  Used only for SLR and logistic regression objects.}
 
@@ -76,15 +87,15 @@ fitPlot(object, ...)
 
 \item{lty.pi}{a numeric used to indicate the type of line used for the prediction band lines for SLR objects.  For IVR, the prediction band types are controlled by \code{lty}.  See \code{par}.}
 
-\item{xlab}{a string for labelling the x-axis.}
+\item{xlab}{a string for labeling the x-axis.}
 
-\item{ylab}{a string for labelling the y-axis.}
+\item{ylab}{a string for labeling the y-axis.}
 
 \item{main}{a string for the main label to the plot.  Defaults to the model call.}
 
 \item{type}{The type of graphic to construct in a one-way and two-way ANOVA.  If \code{"b"} then points are plotted and lines are used to connect points (DEFAULT).  If \code{"p"} then only points are used and if \code{"l"} then only lines are drawn.}
 
-\item{col}{A vector of color names or numbers or the name of a paletted (see details) that indicates what color of points and lines to use for the levels of the first factor in an IVR or the second factor in a two-way ANOVA.}
+\item{col}{A vector of color names or numbers or the name of a palette (see details) that indicates what color of points and lines to use for the levels of the first factor in an IVR or the second factor in a two-way ANOVA.}
 
 \item{ci.fun}{A function used to put error bars on the one-way or two-way ANOVA graphs.  The default is to use the internal \code{iCIfp} function which will place t-distribution based confidence intervals on the graph.  The user can provide alternative functions that may plot other types of \sQuote{error bars}.  See examples in \code{\link[sciplot]{lineplot.CI}} function of \pkg{sciplot} package.}
 
@@ -100,7 +111,7 @@ fitPlot(object, ...)
 
 \item{box.lty.leg}{A single numeric values used to indicate the type of line to use for the box around the legend.  The default is to not plot a box.}
 
-\item{d}{A data frame that contains the variabls used in construction of the \code{nls} object.}
+\item{d}{A data frame that contains the variables used in construction of the \code{nls} object.}
 
 \item{jittered}{A logical that indicates whether the points should be jittered horizontally.}
 
@@ -126,11 +137,9 @@ fitPlot(object, ...)
 
 \item{yaxis2.show}{A logical that indicates whether the right y-axis should be created (\code{=TRUE}; default) or not for the logistic regression plot.}
 
-\item{mdl.vals}{A numer representing the number of values to use for plotting the logistic regression.  A larger number means a smoother line.}
+\item{mdl.vals}{A numeric that represents the number of values to use for plotting the logistic regression.  A larger number means a smoother line.}
 
 \item{xlim}{A vector of length two to control the x-axis in the logistic regression plot.  If this is changed from the default then the domain over which the logistic regression model is plotted will change.}
-
-\item{\dots}{Other arguments to be passed to the plot functions.}
 }
 \value{
 None.  However, a fitted-line plot is produced.
@@ -231,12 +240,11 @@ par(cex.axis=1.5,cex.lab=1.5)
 fitPlot(glm1)
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \seealso{
 See \code{\link{abline}}, \code{\link[car]{regLine}} in \pkg{car}, \code{\link[gplots]{plotmeans}} in \pkg{gplots}, \code{\link[psych]{error.bars}} in \pkg{psych}, \code{interaction.plot}, and \code{\link[sciplot]{lineplot.CI}} in \pkg{sciplot} for similar functionality. See \code{\link{residPlot}} for related functionality.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{hplot}
 \keyword{models}
-

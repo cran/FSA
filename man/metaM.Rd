@@ -4,13 +4,15 @@
 \alias{Mmethods}
 \alias{metaM}
 \alias{print.metaM}
+\alias{metaM}
+\alias{print.metaM}
 \title{Estimate natural mortality from a variety of empirical methods.}
 \usage{
 Mmethods(what = c("all", "tmax", "K", "Hoenig", "Pauly"))
 
 metaM(method = Mmethods(), justM = TRUE, tmax = NULL, K = NULL,
-  Linf = NULL, t0 = NULL, b = NULL, L = NULL, T = NULL, t50 = NULL,
-  Winf = NULL)
+  Linf = NULL, t0 = NULL, b = NULL, L = NULL, Temp = NULL,
+  t50 = NULL, Winf = NULL)
 
 \method{print}{metaM}(x, digits = 4, ...)
 }
@@ -23,7 +25,7 @@ metaM(method = Mmethods(), justM = TRUE, tmax = NULL, K = NULL,
 
 \item{tmax}{The maximum age for the population of fish.}
 
-\item{K}{The Brody growth coefficident from the fit of the von Bertalanffy growth function.}
+\item{K}{The Brody growth coefficient from the fit of the von Bertalanffy growth function.}
 
 \item{Linf}{The asymptotic mean length (cm) from the fit of the von Bertalanffy growth function.}
 
@@ -33,7 +35,7 @@ metaM(method = Mmethods(), justM = TRUE, tmax = NULL, K = NULL,
 
 \item{L}{The body length of the fish (cm).}
 
-\item{T}{The temperature experienced by the fish (C).}
+\item{Temp}{The temperature experienced by the fish (C).}
 
 \item{t50}{The age (time) when half the fish in the population are mature.}
 
@@ -46,7 +48,7 @@ metaM(method = Mmethods(), justM = TRUE, tmax = NULL, K = NULL,
 \item{\dots}{Additional arguments for methods.  Not implemented.}
 }
 \value{
-\code{Mmethods} returns a charachter vector with a list of methods.  If only one \code{method} is chosen then \code{metaM} returns a single numeric if \code{justM=TRUE} or, otherwise, a \code{metaM} object that is a list with the following items:
+\code{Mmethods} returns a character vector with a list of methods.  If only one \code{method} is chosen then \code{metaM} returns a single numeric if \code{justM=TRUE} or, otherwise, a \code{metaM} object that is a list with the following items:
 \itemize{
    \item \code{method}: The name for the method within the function (as given in \code{method}).
    \item \code{name}: A more descriptive name for the method.
@@ -92,6 +94,7 @@ Results for the Rio Formosa Seahorse data were also tested against results from 
 \section{IFAR Chapter}{
  11-Mortality.
 }
+
 \examples{
 ## List names for available methods
 Mmethods()
@@ -105,15 +108,15 @@ metaM("HoenigNLS",tmax=20,justM=FALSE)
  
 ## Example Patagonian Sprat ... from Table 2 in Cerna et al. (2014)
 ## http://www.scielo.cl/pdf/lajar/v42n3/art15.pdf
-T <- 11
+Temp <- 11
 Linf <- 17.71
 K <- 0.78
 t0 <- -0.46
 tmax <- t0+3/K
 t50 <- t0-(1/K)*log(1-13.5/Linf)
 metaM("RikhterEfanov1",t50=t50)
-metaM("PaulyL",K=K,Linf=Linf,T=T)
-metaM("PaulyL",K=K,Linf=Linf,T=T,justM=FALSE)
+metaM("PaulyL",K=K,Linf=Linf,Temp=Temp)
+metaM("PaulyL",K=K,Linf=Linf,Temp=Temp,justM=FALSE)
 metaM("HoenigNLS",tmax=tmax)
 metaM("HoenigO",tmax=tmax)
 metaM("HewittHoenig",tmax=tmax)
@@ -121,17 +124,14 @@ metaM("AlversonCarney",K=K,tmax=tmax)
 
 ## Example of multiple calculations
 metaM(c("RikhterEfanov1","PaulyL","HoenigO","HewittHoenig","AlversonCarney"),
-     K=K,Linf=Linf,T=T,tmax=tmax,t50=t50)
+     K=K,Linf=Linf,Temp=Temp,tmax=tmax,t50=t50)
 
 ## Example of multiple methods using Mmethods
 # select some methods
-metaM(Mmethods()[-c(15,20,22:24,26)],K=K,Linf=Linf,T=T,tmax=tmax,t50=t50)
+metaM(Mmethods()[-c(15,20,22:24,26)],K=K,Linf=Linf,Temp=Temp,tmax=tmax,t50=t50)
 # select just the Hoenig methods
-metaM(Mmethods("Hoenig"),K=K,Linf=Linf,T=T,tmax=tmax,t50=t50)
+metaM(Mmethods("Hoenig"),K=K,Linf=Linf,Temp=Temp,tmax=tmax,t50=t50)
  
-}
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
 }
 \references{
 Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
@@ -156,12 +156,14 @@ Pauly, D.  1980.  On the interrelationships between natural mortality, growth pa
 
 Rikhter, V.A., and V.N. Efanov.  1976.  On one of the approaches for estimating natural mortality in fish populations (in Russian). ICNAF Research Document 76/IV/8, 12pp. 
 
-Then, A.Y., J.M. Hoenig, N.G. Hall, and D.A. Hewitt.  2015.  Evaluating the predictive performance of empirical estimators of natural mortality rate using informatno on over 200 fish species.  ICES Journal of Marine Science.  72:82-92.
+Then, A.Y., J.M. Hoenig, N.G. Hall, and D.A. Hewitt.  2015.  Evaluating the predictive performance of empirical estimators of natural mortality rate using information on over 200 fish species.  ICES Journal of Marine Science.  72:82-92.
 
-Zhang, C-I and B.A. Megrey.  2006.  A revised Alverson and Carney model for estimating the instantaneous rate of natural mortality.  Transactions of the American Fisheries Socity.  135-620-633.  [Was (is?) from http://www.pmel.noaa.gov/foci/publications/2006/zhan0531.pdf.]
+Zhang, C-I and B.A. Megrey.  2006.  A revised Alverson and Carney model for estimating the instantaneous rate of natural mortality.  Transactions of the American Fisheries Society.  135-620-633.  [Was (is?) from http://www.pmel.noaa.gov/foci/publications/2006/zhan0531.pdf.]
 }
 \seealso{
 See \code{\link[fishmethods]{M.empirical}} in \pkg{fishmethods} for similar functionality.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{manip}
-

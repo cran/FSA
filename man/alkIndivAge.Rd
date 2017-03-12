@@ -27,7 +27,7 @@ The original data.frame in \code{data} with assigned ages added to the column su
 Use either the semi- or completely-random methods from Isermann and Knight (2005) to assign ages to individual fish in the unaged sample according to the information in an age-length key supplied by the user.
 }
 \details{
-The age-length key in \code{key} must have length intervals as rows and ages as columns.  The row names of \code{key} (i.e., \code{rownames(key)}) must contain the mininum values of each length interval (e.g., if an interval is 100-109, then the corresponding row name must be 100).  The column names of \code{key} (i.e., \code{colnames(key)}) must contain the age values (e.g., the columns can NOT be named with \dQuote{age.1}, for example).
+The age-length key in \code{key} must have length intervals as rows and ages as columns.  The row names of \code{key} (i.e., \code{rownames(key)}) must contain the minimum values of each length interval (e.g., if an interval is 100-109, then the corresponding row name must be 100).  The column names of \code{key} (i.e., \code{colnames(key)}) must contain the age values (e.g., the columns can NOT be named with \dQuote{age.1}, for example).
 
 The length intervals in the rows of \code{key} must contain all of the length intervals present in the unaged sample to which the age-length key is to be applied (i.e., sent in the \code{length} portion of the \code{formula}).  If this constraint is not met, then the function will stop with an error message.
 
@@ -42,6 +42,7 @@ Assigned ages will be stored in the column identified on the left-hand-side of \
 \section{IFAR Chapter}{
  5-Age-Length Key.
 }
+
 \examples{
 ## Get data with length measurements and some assigned ages
 data(WR79)
@@ -90,9 +91,6 @@ WR3.comb <- rbind(WR3.age, WR3.len)                  # combine orig age & new ag
 Summarize(len~age,data=WR3.comb,digits=2)
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}.  This is largely an R version of the SAS code provided by Isermann and Knight (2005).
-}
 \references{
 Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
 
@@ -101,5 +99,7 @@ Isermann, D.A. and C.T. Knight.  2005.  A computer program for age-length keys i
 \seealso{
 See \code{\link{alkAgeDist}} and \code{\link{alkMeanVar}} for alternative methods to derived age distributions and mean (and SD) values for each age.  See \code{\link{alkPlot}} for methods to visualize age-length keys.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}.  This is largely an R version of the SAS code provided by Isermann and Knight (2005).
+}
 \keyword{manip}
-

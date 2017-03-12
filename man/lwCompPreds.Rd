@@ -41,9 +41,9 @@ lwCompPreds(object, lens = NULL, qlens = c(0.05, 0.25, 0.5, 0.75, 0.95),
 
 \item{cex.main}{A numeric value for the character expansion of the main title.  See details.}
 
-\item{xlab}{A single string for labelling the x-axis.}
+\item{xlab}{A single string for labeling the x-axis.}
 
-\item{ylab}{A single string for labelling the y-axis.}
+\item{ylab}{A single string for labeling the y-axis.}
 
 \item{yaxs}{A single string that indicates how the y-axis is formed.  See \code{par} for more details.}
 
@@ -62,6 +62,7 @@ Constructs plots of predicted weights at given lengths among different groups.  
 \section{IFAR Chapter}{
  7-Weight-Length.
 }
+
 \examples{
 # load weight-length data
 data(ChinookArg)
@@ -112,11 +113,10 @@ if (interactive()) {
 }
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \references{
 Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{manip}
-

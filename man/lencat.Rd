@@ -19,6 +19,8 @@ lencat(x, ...)
 \arguments{
 \item{x}{A numeric vector that contains the length measurements or a formula of the form \code{~x} where \dQuote{x} generically represents a variable in \code{data} that contains length measurements.  This formula can only contain one variable.}
 
+\item{\dots}{Not implemented.}
+
 \item{w}{A single numeric that indicates the width of length categories to create.  Ignored if \code{breaks} is not \code{NULL}.}
 
 \item{startcat}{A single numeric that indicates the beginning of the first length category.  Only used with \code{w}.  See details for how this is handled when \code{NULL}.}
@@ -36,14 +38,12 @@ lencat(x, ...)
 \item{data}{A data.frame that minimally contains the length measurements given in the variable in the \code{formula}.}
 
 \item{vname}{A string that contains the name for the new length class variable.}
-
-\item{\dots}{Not implemented.}
 }
 \value{
 If the formula version of the function is used, then a data.frame is returned with the a new variable, named as in \code{vname} (defaults to \code{LCat}), appended to the original data.frame.  If the default version of the function is used, then a single vector is returned.  The returned values will be numeric unless \code{breaks} is named and \code{use.names=TRUE} or if \code{as.fact=TRUE}.
 }
 \description{
-Constructs a vector that contains the length class or category to which an individual belongs.  Optionally, that vector can be appened to the original data frame.
+Constructs a vector that contains the length class or category to which an individual belongs.  Optionally, that vector can be appended to the original data frame.
 }
 \details{
 If \code{breaks} is non-NULL, then \code{w} and \code{startcat} will be ignored. The vector of values in \code{breaks} should begin with a value smaller than the minimum observed value and end with a value larger than the maximum observed value.  If the lowest break value is larger than the minimum observed value, then an error will occur.  If the largest break value is smaller than the maximum observed value, then an additional break value larger than the maximum observed value will be added to \code{breaks} (and a warning will be sent).  The values in \code{breaks} do not have to be equally spaced.
@@ -52,13 +52,14 @@ If \code{breaks=NULL} (the default), then the value in \code{w} is used to creat
 
 The start of the length categories may also be set with \code{startcat}.  The number in the \code{startcat} argument should be less than the smallest value in \code{x}.  Additionally, the number of decimals in \code{startcat} should not be more than the number of decimals in \code{w} (e.g., \code{startcat=0.4} and \code{w=1} will result in an error).
 
-One may want to convert apparent numeric values to factor values if some of the length categories are missing (e.g., if factor values are used, for example, then tables of the length category values will have values for all length categories; i.e., it will have zeroes for the length categories that are missing).  The numeric values can be converted to factors by including \code{as.fact}.  See the \dQuote{real data} example.
+One may want to convert apparent numeric values to factor values if some of the length categories are missing (e.g., if factor values are used, for example, then tables of the length category values will have values for all length categories; i.e., it will have zeros for the length categories that are missing).  The numeric values can be converted to factors by including \code{as.fact}.  See the \dQuote{real data} example.
 
 The observed values in \code{x} should be rounded to the appropriate number of decimals to avoid misplacement of individuals into incorrect length categories due to issues with machine-precision (see discussion in \code{all.equal}.)
 }
 \section{IFAR Chapter}{
  2-Data Manipulation.
 }
+
 \examples{
 # Create random lengths measured to nearest 0.1 unit
 df1 <- data.frame(len=round(runif(50,0.1,9.9),1))
@@ -194,11 +195,10 @@ head(smb2)
 str(smb2)
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \references{
 Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{manip}
-

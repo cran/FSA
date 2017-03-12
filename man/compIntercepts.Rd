@@ -3,6 +3,7 @@
 \name{compIntercepts}
 \alias{compIntercepts}
 \alias{print.compIntercepts}
+\alias{print.compIntercepts}
 \title{Tests for significant differences among all pairs of intercepts in a dummy variable regression.}
 \usage{
 compIntercepts(mdl, common.cov = mean(x), conf.level = 0.95,
@@ -19,16 +20,16 @@ compIntercepts(mdl, common.cov = mean(x), conf.level = 0.95,
 
 \item{digits}{A numeric that controls the number of digits to print.}
 
-\item{x}{A \code{compIntercepts} object (i.e., returned from \code{compIntercepts}).}
-
 \item{\dots}{Other arguments to be passed to the \code{TukeyHSD} or \code{print} functions.}
+
+\item{x}{A \code{compIntercepts} object (i.e., returned from \code{compIntercepts}).}
 }
 \value{
 A list with the following four components:
 \tabular{ll}{
 \code{comparison} \tab The comparison results as returned from \code{\link[stats]{TukeyHSD}}.\cr
 \code{common.cov} \tab The value of the common covariate sent in \code{common.cov}.\cr
-\code{adjvals} \tab A vector of values of the repsonse variable adjusted to the \code{common.cov} value of the covariate.  This vector can be appended to the original data frame to construct summary statistics for the adjusted values (e.g., mean adjusted value for each group).\cr 
+\code{adjvals} \tab A vector of values of the response variable adjusted to the \code{common.cov} value of the covariate.  This vector can be appended to the original data frame to construct summary statistics for the adjusted values (e.g., mean adjusted value for each group).\cr 
 \code{means} \tab A vector of mean adjusted values at the value of the common covariate.\cr 
 \code{digits} \tab The value sent in \code{digits}.\cr 
 \code{rnm} \tab The name of the response (LHS) variable.\cr
@@ -68,11 +69,10 @@ compIntercepts(lm2)
 fitPlot(lm1,legend="topleft")
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \seealso{
 \code{\link[stats]{TukeyHSD}} and \code{compSlopes} from \pkg{FSA}.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{htest}
-

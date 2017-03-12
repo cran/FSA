@@ -1,4 +1,12 @@
-# FSA 0.8.11 ongoing
+# FSA 0.8.12 ongoing
+* Lots of spelling corrections after running `devtools::spell_check()`.
+* Cleaned up some issues in the testing files that were caused by a new version of `fishmethods` and changes to R v3.4.0.
+* `metaM()`: Modified. Changed `T=` to `Temp=` to reduce potential for conflicts with `TRUE` abbreviation.
+* `reproInfo()`: Modified. Added `ind=` to select a CRAN mirror to help with a common problem I have when knitting.
+* `srStarts()`: Modified. Corrected mis-spelling in directive to `FSAsim` package.
+* `vbStarts()`: Modified. Added a catch that Linf cannot be automatically estimated with fewer than three ages. Corrected mis-spelling in directive to `FSAsim` package.
+
+# FSA 0.8.11 13-Dec-16
 * Changed all `stop()`s to `STOP()`s and all `warning()`s to `WARN()`. This modified nearly all functions.
 * Changed all `paste()`s that used `sep=""` to `paste0()`s.
 * Removed several `sep=""`s from `message()`s.
@@ -8,10 +16,10 @@
 * `addZeroCatch()`: Modified. Added more "catches" for bad data types or arguments.
 * `ageBias()`: Modified. Changed all `message()`s in `summary()` to `cat()`s.
 * `agePrecision()`: Modified. Changed all `message()`s in `summary()` to `cat()`s.
-* `binCI()`: Modified. Changed from using `binconf()` in `Hmisc` to `binom.exact()`, `binom.wilson()`, and `binom.approx()` from `epitools` (this removes dependency on `Hmisc` which was causing problems). Allowed multiple `type`s to be chosen. Now only accepts whole numbers for `x` and `n`. Added `verbose=` so that the result can be include all of the information return from the `epitools` functions. Added a catch for bad `conf.level`s. Added some more tests.
+* `binCI()`: Modified. Changed from using `binconf()` in `Hmisc` to `binom.exact()`, `binom.wilson()`, and `binom.approx()` from `epitools` (this removes dependency on `Hmisc` which was causing problems). Allowed multiple `type`s to be chosen. Now only accepts whole numbers for `x` and `n`. Added `verbose=` so that the result can include all of the information returned from the `epitools` functions. Added a catch for bad `conf.level`s. Added some more tests.
 * `catchCurve()`: Modified. Made sure that `coef()` method returned a vector (addresses [#19](https://github.com/droglenc/FSA/issues/19)). Modified `confint()` code for efficiency, made sure matrix is always returned.
 * `chapmanRobson()`: Modified. Made sure that `coef()` method returned a vector (addresses [#19](https://github.com/droglenc/FSA/issues/19)). Modified `confint()` code for efficiency, made sure matrix is always returned.
-* `chooseColors()`: Modified.  Added `rev=` for returned reverse ordered (from default) colors.
+* `chooseColors()`: Modified.  Added `rev=` for returning reverse ordered (from default) colors.
 * `depletion()`: Modified. Changed `coef()` method so that it returned a named vector (addresses [#19](https://github.com/droglenc/FSA/issues/19)). Modified `confint()` code for efficiency, made sure matrix is always returned. Removed `type=` to match other functions (incorporated that functionality into `parm=`). Removed `digits=` to match other functions.
 * `expandLenFreq()`: Modified. Changed all `message()`s to `cat()`s. Removed "names" from printed items for a cleaner look.
 * `fitPlot()`: Modified.  Added `cex.leg=` and `box.lty.leg=` to IVR plots.
@@ -483,10 +491,10 @@
 * `vbFuns()`: Modified.  Changed function returned when `simplify=FALSE` so that if the parameters are named that the name is dropped.  Thus, when the function is used, the returned result will not be annoyingly named as the first parameter.
 
 # FSA 0.5.3 Mar15
-* `growthModelSim()`: Deleted.  The simulation functionality was moved to the `FSAsims` package.  The functionality related to finding starting values for the von Bertalanffy modesl was moved to `vbStarts()`.
+* `growthModelSim()`: Deleted.  The simulation functionality was moved to the `FSAsim` package.  The functionality related to finding starting values for the von Bertalanffy modesl was moved to `vbStarts()`.
 * `srFuns()`: Modified.  A complete rebuild to make similar to `vbFuns()`.  Added `simple=`.  Added `type='Shepherd'` for the Shepherd (1982) three parameter model and `type='SailaLorda'` for the "Saila-Lorda" three parameter model from Iles (1994).  Added tests for error messages.
 * `srModels()`: Modified.  A complete rebuild to make similar to `growthModels()`.  Added "Shepherd" and "Saila-Lorda" models.
-* `srSims()`: Deleted.  The simulation functionality was moved to the `FSAsims` package.  The functionality related to finding starting values was moved to `srStarts()`.
+* `srSims()`: Deleted.  The simulation functionality was moved to the `FSAsim` package.  The functionality related to finding starting values was moved to `srStarts()`.
 * `srStarts()`: Modified.  A complete rebuild to streamline.  Removed default method (i.e., a formula must be used now).  Added "Shepherd" and "Saila-Lorda" models.  Modified plotting routine, including adding `col.mdl=`, `lwd.mdl=`, and `lty.mdl=`.  Moved the dynamic modeling aspects of `srSim()` into this function and is called with the new argument `dynamicPlot=TRUE`.  Also added `minmax.ratio=` and `delta.prop=` for use with the dynamic plots.
 * `vbStarts()`: Modified.  A complete rebuild to streamline and fix some bugs that had not been found.  Modified plotting routine, including adding `col.mdl=`, `lwd.mdl=`, and `lty.mdl=`.  Also added all of the von Bertalanffy parameterizations in `growthModelSim()` into this function and is called with the new argument `dynamicPlot=TRUE`.  Added dynamics plots for the "Francis" and "Schnute" parameterizations.
 
@@ -578,7 +586,7 @@
 * `dunnTest()`: Added.
 
 # FSA 0.4.34 Dec14
-* `addZeroCatch()`: Modified.  Removed `idvar=`, forced the `eventvar=` and `speciesvar=` variables in the returned data.frame to be numeric if they were numeric in the original data.frame, allowed `speciesvar=` to have more than one variable, and added `na.rm=`.  Multiple values for `specvar=` will allow the user to add zeroes based on a combination of variables (e.g., species and size category).  The `na.rm=` argument allows the user to remove "missing" species, which are common if some sampling events did not capture any fish.
+* `addZeroCatch()`: Modified.  Removed `idvar=`, forced the `eventvar=` and `speciesvar=` variables in the returned data.frame to be numeric if they were numeric in the original data.frame, allowed `speciesvar=` to have more than one variable, and added `na.rm=`.  Multiple values for `specvar=` will allow the user to add zeros based on a combination of variables (e.g., species and size category).  The `na.rm=` argument allows the user to remove "missing" species, which are common if some sampling events did not capture any fish.
 
 # FSA 0.4.33 Dec14
 * `growthModelSim()`: Modified.  Changed all "K0" objects to "t50".
@@ -845,7 +853,7 @@
 * Removed Roxygen directives in DESCRIPTION (with changes to roxygen2 4.0.1).
 * Changed `@S3method` and `@method` to `@export` in the following files according to changes in ROxygen2 as [described here](http://stackoverflow.com/questions/7198758/roxygen2-how-to-properly-document-s3-methods/7199577#7199577), among several other places: `ageBias`, `agePrecision`, `bootCase`, `catchCurve`, `chapmanRobson`, `confint.nlsboot`, `depletion`, `dietOverlap`, `fitPlot`, `hist.formula`, `htest.nlsBoot`, `ks2d1`, `ks2d1p`, `ks2d2`, `ks2d2p`, `ksTest`, `lencat`, `mrClosed`, `mrOpen`, `plotBinResp`, `predict.nlsBoot`, `removal`, `residPlot`, `srStarts`, `Subset`, `Summarize`, `sumTable`, `vbStarts`, and `walfordChapmanPlot`.
 
-* `addZeroCatch()`: Modified.  Added a catch for the situation where no zeroes need to be added to the data.frame.  Cleaned-up the help file, modified the examples, and added another example.  Thanks to Ben Neely for bringing this bug (handling where zeroes are not needed) to my attention.
+* `addZeroCatch()`: Modified.  Added a catch for the situation where no zeros need to be added to the data.frame.  Cleaned-up the help file, modified the examples, and added another example.  Thanks to Ben Neely for bringing this bug (handling where zeros are not needed) to my attention.
 * `capHistSum()`: Modified.  Cleaned up the code (no changes in functionality).
 * `catchCurveSim()`: Deleted.  Moved to FSAsim package.
 * `checkstartcatw()`: Modified.  Changed the catch for whether the starting category value was greater than the minimum observed value to correct for a pathological case where they were equal but not with machine rounding.
@@ -1050,7 +1058,7 @@
 * `.onLoad()`: Deleted, now `.onAttach()`.
 * `addMargins()`: Deleted, moved back to NCStats.
 * `addSigLetters()`: Deleted, moved back to NCStats.
-* `addZeroCatch()`: Modified.  Changed the looping structure for finding the sampling event and species combinations that need zeroes.  This should speed things up substantially.  Also, modified to allow no `idvar=` variables.  Finally, the returned data frame has the variables (columns) in the same order as the original data frame (rather than having the order modified).
+* `addZeroCatch()`: Modified.  Changed the looping structure for finding the sampling event and species combinations that need zeros.  This should speed things up substantially.  Also, modified to allow no `idvar=` variables.  Finally, the returned data frame has the variables (columns) in the same order as the original data frame (rather than having the order modified).
 * `ageComp()`: Modified some of the code to adjust for name changes in `Summarize()`.    Modified to use a formula notation.
 * `ageKey()`: Modified to using a formula notation.  This removed the `dl=`, `cl=`, and `ca=` arguments.  Made minor adjustments to the help pages (in addition to changes related to the argument modifications).
 * `bcFuns()`: Removed use of &#37;nin&#37;.
@@ -1082,7 +1090,7 @@
 * `rsdVal()`: Deprecated, will delete, became `pssVal()`.
 * `sigLetters()`: Deleted, `cld()` in multcomp has been modified to deprecate this.
 * `simLenSelect()`: Modified to deal with `lencat()` change.
-* `Summarize()`: Modified by calculating the percentage of zeroes for quantitative data.  Also changed the names in the returned vectors or data frames to reduce capitalization, spaces, and punctuation.  Removed use of &#37;nin&#37;.
+* `Summarize()`: Modified by calculating the percentage of zeros for quantitative data.  Also changed the names in the returned vectors or data frames to reduce capitalization, spaces, and punctuation.  Removed use of &#37;nin&#37;.
 * `tictactoe()`: Modified by changing the way the "in balance" regions are depicted.  This resulted in the addition of the `bal.trans=` argument.
 * `tictactoeAdd()`: Modified by changing PSD labels to PSS.
 * `vbStarts()`: Removed use of &#37;nin&#37;.
@@ -1596,7 +1604,7 @@
 
 * age.key(): Modified the way that the length categories in the age-length key
     is determined.  Previously I just used the rownames found in the key, but
-    this allows lengths with a row of all NA or zeroes to be considered as a
+    this allows lengths with a row of all NA or zeros to be considered as a
     length found in the age length key.  Now the row sums are found and the
     sums with NaN or 0 are removed.  In addition, I added a warning message
     if the row sums d* not sum to 1.
@@ -1745,7 +1753,7 @@
 # FSA 0.0-12  15Jul08
 
 * .First.lib: Added
-* add.zerocatch(): added this function to add zeroes to catch records where a
+* add.zerocatch(): added this function to add zeros to catch records where a
     species of fish was not caught.
 * limnoprofile.plot(): added this function to simplify constructing plots of
     depth versus limnological measure with the depth decreasing from top to bottom.
@@ -1790,7 +1798,7 @@
 * lencat(): Modified by adding an as.fact= argument that allows the user to decide
     if the resulting variable should be returned as a factor variable or not.  The
     default is set to return as a factor variable.  This allows tables of the new
-    variable to include zeroes for levels of the new variable that contain no individuals.
+    variable to include zeros for levels of the new variable that contain no individuals.
     This makes some RSD/PSD (and likely age-length key) calculations simpler.  Also added
     a drop.levels= argument to allow the user to drop unused levels if so desired.
 * mr.closed():  This function is a combination of the old mr.closed1() and mr.closed2().

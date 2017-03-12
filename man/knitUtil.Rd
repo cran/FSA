@@ -5,6 +5,9 @@
 \alias{kPvalue}
 \alias{purl2}
 \alias{reproInfo}
+\alias{kPvalue}
+\alias{purl2}
+\alias{reproInfo}
 \title{Specific utilities for use in a knitr document.}
 \usage{
 kCounts(value, capitalize = FALSE)
@@ -17,7 +20,7 @@ purl2(file, out.dir = NULL, newname = NULL, topnotes = NULL,
 
 reproInfo(out = c("r", "markdown", "latex"), rqrdPkgs = NULL,
   elapsed = NULL, width = 0.95 * getOption("width"), addTOC = TRUE,
-  newpage = FALSE, links = NULL, closeGraphics = TRUE)
+  newpage = FALSE, links = NULL, closeGraphics = TRUE, ind = 1)
 }
 \arguments{
 \item{value}{A single numeric count or p-value.}
@@ -46,6 +49,8 @@ reproInfo(out = c("r", "markdown", "latex"), rqrdPkgs = NULL,
 
 \item{timestamp}{A logical that indicates whether a timestamp comment should be appended to the bottom of the script created by \code{purl2}.}
 
+\item{\dots}{Additional arguments for the original \code{purl}.}
+
 \item{out}{A string that indicates the type of output from \code{reproInfo} -- Markdown, LaTeX, or simple R code.}
 
 \item{rqrdPkgs}{A string vector that contains packages that are required for the vignette and for which all dependencies should be found.}
@@ -54,15 +59,15 @@ reproInfo(out = c("r", "markdown", "latex"), rqrdPkgs = NULL,
 
 \item{width}{A numeric that indicates the width to use for wrapping the reproducibility information when \code{out="r"}.}
 
-\item{addTOC}{A logical that indicates whether or not a table of contents entry for the reproducibity section should be added to the LaTeX output.  Used only if \R{out="latex"}}
+\item{addTOC}{A logical that indicates whether or not a table of contents entry for the reproducibility section should be added to the LaTeX output.  Used only if \R{out="latex"}}
 
-\item{newpage}{A logical that indicates whether or not the reproduciility information should begin on a new page.  Used only if \R{out="latex"}}
+\item{newpage}{A logical that indicates whether or not the reproducibility information should begin on a new page.  Used only if \R{out="latex"}}
 
 \item{links}{A named character vector that will add a links bullet to the reproducibility information.  The names will be shown and the values are the links.  Used only if \R{out="markdown}.}
 
 \item{closeGraphics}{A logical that indicates whether the graphics device should be closed or not.}
 
-\item{\dots}{Additional arguments for the original \code{purl}.}
+\item{ind}{An integer that indicates the CRAN mirror to use. Defaults to 1.}
 }
 \value{
 \itemize{
@@ -84,7 +89,7 @@ Specific utilities for pretty printing various items in a knitr document.
  }
 }
 \note{
-In \code{reproInfo}, \code{elapsed} can be used to print the time it took to process the document by sending the elasped time for processing to this argument.  The simplest way to get an approximate elapsed time is to put  \code{st <- proc.time()} very early (first line?) in your knitr code, put \code{et <- proc.time()-st} very late in your knitr code (i.e., just prior to \code{reproInfo}), and then used \code{elapsed=et["user.self"]+et["sys.self"]} in \code{reproInfo}.
+In \code{reproInfo}, \code{elapsed} can be used to print the time it took to process the document by sending the elapsed time for processing to this argument.  The simplest way to get an approximate elapsed time is to put  \code{st <- proc.time()} very early (first line?) in your knitr code, put \code{et <- proc.time()-st} very late in your knitr code (i.e., just prior to \code{reproInfo}), and then used \code{elapsed=et["user.self"]+et["sys.self"]} in \code{reproInfo}.
 }
 \examples{
 kCounts(7)
@@ -100,11 +105,10 @@ kPvalue(0.000012345,include.p=FALSE)
 kPvalue(0.000012345,include.p=FALSE,latex=FALSE)
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \seealso{
 See \code{\link{formatC}} for functionality similar to \code{kPvalue}.  See \code{\link[knitr]{purl}} and \code{\link[knitr]{knit}} in \pkg{knitr} for functionality similar to \code{purl2}.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{manip}
-

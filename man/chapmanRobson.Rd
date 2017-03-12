@@ -4,10 +4,15 @@
 \alias{chapmanRobson}
 \alias{chapmanRobson.default}
 \alias{chapmanRobson.formula}
+\alias{plot.chapmanRobson}
+\alias{summary.chapmanRobson}
+\alias{confint.chapmanRobson}
+\alias{chapmanRobson.default}
+\alias{chapmanRobson.formula}
+\alias{summary.chapmanRobson}
 \alias{coef.chapmanRobson}
 \alias{confint.chapmanRobson}
 \alias{plot.chapmanRobson}
-\alias{summary.chapmanRobson}
 \title{Computes Chapman-Robson estimates of S and Z.}
 \usage{
 chapmanRobson(x, ...)
@@ -33,6 +38,8 @@ chapmanRobson(x, ...)
 \arguments{
 \item{x}{A numerical vector of the assigned ages in the catch curve or a formula of the form \code{catch~age} when used in \code{chapmanRobson}.  An object saved from \code{chapmanRobson} (i.e., of class \code{chapmanRobson}) when used in the methods.}
 
+\item{\dots}{Additional arguments for methods.}
+
 \item{catch}{A numerical vector of the catches or CPUEs for the ages in the catch curve.  Not used if \code{x} is a formula.}
 
 \item{ages2use}{A numerical vector of the ages that define the descending limb of the catch curve.}
@@ -47,13 +54,13 @@ chapmanRobson(x, ...)
 
 \item{verbose}{A logical that indicates whether the method should return just the estimate (\code{FALSE}; default) or a more verbose statement.}
 
-\item{level}{Same as \code{conf.level}.  Used for compatability with the generic \code{confint} function.}
+\item{level}{Same as \code{conf.level}.  Used for compatibility with the generic \code{confint} function.}
 
 \item{conf.level}{A number representing the level of confidence to use for constructing confidence intervals.}
 
 \item{pos.est}{A string to identify where to place the estimated mortality rates on the plot.  Can be set to one of \code{"bottomright"}, \code{"bottom"}, \code{"bottomleft"}, \code{"left"}, \code{"topleft"}, \code{"top"}, \code{"topright"}, \code{"right"} or \code{"center"} for positioning the estimated mortality rates on the plot.  Typically \code{"bottomleft"} (DEFAULT) and \code{"topright"} will be \dQuote{out-of-the-way} placements.  Set \code{pos.est} to \code{NULL} to remove the estimated mortality rates from the plot.}
 
-\item{cex.est}{A single numeric characther expansion value for the estimated mortaliry rates on the plot.}
+\item{cex.est}{A single numeric character expansion value for the estimated mortality rates on the plot.}
 
 \item{ylab}{A label for the y-axis (\code{"Catch"} is the default).}
 
@@ -61,9 +68,7 @@ chapmanRobson(x, ...)
 
 \item{col.pt}{A string that indicates the color of the plotted points.}
 
-\item{axis.age}{A string that indicates the type of x-axis to display.  The \code{age} will disply only the original ages, \code{recoded age} will display only the recoded ages, and \code{both} (DEFAULT) displays the original ages on the main axis and the recoded ages on the secondary axis.}
-
-\item{\dots}{Additional arguments for methods.}
+\item{axis.age}{A string that indicates the type of x-axis to display.  The \code{age} will display only the original ages, \code{recoded age} will display only the recoded ages, and \code{both} (DEFAULT) displays the original ages on the main axis and the recoded ages on the secondary axis.}
 }
 \value{
 A list with the following items:
@@ -73,8 +78,8 @@ A list with the following items:
    \item age.e a vector of assigned ages used to estimate mortalities.
    \item catch.e a vector of catches or CPUEs used to estimate mortalities.
    \item age.r a vector of recoded ages used to estimate mortalities.  See references.
-   \item n a numeric holding the intermediate calcualtion of n.  See references.
-   \item T a numeric holding the intermediate calcualtion of T.  See references.
+   \item n a numeric holding the intermediate calculation of n.  See references.
+   \item T a numeric holding the intermediate calculation of T.  See references.
    \item est A 2x2 matrix that contains the estimates and standard errors for S and Z.
  }
 }
@@ -95,6 +100,7 @@ Tested the results against the results from \code{agesurv} in \pkg{fishmethods} 
 \section{IFAR Chapter}{
  11-Mortality.
 }
+
 \examples{
 data(BrookTroutTH)
 plot(catch~age,data=BrookTroutTH,pch=19)
@@ -123,9 +129,6 @@ summary(cr3)
 plot(cr3)
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \references{
 Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
 
@@ -142,6 +145,8 @@ Smith, M.W., A.Y. Then, C. Wor, G. Ralph, K.H. Pollock, and J.M. Hoenig. 2012. R
 \seealso{
 See \code{\link[fishmethods]{agesurv}} in \pkg{fishmethods} for similar functionality.  See \code{\link{catchCurve}} and \code{\link[fishmethods]{agesurvcl}} in \pkg{fishmethods} for alternative methods.  See \code{\link{metaM}} for empirical methods to estimate natural mortality.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{htest}
 \keyword{manip}
-

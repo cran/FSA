@@ -9,7 +9,7 @@ logbtcf(obj, base = exp(1))
 \arguments{
 \item{obj}{An object from \code{lm}.}
 
-\item{base}{A single numerica value that indicates the base of the logarithm used.}
+\item{base}{A single numeric that indicates the base of the logarithm used.}
 }
 \value{
 A numeric value that is the correction factor according to Sprugel (1983).
@@ -44,11 +44,10 @@ all.equal(cfe,cf10)
 all.equal(cpe,cp10)
 
 }
-\author{
-Derek H. Ogle, \email{derek@derekogle.com}
-}
 \references{
 Sprugel, D.G. 1983.  Correcting for bias in log-transformed allometric equations. Ecology 64:209-210.
 }
+\author{
+Derek H. Ogle, \email{derek@derekogle.com}
+}
 \keyword{manip}
-
