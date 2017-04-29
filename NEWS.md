@@ -1,4 +1,25 @@
-# FSA 0.8.12 ongoing
+# FSA 0.8.13 ongoing
+* `ageBias()`: Modified. A complete rebuild of `plot`. Major changes are to add `plotAB()` which is primarily used to make the "legacy" age bias plots of Campana, removal of the "sunflower" plot option, new sets of defaults for many of the arguments that reflect my preferences for visualizing age comparisons (which includes defaulting to plotting differences in ages), addition of the ability to add marginal histograms (`xHist=`, `yHist=`, `col.hist=`, and `hist.panel.size=`), better handling of axis ticks and labels (primarily to show ticks at integers and make sure 0 is included for differences), and allowing the ability to add "summary layers" to the main plot (see `allowAdd=`). Many examples were added. Some functionality from previous versions will be broken.
+* `capFirst()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `compIntercepts()`: Modified. Replaced two `dim()` calls with `nrow()`.
+* `fact2num()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `lagratio()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `iHndlCols2UseIgnore()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `iLegendHelp()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `iPredictBoot()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `is.CapHist()`: Added.
+* `iTypeoflm()`: Modified. Added a catch for a linear model that has a character variable (now alerts the user with a warning).
+* `mrClosed()`: Modified. Changed some `if()`s with `class()`es to `is.CapHist()`.
+* `mrOpen()`: Modified. Changed some `if()`s with `class()`es to `is.CapHist()`.
+* `nlsTracePlot()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `perc()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `plotAB()`: Added. See description above for `ageBias()`.
+* `plotBinResp()`: Modified. Changed how default transparency level is calculated and set the maximum transparency to 50 (changed from 500). Fixed bug in how the width of the proportions windows were calculated by default. These changes will affect `fitPlot()` for logistic regression models.
+* `psdAdd()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+* `residPlot()`: Modified. Changed default for `loess=` from `TRUE` to `FALSE`. Changed some `if()`s with `class()`es to `inherits()`.
+* `wrAdd()`: Modified. Changed some `if()`s with `class()`es to `inherits()`.
+
+# FSA 0.8.12 12-Mar-17
 * Lots of spelling corrections after running `devtools::spell_check()`.
 * Cleaned up some issues in the testing files that were caused by a new version of `fishmethods` and changes to R v3.4.0.
 * `metaM()`: Modified. Changed `T=` to `Temp=` to reduce potential for conflicts with `TRUE` abbreviation.
