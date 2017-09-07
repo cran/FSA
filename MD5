@@ -1,7 +1,7 @@
 46aaf69a91703493b666f212a04f2d8d *COPYING
-b1d505a35e8eb8018b48260bec3bf731 *DESCRIPTION
+aedc23996e09a222652ac109f2fcad81 *DESCRIPTION
 a74abb3a0984de6d9431c17ee10552a9 *NAMESPACE
-d573e785abd405b66978a5c4f05f3cea *NEWS.md
+8f3ea9f13ca5f8e56c46080dfb097d07 *NEWS.md
 15820ed659633bd5028d427d4c89145b *R/BluegillJL.R
 192e6936e42d37ddcd0674099ddd4c63 *R/BrookTroutTH.R
 354a23336e030346b8e09528e9c8ee42 *R/CIDists.R
@@ -42,7 +42,7 @@ d2b727fef75e98a7abc4a0144d74fcfe *R/expandLenFreq.R
 84ac3a23e78f598fad4af2fc2f3e3445 *R/extraTests.R
 f395d84315fc6b1af0033dd472dc1967 *R/fitPlot.R
 6817b748088d3ab8457ed859c367d4e7 *R/growthDataUtils.R
-3468cfd21a0c72193d325185ed211164 *R/growthModels.R
+e2c048e1aa2d590edcac5b2e53189c58 *R/growthModels.R
 a37970aa0ee5a29464481b005ba57dbd *R/hist.formula.R
 07f6075ecbb745cf9db291f423c0a214 *R/histFromSum.R
 f064999f00173d1b7c20d1bc080ad288 *R/knitUtil.R
@@ -60,9 +60,9 @@ f65f3d540566543e6295d72bcccb8466 *R/plotBinResp.R
 f6011846a27962fd8e7e1e49ea02e81a *R/psdCalc.R
 7300e850a2b8879bc45e310b2dbe6a5b *R/psdPlot.R
 f063fc5f90b12815da6bd35b6774cb02 *R/psdVal.R
-ff733428c3d3aec92c361bef7f9e7c33 *R/removal.R
-6024a5c2e05c19a704b59b725a6ffdf2 *R/residPlot.R
-fbcd3d063ee9ce7e4f4b599b0e946a62 *R/srStarts.R
+07b693243148e9c6fe38667f7fb11d51 *R/removal.R
+6cd0f65d19abf52f9b10ea8bf0e5151a *R/residPlot.R
+6aae32c3cb1c06dabff8ac11bc41a164 *R/srStarts.R
 d424302faf34da89f4a08283c90c03e1 *R/stockRecruitment.R
 205aa44263aa0bac3e87ecc80c9f2af1 *R/sumTable.R
 cf86abd189ed0b624c28c5a9aa35fdfc *R/tictactoe.R
@@ -89,6 +89,7 @@ a414199717ec1058199e9a899dcd934d *data/WhitefishLC.rdata
 3d7fd0f1b43bf127ff4d61ff2c840b65 *inst/extdata/PSDWR_testdata.csv
 e4a7f515307617d7416c26ce5d10858a *inst/extdata/bootCase1.RData
 2d8925fbdeecdc31b7111c5b649a30fb *inst/extdata/nlsBoot1.RData
+e5c1a7387777f6f5b2ad57d8d01fa45b *inst/helpers/installTester.R
 cf9326d9379dbb64f93e60dcd004fef9 *man/BluegillJL.Rd
 ce0342fac798fcc22ee5128e6bc9aebc *man/BrookTroutTH.Rd
 76d2e49a1211e26cb3896c9262b35175 *man/ChinookArg.Rd
@@ -170,10 +171,10 @@ ea7c055ccad0087c46b8a54ac9536039 *man/poiCI.Rd
 ffdb5ebf57510ed4e2984dacca97f135 *man/psdPlot.Rd
 ea208a104cda1da3872db2f84be71e5f *man/psdVal.Rd
 c3f053d73733971e70dc20aae270d367 *man/rcumsum.Rd
-0b3b843c65f424e05857fcd30bfded2d *man/removal.Rd
-5685e48f15bf136d0075b893a458b638 *man/residPlot.Rd
+051e7a3988f3911da13e58e198831e28 *man/removal.Rd
+9055d861d1860921f9641651f56e20fc *man/residPlot.Rd
 dad83001d138b1c237f93e929c476325 *man/se.Rd
-293cdc992ca61028f9eff1a1f47395ce *man/srStarts.Rd
+4954f872d799087860a31b39bd194610 *man/srStarts.Rd
 2e610b18f584acb179684449f95f91e7 *man/stockRecruitment.Rd
 71992f2a3829a289b55788d736c1c941 *man/sumTable.Rd
 eb78ca67a2cac63d1d4332bc6d305cb4 *man/tictactoe.Rd
@@ -216,8 +217,8 @@ db331dd955416bb7661ba4b491b30fff *tests/testthat/test_LWCompPreds_MSG.R
 f56c1a5e87be18c6f9a8bb1202b6f87d *tests/testthat/test_PSD_MSG.R
 e8fd86bf408406e793e72acb0eb60a26 *tests/testthat/test_PSD_OUT.R
 291205f626ce7d695652847be3d314a0 *tests/testthat/test_PSD_VALIDATE.R
-afcd6f1dfbe754247412656f4ab1f13c *tests/testthat/test_StockRecruit_MSG.R
-33b04aab7c5ebc66fd7b94972d027958 *tests/testthat/test_StockRecruit_OUT.R
+5f6d58977c7f71a6840d41a2f1924b34 *tests/testthat/test_StockRecruit_MSG.R
+2f77add06ecd69e2383aaa1222fc5d41 *tests/testthat/test_StockRecruit_OUT.R
 7ca3536c78c47b0c56d1e2b2322ee338 *tests/testthat/test_Summarize_MSG.R
 c401ff11e778fabe5a1d079e029597cb *tests/testthat/test_Summarize_OUT_VALIDATE.R
 94378630388c1089bfc6c9942314ff12 *tests/testthat/test_VonBertalanffy_MSG.R
