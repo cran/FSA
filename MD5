@@ -1,7 +1,7 @@
 46aaf69a91703493b666f212a04f2d8d *COPYING
-aedc23996e09a222652ac109f2fcad81 *DESCRIPTION
+16b79e43d083c476ff547447bd84d45a *DESCRIPTION
 a74abb3a0984de6d9431c17ee10552a9 *NAMESPACE
-8f3ea9f13ca5f8e56c46080dfb097d07 *NEWS.md
+981625b2f02e732adcba9f77c3f80f23 *NEWS.md
 15820ed659633bd5028d427d4c89145b *R/BluegillJL.R
 192e6936e42d37ddcd0674099ddd4c63 *R/BrookTroutTH.R
 354a23336e030346b8e09528e9c8ee42 *R/CIDists.R
@@ -36,13 +36,13 @@ ce8e693706d965ccff6bb18b0e21a8c0 *R/catchCurve.R
 277b47cd50c2c2e2ab51c4b4c9efa73c *R/chapmanRobson.R
 2a8a7ab19e4834431c2800266b278d9e *R/comparisonsDVR.R
 205504f54869b75c7859be23e8033749 *R/depletion.R
-fa9f0256f6a0dba84d86168209c776b2 *R/dunnTest.R
+320ddbad3defb54b192ab50e14635101 *R/dunnTest.R
 78a192004c46fabc7436414778f05ad4 *R/expandCounts.R
 d2b727fef75e98a7abc4a0144d74fcfe *R/expandLenFreq.R
 84ac3a23e78f598fad4af2fc2f3e3445 *R/extraTests.R
 f395d84315fc6b1af0033dd472dc1967 *R/fitPlot.R
 6817b748088d3ab8457ed859c367d4e7 *R/growthDataUtils.R
-e2c048e1aa2d590edcac5b2e53189c58 *R/growthModels.R
+57966fe5ef8af505b78faaf4f4b96c50 *R/growthModels.R
 a37970aa0ee5a29464481b005ba57dbd *R/hist.formula.R
 07f6075ecbb745cf9db291f423c0a214 *R/histFromSum.R
 f064999f00173d1b7c20d1bc080ad288 *R/knitUtil.R
@@ -133,7 +133,7 @@ cf399dd139aaf9312d7091db1412ace0 *man/chapmanRobson.Rd
 515ad453ed508e7de0dc134c60bf770e *man/compSlopes.Rd
 b6237feb810a8eb4698d4565e34db059 *man/depletion.Rd
 0894778b6591b7fe0430457ec3f58b84 *man/diags.Rd
-865a1009e85974c384b0986bea53c27f *man/dunnTest.Rd
+038e5dfbaac94a3ce2afd23e8790ba91 *man/dunnTest.Rd
 584e832687ddf0c505c0538a406fdf8c *man/expandCounts.Rd
 f1c070706239ce62266837645484223d *man/expandLenFreq.Rd
 b974dded89baea2c293b9058156f9870 *man/extraTests.Rd
@@ -191,7 +191,7 @@ afc5cd731062da09efdc9106828a813d *tests/testthat/EXS_Summarize.R
 97150e12f4a6cea950b2d4af15aa8592 *tests/testthat/EXS_bootstrap.R
 047cd3f22251c36d905194373a8d81d9 *tests/testthat/EXS_capHist.R
 674dd65299d7139dbac13673c8b48108 *tests/testthat/EXS_comparisonsDVR.R
-abe407854dc77d7ef27194319fc18399 *tests/testthat/EXS_dunnTest.R
+7f67dc2e6fe2638e33db0a53d8162f6c *tests/testthat/EXS_dunnTest.R
 d009d927e5513ee1580415875b95d8d8 *tests/testthat/EXS_extraTests.R
 7a0411a5c571edaa111a058c8a886b7e *tests/testthat/EXS_fitResidPlots.R
 feac9b5bd5d83b1c7f5cdb9fd0b990a6 *tests/testthat/EXS_growthFuns.R
@@ -245,9 +245,9 @@ ff71b926621134d6d3284fa79be976fd *tests/testthat/test_comparisonsDVR_MSG.R
 bd6d501a7f49f52fd223d9945dad7631 *tests/testthat/test_depletion_MSG.R
 e8cf9854aff40bd2d4a822cc20618960 *tests/testthat/test_depletion_OUT.R
 6e1fe476553a2dd04e62e4718cea1a1b *tests/testthat/test_depletion_VALIDATE.R
-c1abcfede4bb775d6be6df94a16aa7cb *tests/testthat/test_dunnTest_MSG.R
-abed70aac9f6dd89d63d6c3e34795cd6 *tests/testthat/test_dunnTest_OUT.R
-bba1bc9449fa07f93d4d784387e1990c *tests/testthat/test_dunnTest_VALIDATE.R
+9005e2e57bd364b7c7c234a8b2312a41 *tests/testthat/test_dunnTest_MSG.R
+5f92a8e791c30c5d1d98eed4aae08734 *tests/testthat/test_dunnTest_OUT.R
+fedaed0f27480f022bef75377c790c5a *tests/testthat/test_dunnTest_VALIDATE.R
 083d9da90465149ba9b5f2a0cde0fae3 *tests/testthat/test_expandCounts_MSG.R
 f627a5e47ca46cd73497552b2a6b38c1 *tests/testthat/test_expandCounts_OUT_VALIDATE.R
 090acfb89eea51a3d5df5ddfc5481b09 *tests/testthat/test_expandLenFreq_MSG.R
