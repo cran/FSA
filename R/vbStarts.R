@@ -179,7 +179,7 @@ vbStarts <- function(formula,data=NULL,
 #=============================================================
 # Find starting values for Linf and K from a Walford Plot
 #=============================================================
-iVBStarts.LinfK <- function(age,len,type,methLinf,num4Linf,fixed) {
+iVBStarts.LinfK <- function(age,len,type,methLinf,num4Linf,fixed,check=TRUE) {
   ## compute mean lengths-at-age and numbers-at-age
   meanL <- tapply(len,age,mean)
   ns <- tapply(len,age,length)
@@ -204,13 +204,13 @@ iVBStarts.LinfK <- function(age,len,type,methLinf,num4Linf,fixed) {
         sLinf <- mean(len[age %in% ages[1:num4Linf]])
       }
     }
-    iCheckLinf(sLinf,len)
+    if (check) iCheckLinf(sLinf,len)
   }
   if ("K" %in% names(fixed)) {
     sK <- fixed[["K"]]
   } else {
     sK <- -log(cfs[[2]])
-    iCheckK(sK,type,len)
+    if (check) iCheckK(sK,type,len)
   }
   ## return the starting values
   c(Linf=sLinf,K=sK)
@@ -221,12 +221,12 @@ iVBStarts.LinfK <- function(age,len,type,methLinf,num4Linf,fixed) {
 #=============================================================
 iCheckLinf <- function(sLinf,len) {
   if ((sLinf<0.5*max(len,na.rm=TRUE)) | sLinf>1.5*max(len,na.rm=TRUE)) {
-    msg <- "Starting value for Linf is very different from the observed maximum length, "
-    msg <- paste0(msg,"which suggests a model fitting problem.\n")
-    msg <- paste0(msg,"See a Walford or Chapman plot to examine the problem.  Consider\n")
-    msg <- paste0(msg,"either using the mean length for several of the largest fish\n")
-    msg <- paste0(msg,"(i.e., use 'oldAge' in 'methLinf=') or manually setting Linf\n")
-    msg <- paste0(msg,"to the maximum observed lengthin the starting value list.\n")
+    msg <- "Starting value for Linf is very different from the observed maximum\n"
+    msg <- paste0(msg,"length, which suggests a model fitting problem. See a Walford or\n")
+    msg <- paste0(msg,"Chapman plot to examine the problem. Consider either using the mean\n")
+    msg <- paste0(msg,"length for several of the largest fish (i.e., use 'oldAge' in \n")
+    msg <- paste0(msg,"'methLinf=') or manually setting Linf in the starting value list\n")
+    msg <- paste0(msg,"to the maximum observed length.\n")
     WARN(msg)    
   } 
 }
@@ -237,7 +237,7 @@ iCheckK <- function(sK,type,len) {
                     "vonBertalanffy","GQ","GallucciQuinn","Schnute")) {
       msg <- "The suggested starting value for K is negative, "
     } else {
-      msg <- "One  suggested starting value is based on a negative K, "
+      msg <- "One suggested starting value is based on a negative K, "
     }
     msg <- paste0(msg,"which suggests a model fitting problem.\n")
     msg <- paste0(msg,"See a Walford or Chapman Plot to examine the problem.\n")
@@ -271,7 +271,7 @@ iVBStarts.t0 <- function(age,len,type,meth0,methLinf,num4Linf,fixed) {
       st0 <- st0[[1]]
     } else {
       # find starting values for Linf and K
-      tmp <- iVBStarts.LinfK(age,len,type,methLinf,num4Linf,fixed)
+      tmp <- iVBStarts.LinfK(age,len,type,methLinf,num4Linf,fixed,FALSE)
       # find the youngest age with a n>=1
       if (all(ns==1)) yngAge <- min(ages)
       else yngAge <- min(ages[which(ns>=1)])
@@ -305,7 +305,7 @@ iVBStarts.L0 <- function(age,len,type,meth0,methLinf,num4Linf,fixed) {
       sL0 <- sL0[[1]]
     } else {
       # find starting values for Linf and K
-      tmp <- iVBStarts.LinfK(age,len,type,methLinf,num4Linf,fixed)
+      tmp <- iVBStarts.LinfK(age,len,type,methLinf,num4Linf,fixed,FALSE)
       # find the youngest age with a n>=1
       if (all(ns==1)) yngAge <- min(ages)
       else yngAge <- min(ages[which(ns>=1)])
@@ -378,7 +378,7 @@ iVBStarts.Ogle <- function(age,len,type,meth0,methLinf,num4Linf,valOgle,fixed) {
   if (is.null(names(valOgle))) STOP("'valOgle' must be a named vector")
   setParam <- names(valOgle)
   if (!setParam %in% c("Lr","tr")) STOP("Name in 'valOgle' must be 'Lr' or 'tr'")
-  LK <- iVBStarts.LinfK(age,len,type,methLinf,num4Linf,fixed)
+  LK <- iVBStarts.LinfK(age,len,type,methLinf,num4Linf,fixed,FALSE)
   if (setParam=="tr") {
     ## an age was given, fit polynomial and predict length at that age
     if (valOgle<min(age) & is.null(fixed)) WARN("'valAge' is less than minimum observed age.\nStarting value for Lr may be suspect; considering using 'fixed'.")

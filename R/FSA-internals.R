@@ -155,7 +155,7 @@ iHndlCols2UseIgnore <- function(df,cols2use=NULL,cols2ignore=NULL) {
   }
 
   ## if both cols2use and cols2ignore are NULL, return the original df
-  if (is.null(cols2use) & is.null(cols2ignore)) ind <- 1:ncol(df)
+  if (is.null(cols2use) & is.null(cols2ignore)) ind <- seq_len(ncol(df))
   else if (!is.null(cols2use) & !is.null(cols2ignore)) STOP("Cannot use both 'cols2use' and 'cols2ignore'.")
   else if (!is.null(cols2use)) ind <- iHndlCols2Use(df,cols2use)
   else ind <- iHndlCols2Ignore(df,cols2ignore)
@@ -170,18 +170,22 @@ iHndlFormula <- function(formula,data,expNumR=NULL,
                          expNumE=NULL,expNumENums=NULL,expNumEFacts=NULL) {
   mf <- stats::model.frame(formula,data=data,na.action=NULL)
   if (ncol(mf)==1) {
-    # One variable.  Return only model.frame, name of variable, and it's class.
-    #   but handle an odd case where the item is an array by returning the mode
+    # One variable. Return only model.frame, name of variable, and it's
+    # class; but handle an odd case where the item is an array by
+    # returning the mode
     return(list(mf=mf,vnum=1,vname=names(mf),
                 vclass=ifelse(is.array(mf[,1]),mode(mf[,1]),class(mf[,1]))))
   } else {
     # More than one variable in the formula.
     # Must identify if there is a LHS.
-    ifelse(attr(stats::terms(formula),"response")==0,LHS <- FALSE, LHS <- TRUE)
+    ifelse(attr(stats::terms(formula),"response")==0,
+           LHS <- FALSE,LHS <- TRUE)
     # See if more than one variable on LHS
     if (LHS) {
       fcLHS <- as.character(formula)[2]
-      ifelse(any(c("*","+") %in% substring(fcLHS,1:nchar(fcLHS),1:nchar(fcLHS))),LHSgt1 <- TRUE, LHSgt1 <- FALSE)
+      ifelse(any(c("*","+") %in% substring(fcLHS,seq_len(nchar(fcLHS)),
+                                           seq_len(nchar(fcLHS)))),
+             LHSgt1 <- TRUE, LHSgt1 <- FALSE)
       # STOP if there is more than one variable on LHS
       if (LHSgt1) STOP("Function does not work with more than one variable on the LHS.")
       else {
@@ -203,13 +207,14 @@ iHndlFormula <- function(formula,data,expNumR=NULL,
       Emf <- mf
       Enames <- names(Emf)
       Enum <- length(Enames)
-      Epos <- 1:Enum      
+      Epos <- seq_len(Enum)      
     }
     # find the class of each response and explanatory variable on the RHS
-    if (Enum>0) ifelse(Enum==1,Eclass <- class(Emf), Eclass <- unlist(lapply(Emf,class)))
+    if (Enum>0) ifelse(Enum==1,Eclass <- class(Emf),
+                       Eclass <- unlist(lapply(Emf,class)))
     # get positions of numeric and factor explanatory vars on RHS
     ENumPos <- which(Eclass %in% c("numeric","integer","AsIs"))
-    EFactPos <- which(Eclass=="factor")
+    EFactPos <- which(Eclass %in% c("factor","character"))
     # add one to positions if Rnum==1
     if (Rnum==1) {
       ENumPos <- ENumPos + 1
@@ -229,10 +234,16 @@ iHndlFormula <- function(formula,data,expNumR=NULL,
   names(df) <- c(Rname,Enames)
   # Check if the expected number of each type of variable was met
   metExpNumR <- metExpNumE <- metExpNumENums <- metExpNumEFacts <- NULL
-  if (!is.null(expNumR)) ifelse(Rnum==expNumR,metExpNumR <- TRUE,metExpNumR <- FALSE)
-  if (!is.null(expNumE)) ifelse(Enum==expNumE,metExpNumE <- TRUE,metExpNumE <- FALSE)
-  if (!is.null(expNumENums)) ifelse(ENumNum==expNumENums,metExpNumENums <- TRUE,metExpNumENums <- FALSE)
-  if (!is.null(expNumEFacts)) ifelse(EFactNum==expNumEFacts,metExpNumEFacts <- TRUE,metExpNumEFacts <- FALSE)
+  if (!is.null(expNumR)) ifelse(Rnum==expNumR,
+                                metExpNumR <- TRUE,metExpNumR <- FALSE)
+  if (!is.null(expNumE)) ifelse(Enum==expNumE,
+                                metExpNumE <- TRUE,metExpNumE <- FALSE)
+  if (!is.null(expNumENums)) ifelse(ENumNum==expNumENums,
+                                    metExpNumENums <- TRUE,
+                                    metExpNumENums <- FALSE)
+  if (!is.null(expNumEFacts)) ifelse(EFactNum==expNumEFacts,
+                                     metExpNumEFacts <- TRUE,
+                                     metExpNumEFacts <- FALSE)
   # put it all together to return
   list(formula=formula,mf=df,vnum=Rnum+Enum,
        Rnum=Rnum,Rname=Rname,Rclass=Rclass,Rpos=Rpos,
@@ -248,7 +259,7 @@ iHndlMultWhat <- function(what,item,type=c("message","cat")) {
   ##################################################################
   ## Internal functions used to handle multiple what= arguments
   ## If more than one item then print a line return and return
-  ##   the what vector without item in it.  This allows an easy way
+  ##   the what vector without item in it. This allows an easy way
   ##   to put space between multiple items without an extra space
   ##   after the last one.
   ##################################################################
@@ -283,7 +294,7 @@ iLegendHelp <- function(legend) {
 
 
 iListSpecies <- function(d) {
-  message("\nSpecies name must be one of following.  Be careful of spelling and capitalization.")
+  message("\nSpecies name must be one of following. Be careful of spelling and capitalization.")
   print(levels(d$species))
   return(invisible())
 } # end internal function    
@@ -291,8 +302,8 @@ iListSpecies <- function(d) {
 
 iMakeColor <- function(col,transp) { 
   ## Takes a color string and will make it transparent based on
-  ##  the value of transp.  The transp value must be greater
-  ##  than 0.  If transp is greater than 1 than it is interpreted
+  ##  the value of transp. The transp value must be greater
+  ##  than 0. If transp is greater than 1 than it is interpreted
   ##  as the number of points plotted on top of each other before the
   ##  transparency is lost and is, thus, transformed to 1/transp.
   ## The return value is an rgb() color.

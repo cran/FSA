@@ -9,21 +9,24 @@
 \alias{coef.catchCurve}
 \alias{anova.catchCurve}
 \alias{confint.catchCurve}
+\alias{rSquared.catchCurve}
 \alias{catchCurve.default}
 \alias{catchCurve.formula}
 \alias{summary.catchCurve}
 \alias{coef.catchCurve}
 \alias{anova.catchCurve}
 \alias{confint.catchCurve}
+\alias{rSquared.catchCurve}
 \alias{plot.catchCurve}
 \title{Mortality estimates from the descending limb of a catch curve.}
 \usage{
 catchCurve(x, ...)
 
 \method{catchCurve}{default}(x, catch, ages2use = age, weighted = FALSE,
-  ...)
+  negWeightReplace = 0, ...)
 
-\method{catchCurve}{formula}(x, data, ages2use = age, weighted = FALSE, ...)
+\method{catchCurve}{formula}(x, data, ages2use = age, weighted = FALSE,
+  negWeightReplace = 0, ...)
 
 \method{summary}{catchCurve}(object, parm = c("both", "all", "Z", "A", "lm"),
   ...)
@@ -36,32 +39,41 @@ catchCurve(x, ...)
 \method{confint}{catchCurve}(object, parm = c("all", "both", "Z", "A", "lm"),
   level = conf.level, conf.level = 0.95, ...)
 
+\method{rSquared}{catchCurve}(object, digits = getOption("digits"),
+  percent = FALSE, ...)
+
 \method{plot}{catchCurve}(x, pos.est = "topright", cex.est = 0.95,
   ylab = "log(Catch)", xlab = "Age", col.pt = "gray30",
   col.mdl = "black", lwd = 2, lty = 1, ...)
 }
 \arguments{
-\item{x}{A numerical vector of the assigned ages in the catch curve or a formula of the form \code{catch~age} when used in \code{catchCurve}.  An object saved from \code{catchCurve} (i.e., of class \code{catchCurve}) when used in the methods.}
+\item{x}{A numerical vector of assigned ages in the catch curve or a formula of the form \code{catch~age} when used in \code{catchCurve}. An object saved from \code{catchCurve} (i.e., of class \code{catchCurve}) when used in the methods.}
 
 \item{\dots}{Additional arguments for methods.}
 
-\item{catch}{A numerical vector of the catches or CPUEs for the ages in the catch curve.  Not used if \code{x} is a formula.}
+\item{catch}{A numerical vector of catches or CPUEs for the ages in the catch curve. Not used if \code{x} is a formula.}
 
-\item{ages2use}{A numerical vector of the ages that define the descending limb of the catch curve.}
+\item{ages2use}{A numerical vector of ages that define the descending limb of the catch curve.}
 
-\item{weighted}{A logical that indicates whether a weighted regression should be used.  See details.}
+\item{weighted}{A logical that indicates whether a weighted regression should be used. See details.}
 
-\item{data}{A data frame from which the variables in the \code{x} formula can be found.  Not used if \code{x} is not a formula.}
+\item{negWeightReplace}{A single non-negative numeric that will replace negative weights (defaults to 0). Only used when \code{weighted=TRUE}. See details.}
+
+\item{data}{A data.frame from which the variables in the \code{x} formula can be found. Not used if \code{x} is not a formula.}
 
 \item{object}{An object saved from the \code{catchCurve} call (i.e., of class \code{catchCurve}).}
 
-\item{parm}{A numeric or string (of parameter names) vector that specifies which parameters are to be given confidence intervals.  If \code{parm="lm"} then confidence intervals for the underlying linear model are returned.}
+\item{parm}{A numeric or string (of parameter names) vector that specifies which parameters are to be given confidence intervals. If \code{parm="lm"} then confidence intervals for the underlying linear model are returned.}
 
-\item{level}{Same as \code{conf.level}.  Used for compatibility with the generic \code{confint} function.}
+\item{level}{Same as \code{conf.level}. Used for compatibility with the generic \code{confint} function.}
 
 \item{conf.level}{A number representing the level of confidence to use for constructing confidence intervals.}
 
-\item{pos.est}{A string to identify where to place the estimated mortality rates on the plot.  Can be set to one of \code{"bottomright"}, \code{"bottom"}, \code{"bottomleft"}, \code{"left"}, \code{"topleft"}, \code{"top"}, \code{"topright"}, \code{"right"} or \code{"center"} for positioning the estimated mortality rates on the plot.  Typically \code{"bottomleft"} (DEFAULT) and \code{"topright"} will be \dQuote{out-of-the-way} placements.  Set \code{pos.est} to \code{NULL} to remove the estimated mortality rates from the plot.}
+\item{digits}{The number of digits to round the \code{rSquared} result to.}
+
+\item{percent}{A logical that indicates if the \code{rSquared} result should be returned as a percentage (\code{=TRUE}) or as a proportion (\code{=FALSE}; default).}
+
+\item{pos.est}{A string to identify where to place the estimated mortality rates on the plot. Can be set to one of \code{"bottomright"}, \code{"bottom"}, \code{"bottomleft"}, \code{"left"}, \code{"topleft"}, \code{"top"}, \code{"topright"}, \code{"right"} or \code{"center"} for positioning the estimated mortality rates on the plot. Typically \code{"bottomleft"} (DEFAULT) and \code{"topright"} will be \dQuote{out-of-the-way} placements. Set \code{pos.est} to \code{NULL} to remove the estimated mortality rates from the plot.}
 
 \item{cex.est}{A single numeric character expansion value for the estimated mortality rates on the plot.}
 
@@ -84,20 +96,20 @@ A list that contains the following items:
    \item catch The original vector of observed catches or CPUEs.
    \item age.e A vector of assigned ages for which the catch curve was fit.
    \item log.catch.e A vector of log catches or CPUEs for which the catch curve was fit.
-   \item W A vector of weights used in the catch curve fit.  Will be \code{NULL} unless \code{weighted=TRUE}.
+   \item W A vector of weights used in the catch curve fit. Will be \code{NULL} unless \code{weighted=TRUE}.
    \item lm An \code{lm} object from the fit to the ages and log catches or CPUEs on the descending limb (i.e., in age.e and log.catch.e).
  }
 }
 \description{
-Fits a linear model to the user-defined descending limb of a catch curve.  Method functions extract estimates of the instantaneous (Z) and total annual (A) mortality rates with associated standard errors and confidence intervals.  A plot method highlights the descending-limb, shows the linear model on the descending limb, and, optionally, prints the estimated Z and A.
+Fits a linear model to the user-defined descending limb of a catch curve. Method functions extract estimates of the instantaneous (Z) and total annual (A) mortality rates with associated standard errors and confidence intervals. A plot method highlights the descending limb, shows the linear model on the descending limb, and, optionally, prints the estimated Z and A.
 }
 \details{
-The default is to use all ages in the age vector.  This is appropriate only when the age and catch vectors contain only the ages and catches on the descending limb of the catch curve.  Use \code{ages2use} to isolate only the catch and ages on the descending limb.
+The default is to use all ages in the age vector. This is appropriate only when the age and catch vectors contain only the ages and catches on the descending limb of the catch curve. Use \code{ages2use} to isolate only the catch and ages on the descending limb.
 
-If \code{weighted=TRUE} then a weighted regression is used where the weights are the log(number) at each age predicted from the unweighted regression of log(number) on age (as proposed by Maceina and Bettoli (1998)).
+If \code{weighted=TRUE} then a weighted regression is used where the weights are the log(number) at each age predicted from the unweighted regression of log(number) on age (as proposed by Maceina and Bettoli (1998)). If a negative weight is computed it will be changed to the value in \code{negWeightReplace} and a warning will be issued.
 }
 \section{Testing}{
- Tested the results of catch curve, both unweighted and weighted, against the results in Miranda and Bettoli (2007).  Results for Z and the SE of Z matched perfectly.  Tested the unweighted results against the results from \code{agesurv} in \pkg{fishmethods} using the \code{rockbass} data.frame in \pkg{fishmethods}.  Results for Z and the SE of Z matched perfectly.
+ Tested the results of catch curve, both unweighted and weighted, against the results in Miranda and Bettoli (2007). Results for Z and the SE of Z matched perfectly. Tested the unweighted results against the results from \code{agesurv} in \pkg{fishmethods} using the \code{rockbass} data.frame in \pkg{fishmethods}. Results for Z and the SE of Z matched perfectly.
 }
 
 \section{IFAR Chapter}{
@@ -112,6 +124,7 @@ plot(catch~age,data=BrookTroutTH,pch=19)
 cc1 <- catchCurve(catch~age,data=BrookTroutTH,ages2use=2:6)
 summary(cc1)
 cbind(Est=coef(cc1),confint(cc1))
+rSquared(cc1)
 plot(cc1)
 summary(cc1,parm="Z")
 cbind(Est=coef(cc1,parm="Z"),confint(cc1,parm="Z"))
@@ -147,14 +160,14 @@ plot(cc5)
 
 }
 \references{
-Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}.  Chapman & Hall/CRC, Boca Raton, FL.
+Ogle, D.H. 2016. \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}. Chapman & Hall/CRC, Boca Raton, FL.
 
-Maceina, M.J., and P.W. Bettoli.  1998.  Variation in largemouth bass recruitment in four mainstream impoundments on the Tennessee River. North American Journal of Fisheries Management 18:998-1003.
+Maceina, M.J., and P.W. Bettoli. 1998. Variation in Largemouth Bass recruitment in four mainstream impoundments on the Tennessee River. North American Journal of Fisheries Management 18:998-1003.
 
-Ricker, W.E. 1975. Computation and interpretation of biological statistics of fish populations. Technical Report Bulletin 191, Bulletin of the Fisheries Research Board of Canada.  [Was (is?) from http://www.dfo-mpo.gc.ca/Library/1485.pdf.]
+Ricker, W.E. 1975. Computation and interpretation of biological statistics of fish populations. Technical Report Bulletin 191, Bulletin of the Fisheries Research Board of Canada. [Was (is?) from http://www.dfo-mpo.gc.ca/Library/1485.pdf.]
 }
 \seealso{
-See \code{\link[fishmethods]{agesurv}} in \pkg{fishmethods} for similar functionality.  See \code{\link{chapmanRobson}} and \code{\link[fishmethods]{agesurvcl}} in \pkg{fishmethods} for alternative methods to estimate mortality rates.  See \code{\link{metaM}} for empirical methods to estimate natural mortality.
+See \code{\link[fishmethods]{agesurv}} in \pkg{fishmethods} for similar functionality. See \code{\link{chapmanRobson}} and \code{\link[fishmethods]{agesurvcl}} in \pkg{fishmethods} for alternative methods to estimate mortality rates. See \code{\link{metaM}} for empirical methods to estimate natural mortality.
 }
 \author{
 Derek H. Ogle, \email{derek@derekogle.com}

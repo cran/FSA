@@ -3,6 +3,8 @@
 \name{confint.nlsBoot}
 \alias{confint.nlsBoot}
 \alias{confint.nlsboot}
+\alias{htest.nlsboot}
+\alias{predict.nlsbooot}
 \alias{predict.nlsBoot}
 \alias{htest}
 \alias{htest.nlsBoot}
@@ -23,13 +25,13 @@ htest(object, ...)
 \arguments{
 \item{object}{An object saved from \code{nlsBoot()}.}
 
-\item{parm}{An integer that indicates which parameter to compute the confidence interval or hypothesis test for.  The confidence interval Will be computed for all parameters if \code{NULL}.}
+\item{parm}{An integer that indicates which parameter to compute the confidence interval or hypothesis test for. The confidence interval Will be computed for all parameters if \code{NULL}.}
 
-\item{level}{Same as \code{conf.level}.  Used for compatibility with the main \code{confint}.}
+\item{level}{Same as \code{conf.level}. Used for compatibility with the main \code{confint}.}
 
 \item{conf.level}{A level of confidence as a proportion.}
 
-\item{plot}{A logical that indicates whether a plot should be constructed.  If \code{confint}, then a histogram of the \code{parm} parameters from the bootstrap samples with error bars that illustrate the bootstrapped confidence intervals will be constructed.  If code{htest}, then a histogram of the \code{parm} parameters with a vertical lines illustrating the \code{bo}value will be constructed.}
+\item{plot}{A logical that indicates whether a plot should be constructed. If \code{confint}, then a histogram of the \code{parm} parameters from the bootstrap samples with error bars that illustrate the bootstrapped confidence intervals will be constructed. If code{htest}, then a histogram of the \code{parm} parameters with a vertical lines illustrating the \code{bo}value will be constructed.}
 
 \item{err.col}{A single numeric or character that identifies the color for the error bars on the plot.}
 
@@ -41,18 +43,18 @@ htest(object, ...)
 
 \item{\dots}{Additional arguments to functions.}
 
-\item{FUN}{The function to be applied for the prediction.  See the examples.}
+\item{FUN}{The function to be applied for the prediction. See the examples.}
 
 \item{digits}{A single numeric that indicates the number of digits for the result.}
 
 \item{bo}{The null hypothesized parameter value.}
 
-\item{alt}{A string that identifies the \dQuote{direction} of the alternative hypothesis.  See details.}
+\item{alt}{A string that identifies the \dQuote{direction} of the alternative hypothesis. See details.}
 }
 \value{
 \code{confint} returns a matrix with as many rows as columns (i.e., parameter estimates) in the \code{object$coefboot} data frame and two columns of the quantiles that correspond to the approximate confidence interval.
 
-\code{htest} returns a matrix with two columns.  The first column contains the hypothesized value sent to this function and the second column is the corresponding p-value.
+\code{htest} returns a matrix with two columns. The first column contains the hypothesized value sent to this function and the second column is the corresponding p-value.
 
 \code{predict} returns a matrix with one row and three columns, with the first column holding the predicted value (i.e., the median prediction) and the last two columns holding the approximate confidence interval.
 }
@@ -60,11 +62,11 @@ htest(object, ...)
 Provides S3 methods to construct non-parametric bootstrap confidence intervals and hypothesis tests for parameter values and predicted values of the response variable for a \code{\link[nlstools]{nlsBoot}} object from the \pkg{nlstools} package.
 }
 \details{
-\code{confint} finds the two quantiles that have the proportion (1-\code{conf.level})/2 of the bootstrapped parameter estimates below and above.  This is an approximate 100\code{conf.level}\% confidence interval.
+\code{confint} finds the two quantiles that have the proportion (1-\code{conf.level})/2 of the bootstrapped parameter estimates below and above. This is an approximate 100\code{conf.level}\% confidence interval.
 
-In \code{htest} the \dQuote{direction} of the alternative hypothesis is identified by a string in the \code{alt=} argument.  The strings may be \code{"less"} for a \dQuote{less than} alternative, \code{"greater"} for a \dQuote{greater than} alternative, or \code{"two.sided"} for a \dQuote{not equals} alternative (the DEFAULT).  In the one-tailed alternatives the p-value is the proportion of bootstrapped parameter estimates in \code{object$coefboot} that are extreme of the null hypothesized parameter value in \code{bo}.  In the two-tailed alternative the p-value is twice the smallest of the proportion of bootstrapped parameter estimates above or below the null hypothesized parameter value in \code{bo}.
+In \code{htest} the \dQuote{direction} of the alternative hypothesis is identified by a string in the \code{alt=} argument. The strings may be \code{"less"} for a \dQuote{less than} alternative, \code{"greater"} for a \dQuote{greater than} alternative, or \code{"two.sided"} for a \dQuote{not equals} alternative (the DEFAULT). In the one-tailed alternatives the p-value is the proportion of bootstrapped parameter estimates in \code{object$coefboot} that are extreme of the null hypothesized parameter value in \code{bo}. In the two-tailed alternative the p-value is twice the smallest of the proportion of bootstrapped parameter estimates above or below the null hypothesized parameter value in \code{bo}.
 
-In \code{predict}, a user-supplied function is applied to each row of the \code{coefBoot} object in a \code{nlsBoot} object and then finds the median and the two quantiles that have the proportion (1-\code{conf.level})/2 of the bootstrapped predictions below and above.  The median is returned as the predicted value and the quantiles are returned as an approximate 100\code{conf.level}\% confidence interval for that prediction.
+In \code{predict}, a user-supplied function is applied to each row of the \code{coefBoot} object in a \code{nlsBoot} object and then finds the median and the two quantiles that have the proportion (1-\code{conf.level})/2 of the bootstrapped predictions below and above. The median is returned as the predicted value and the quantiles are returned as an approximate 100\code{conf.level}\% confidence interval for that prediction.
 }
 \examples{
 data(Ecoli)
@@ -76,20 +78,21 @@ fnx <- function(days,B1,B2,B3) {
   }
   B1/(1+exp(B2+B3*days))
 }
-nl1 <- nls(cells~fnx(days,B1,B2,B3),data=Ecoli,start=list(B1=6,B2=7.2,B3=-1.45))
+nl1 <- nls(cells~fnx(days,B1,B2,B3),data=Ecoli,
+           start=list(B1=6,B2=7.2,B3=-1.45))
 if (require(nlstools)) {
-  nl1.boot <-  nlstools::nlsBoot(nl1,niter=99)  # way too few
-  confint(nl1.boot,"B1")
-  confint(nl1.boot,c(2,3))
-  confint(nl1.boot,conf.level=0.90)
-  predict(nl1.boot,fnx,days=3)
-  predict(nl1.boot,fnx,days=1:3)
-  htest(nl1.boot,1,bo=6,alt="less")
+  nl1.bootn <-  nlstools::nlsBoot(nl1,niter=99) # too few to be useful
+  confint(nl1.bootn,"B1")
+  confint(nl1.bootn,c(2,3))
+  confint(nl1.bootn,conf.level=0.90)
+  predict(nl1.bootn,fnx,days=3)
+  predict(nl1.bootn,fnx,days=1:3)
+  htest(nl1.bootn,1,bo=6,alt="less")
 }
 
 }
 \seealso{
-See \code{\link[nlstools]{summary.nlsBoot}} in \pkg{nlstools}
+\code{\link[car]{Boot}} and related methods in \pkg{car} and \code{\link[nlstools]{summary.nlsBoot}} in \pkg{nlstools}.
 }
 \author{
 Derek H. Ogle, \email{derek@derekogle.com}

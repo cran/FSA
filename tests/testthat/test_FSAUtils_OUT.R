@@ -90,12 +90,12 @@ test_that("col2rgbt() results",{
 })
 
 test_that("diags() results",{
-  mat1 <- matrix(1:16,nrow=4)
-  colnames(mat1) <- LETTERS[1:ncol(mat1)]
-  rownames(mat1) <- 1:nrow(mat1)
-  mat2 <- matrix(1:20,nrow=4)
-  colnames(mat2) <- LETTERS[1:ncol(mat2)]
-  rownames(mat2) <- 1:nrow(mat2)
+  mat1 <- matrix(seq_len(16),nrow=4)
+  colnames(mat1) <- LETTERS[seq_len(ncol(mat1))]
+  rownames(mat1) <- seq_len(nrow(mat1))
+  mat2 <- matrix(seq_len(20),nrow=4)
+  colnames(mat2) <- LETTERS[seq_len(ncol(mat2))]
+  rownames(mat2) <- seq_len(nrow(mat2))
   # main diagonal, no labels
   tmp <- diags(mat1)
   expect_is(tmp,"data.frame")
@@ -113,25 +113,25 @@ test_that("diags() results",{
   expect_equal(nrow(tmp),nrow(mat1))
   expect_equal(ncol(tmp),2)
   expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,1:4)
+  expect_equal(tmp$label,seq_len(4))
   tmp <- diags(mat1,incl.labels="column")
   expect_is(tmp,"data.frame")
   expect_equal(nrow(tmp),nrow(mat1))
   expect_equal(ncol(tmp),2)
   expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,LETTERS[1:4])
+  expect_equal(tmp$label,LETTERS[seq_len(4)])
   tmp <- diags(mat2,incl.labels="row")
   expect_is(tmp,"data.frame")
   expect_equal(nrow(tmp),nrow(mat2))
   expect_equal(ncol(tmp),2)
   expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,1:4)
+  expect_equal(tmp$label,seq_len(4))
   tmp <- diags(mat2,incl.labels="column")
   expect_is(tmp,"data.frame")
   expect_equal(nrow(tmp),nrow(mat2))
   expect_equal(ncol(tmp),2)
   expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,LETTERS[1:4])
+  expect_equal(tmp$label,LETTERS[seq_len(4)])
   ## Off diagonal, no labels
   tmp <- diags(mat1,which=-1)
   expect_is(tmp,"data.frame")
@@ -173,9 +173,9 @@ test_that("diags() results",{
   tmp <- diags(mat1,incl.labels="col")
   expect_is(tmp$value,"integer")
   expect_is(tmp$label,"character")
-  mat3 <- matrix(LETTERS[1:24],nrow=3)
-  rownames(mat3) <- letters[1:nrow(mat3)]
-  colnames(mat3) <- 1:ncol(mat3)
+  mat3 <- matrix(LETTERS[seq_len(24)],nrow=3)
+  rownames(mat3) <- letters[seq_len(nrow(mat3))]
+  colnames(mat3) <- seq_len(ncol(mat3))
   tmp <- diags(mat3,incl.labels="row")
   expect_is(tmp$value,"character")
   expect_is(tmp$label,"character")
@@ -300,7 +300,7 @@ test_that("headtail() return values",{
   expect_is(tmp,"data.frame")
   
   ## check for matrix
-  miris <- as.matrix(iris[,1:4])
+  miris <- as.matrix(iris[,seq_len(4)])
   tmp <- FSA::headtail(miris)
   expect_equal(nrow(tmp),2*n)
   expect_equal(ncol(tmp),ncol(miris))
@@ -414,6 +414,12 @@ test_that("perc() return values",{
   expect_equal(suppressWarnings(perc(tmp,5,"lt",na.rm=FALSE)),40)
 })
 
+test_that("rSquared() return values",{
+  tmp <- lm(y~x,data=data.frame(x=0:5,y=c(0,1.5,3,5,9,15)))
+  expect_equal(round(summary(tmp)$r.squared,9),
+               rSquared(tmp,digits=9))
+})
+
 test_that("pcumsum()/rcumsum() return values",{
   tmp <- 1:3
   expect_equal(pcumsum(tmp),c(0,1,3))
@@ -424,7 +430,7 @@ test_that("se() return values",{
   ## If an NA value occurs then return NA if na.rm=FALSE
   expect_true(is.na(se(c(1,2,NA),na.rm=FALSE)))
   ## check results
-  tmp <- c(1:10)
+  tmp <- seq_len(10)
   expect_equal(se(tmp),sd(tmp)/sqrt(length(tmp)))
 })
 
