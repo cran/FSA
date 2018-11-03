@@ -12,9 +12,10 @@ lencat(x, ...)
   right = FALSE, use.names = FALSE, as.fact = use.names,
   droplevels = drop.levels, drop.levels = FALSE, ...)
 
-\method{lencat}{formula}(x, data, w = 1, startcat = NULL, breaks = NULL,
-  right = FALSE, use.names = FALSE, as.fact = use.names,
-  droplevels = drop.levels, drop.levels = FALSE, vname = NULL, ...)
+\method{lencat}{formula}(x, data, w = 1, startcat = NULL,
+  breaks = NULL, right = FALSE, use.names = FALSE,
+  as.fact = use.names, droplevels = drop.levels, drop.levels = FALSE,
+  vname = NULL, ...)
 }
 \arguments{
 \item{x}{A numeric vector that contains the length measurements or a formula of the form \code{~x} where \dQuote{x} generically represents a variable in \code{data} that contains length measurements.  This formula can only contain one variable.}
@@ -129,7 +130,6 @@ df4$LCat3 <- lencat(df4$len,w=2)
 xtabs(~LCat3,data=df4)
 
 ## A Fifth example -- with real data
-data(SMBassWB)
 # remove variables with "anu" and "radcap" just for simplicity
 smb1 <- smb2 <- SMBassWB[,-c(8:20)]
 

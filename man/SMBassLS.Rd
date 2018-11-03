@@ -29,12 +29,12 @@ Catch-effort data for Smallmouth Bass (\emph{Micropterus dolomieu}) in Little Si
 }
 
 \examples{
-data(SMBassLS)
 str(SMBassLS)
 head(SMBassLS)
 
 }
-\concept{
-Abundance 'Population Size' Depletion Leslie DeLury Catchability
+\seealso{
+Used in \code{\link{depletion}} examples.
 }
+\concept{Abundance 'Population Size' Depletion Leslie DeLury Catchability}
 \keyword{datasets}

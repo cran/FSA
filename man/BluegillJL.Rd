@@ -28,12 +28,12 @@ Each line consists of the capture history over two samples of Bluegill (\emph{Le
 }
 
 \examples{
-data(BluegillJL)
 str(BluegillJL)
 head(BluegillJL)
 
 }
-\concept{
-Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' Petersen 'Capture History'
+\seealso{
+Used in \code{\link{mrClosed}} examples.
 }
+\concept{Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' Petersen 'Capture History'}
 \keyword{datasets}

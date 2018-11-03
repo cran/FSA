@@ -3,7 +3,6 @@
 \name{compSlopes}
 \alias{compSlopes}
 \alias{print.compSlopes}
-\alias{print.compSlopes}
 \title{Tests for significant differences among all pairs of slopes in a dummy variable regression (DVR).}
 \usage{
 compSlopes(mdl, method = stats::p.adjust.methods, conf.level = 0.95,
@@ -59,7 +58,6 @@ In a dummy variable regression the coefficient for the interaction between the c
 This function only works for linear models with one factor variable.
 }
 \examples{
-data(Mirex)
 Mirex$year <- factor(Mirex$year)
 # fit a dummy variable regression, see that slopes differ
 lm1 <- lm(mirex~weight*year,data=Mirex)

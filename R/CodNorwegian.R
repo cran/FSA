@@ -23,13 +23,14 @@
 #' 
 #' @source From Garrod, D.J. 1967.  Population dynamics of the Arcto-Norwegian cod.  Journal of the Fisheries Research Board of Canada, 24:145-190.
 #' 
+#' @seealso Used in \code{\link{srStarts}}, \code{\link{srFuns}}, and \code{\link{nlsTracePlot}} examples.
+#' 
 #' @keywords datasets
 #' 
 #' @examples
-#' data(CodNorwegian)
 #' str(CodNorwegian)
 #' head(CodNorwegian)
-#' op <- par(mfrow=c(1,2))
+#' op <- par(mfrow=c(1,2),pch=19,mar=c(3,3,0.5,0.5),mgp=c(1.9,0.5,0),tcl=-0.2)
 #' plot(recruits~year,data=CodNorwegian,type="l")
 #' plot(recruits~stock,data=CodNorwegian)
 #' par(op)

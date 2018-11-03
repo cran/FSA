@@ -3,7 +3,6 @@
 \name{fsaNews}
 \alias{fsaNews}
 \alias{FSANews}
-\alias{FSANews}
 \title{Read news and changes for the 'FSA' package.}
 \usage{
 fsaNews()
@@ -17,13 +16,10 @@ None.
 Opens up the \href{https://github.com/droglenc/FSA/blob/master/NEWS.md}{News.md GitHub file} for the \sQuote{FSA} package in an external browser.
 }
 \examples{
-## ONLY RUN IN INTERACTIVE MODE
-if (interactive()) {
-
-fsaNews()
+\dontrun{
+## Opens an external webpage ... only run interactively
 FSANews()
-
-}  ## END IF INTERACTIVE MODE
+}
 
 }
 \author{

@@ -133,7 +133,8 @@ chooseColors <- function(pal=paletteChoices(),num,rev=FALSE,...) {
 
 #' @rdname chooseColors
 #' @export
-paletteChoices <- function() c("rich","cm","default","grey","gray","heat","jet","rainbow","topo","terrain")
+paletteChoices <- function() c("rich","cm","default","grey","gray","heat",
+                               "jet","rainbow","topo","terrain")
 
 
 #' @title Converts an R color to RGB (red/green/blue) including a transparency (alpha channel).
@@ -163,7 +164,8 @@ paletteChoices <- function() c("rich","cm","default","grey","gray","heat","jet",
 #' @export
 col2rgbt <- function(col,transp=1) {
   if (length(transp)==1) transp <- rep(transp,length(col))
-  if (length(col)!=length(transp)) STOP("Length of 'transp' must be 1 or same as length of 'col'.")
+  if (length(col)!=length(transp))
+    STOP("Length of 'transp' must be 1 or same as length of 'col'.")
   mapply(iMakeColor,col,transp,USE.NAMES=FALSE)
 }
 
@@ -224,8 +226,10 @@ col2rgbt <- function(col,transp=1) {
 diags <- function(x,which=0,incl.labels=c("none","row","column"),
                   val.name="value",label.name="label") {
   ## check if matrix
-  if (!is.matrix(x)) STOP("'diags' only works with matrices.")
-  if (nrow(x)==1 | ncol(x)==1) STOP("'x' must have more than 1 row and more than 1 column.")
+  if (!is.matrix(x))
+    STOP("'diags' only works with matrices.")
+  if (nrow(x)==1 | ncol(x)==1)
+    STOP("'x' must have more than 1 row and more than 1 column.")
   ## find indices of diagonals for the matrix
   ## idea from http://stackoverflow.com/a/27935808/1123933
   ind <- row(x)-col(x)
@@ -238,12 +242,15 @@ diags <- function(x,which=0,incl.labels=c("none","row","column"),
     cat("\n") # nocov end
   } else {
     ## extract diagonal from x according to which
-    if (which>max(ind) | which<min(ind)) STOP("The 'which' diagonal does not exist in 'x'.")
+    if (which>max(ind) | which<min(ind))
+      STOP("The 'which' diagonal does not exist in 'x'.")
     res <- x[ind==which]
     ## handle adding names
     incl.labels <- match.arg(incl.labels)
-    if (incl.labels=="row") res2 <- rownames(x)[apply(ind,MARGIN=1,FUN=function(x) any(x==which))]
-    else if (incl.labels=="column") res2 <- colnames(x)[apply(ind,MARGIN=2,FUN=function(x) any(x==which))]
+    if (incl.labels=="row")
+      res2 <- rownames(x)[apply(ind,MARGIN=1,FUN=function(x) any(x==which))]
+    else if (incl.labels=="column")
+      res2 <- colnames(x)[apply(ind,MARGIN=2,FUN=function(x) any(x==which))]
     else res2 <- NULL
     ## put together as data.frame and return
     if (!is.null(res2)) {
@@ -290,11 +297,14 @@ diags <- function(x,which=0,incl.labels=c("none","row","column"),
 fact2num <- function(object) {
   ## Don't continue if object is not a factor or character 
   ## i.e., does not fit the purpose of this function
-  if (!inherits(object,c("factor","character"))) STOP("'object' is not a factor or character and does not fit the purpose of this function.")
+  if (!inherits(object,c("factor","character")))
+    STOP("'object' is not a factor or character and",
+         "does not fit the purpose of this function.")
   ## Convert factor to character and then numeric
   suppressWarnings(res <- as.numeric(as.character(object)))
   ## If all na's then stop because values were not numeric-like, else return
-  if (all(is.na(res))) STOP("Conversion aborted because all levels in 'object' are not 'numbers'.")
+  if (all(is.na(res)))
+    STOP("Conversion aborted because all levels in 'object' are not 'numbers'.")
   else as.vector(res)
 }
 
@@ -312,20 +322,19 @@ fact2num <- function(object) {
 #' @keywords misc
 #' 
 #' @examples
-#' ## ONLY RUN IN INTERACTIVE MODE
-#' if (interactive()) {
-#' 
+#' \dontrun{
+#' ## Opens an external webpage ... only run interactively
 #' fishR()            # home page
 #' fishR("IFAR")      # Introduction to Fisheries Analysis with R page
-#' fishR("general")   # exapmles page
+#' fishR("general")   # examples page
 #' fishR("books")     # examples page
-#' fishR("AIFFD")     # Analysis & Interpretation of Freshwater Fisheries Data page
+#' fishR("AIFFD")     # Analysis & Interpretation of Freshw. Fisher. Data page
 #' fishR("posts")     # blog posts (some examples) page
-#' 
-#' } ## END IF INTERACTIVE MODE
+#' }
 #' 
 #' @export
-fishR <- function(where=c("home","IFAR","general","books","AIFFD","posts","news")) {
+fishR <- function(where=c("home","IFAR","general","books",
+                          "AIFFD","posts","news")) {
   where <- match.arg(where)
   tmp <- "http://derekogle.com/"
   switch(where,
@@ -354,13 +363,10 @@ fishR <- function(where=c("home","IFAR","general","books","AIFFD","posts","news"
 #' @keywords manip
 #' 
 #' @examples
-#' ## ONLY RUN IN INTERACTIVE MODE
-#' if (interactive()) {
-#' 
-#' fsaNews()
+#' \dontrun{
+#' ## Opens an external webpage ... only run interactively
 #' FSANews()
-#'
-#'}  ## END IF INTERACTIVE MODE
+#' }
 #' 
 #' @rdname fsaNews
 #' @export
@@ -419,8 +425,10 @@ FSANews <- function () {
 #' @export
 headtail <- function(x,n=3L,which=NULL,addrownums=TRUE,...) {
   ## Some checks
-  if (!(is.matrix(x) | is.data.frame(x))) STOP("'x' must be a matrix or data.frame.")
-  if (length(n)!=1L) STOP("'n' must be a single number.")
+  if (!(is.matrix(x) | is.data.frame(x)))
+    STOP("'x' must be a matrix or data.frame.")
+  if (length(n)!=1L)
+    STOP("'n' must be a single number.")
   ## Remove tbl_df class if it exists
   if ("tbl_df" %in% class(x)) x <- as.data.frame(x)
   ## Process data.frame
@@ -462,7 +470,6 @@ headtail <- function(x,n=3L,which=NULL,addrownums=TRUE,...) {
 #' @keywords htest
 #'
 #' @examples
-#' data(Mirex)
 #' # Simple linear regression test HA:slope!=0.1
 #' lm1 <- lm(mirex~weight, data=Mirex)
 #' hoCoef(lm1,2,0.1)
@@ -470,10 +477,13 @@ headtail <- function(x,n=3L,which=NULL,addrownums=TRUE,...) {
 #' @export
 hoCoef <- function(object,term=2,bo=0,alt=c("two.sided","less","greater")) {
   alt <- match.arg(alt)
-  if (!"lm" %in% class(object)) STOP("'object' must be from 'lm'.")
-  if (!term>0) STOP("'term' must be a positive number.")
+  if (!"lm" %in% class(object))
+    STOP("'object' must be from 'lm'.")
+  if (!term>0)
+    STOP("'term' must be a positive number.")
   tmp <- summary(object)$coefficients
-  if (term>length(rownames(tmp))) STOP("'term' is greater than number of terms in the model.")
+  if (term>length(rownames(tmp)))
+    STOP("'term' is greater than number of terms in the model.")
   est <- tmp[term,"Estimate"]
   se <- tmp[term,"Std. Error"]
   t <- (est-bo)/se
@@ -530,11 +540,14 @@ hoCoef <- function(object,term=2,bo=0,alt=c("two.sided","less","greater")) {
 #' lagratio(10:1,2,2,direction="forward")
 #'
 #' @export
-lagratio <- function(x,lag=1L,recursion=1L,differences=recursion,direction=c("backward","forward"),...) {
+lagratio <- function(x,lag=1L,recursion=1L,differences=recursion,
+                     direction=c("backward","forward"),...) {
   ## Some checks
   direction <- match.arg(direction)
-  if(any(x==0)) STOP("Will not work with zeros in 'x'.")
-  if(inherits(x,c("POSIXt","POSIXct"))) STOP("Function does not work for 'POSIXt' objects.")
+  if(any(x==0))
+    STOP("Will not work with zeros in 'x'.")
+  if(inherits(x,c("POSIXt","POSIXct")))
+    STOP("Function does not work for 'POSIXt' objects.")
   if (!recursion>0) STOP("'recursion' value must be >0.")
   ## Flip vector if ratio direction is forward
   if (direction=="forward") x <- rev(x)
@@ -549,7 +562,7 @@ lagratio <- function(x,lag=1L,recursion=1L,differences=recursion,direction=c("ba
 
 #' @title Constructs the correction-factor used when back-transforming log-transformed values.
 #'
-#' @description Constructs the correction-factor used when back-transforming log-transformed values according to the method in Sprugel (1983). Sprugel's main formula -- exp((syx^2)/2) -- is used when syx is estimated for natural log transformed data. He noted that a formula for any based could be constructed by multiplying the syx term by log_e(base) to give exp(((log_e(base)*syx)^2)/2). This more general formula is implemented in this function (where, of course, if the base is exp(1) then the general formula reduces to the original specific formula.)
+#' @description Constructs the correction-factor used when back-transforming log-transformed values according to Sprugel (1983). Sprugel's main formula -- exp((syx^2)/2) -- is used when syx is estimated for natural log transformed data. A correction for any base is obtained by multiplying the syx term by log_e(base) to give exp(((log_e(base)*syx)^2)/2). This more general formula is implemented here (if, of course, the base is exp(1) then the general formula reduces to the original specific formula).
 #'
 #' @param obj An object from \code{lm}.
 #' @param base A single numeric that indicates the base of the logarithm used.
@@ -674,11 +687,14 @@ iOddEven <- function(x,checkval) {
 #' perc(tmp,5,"lt",na.rm=FALSE)
 #' 
 #' @export
-perc <- function(x,val,dir=c("geq","gt","leq","lt"),na.rm=TRUE,digits=getOption("digits")) {
+perc <- function(x,val,dir=c("geq","gt","leq","lt"),na.rm=TRUE,
+                 digits=getOption("digits")) {
   ## Some checks
   dir <- match.arg(dir)
-  if (!inherits(x,c("numeric","integer"))) STOP("'perc' only works for numeric vectors.")
-  if (length(val)>1) WARN("Only the first value of 'val' was used.")
+  if (!inherits(x,c("numeric","integer")))
+    STOP("'perc' only works for numeric vectors.")
+  if (length(val)>1)
+    WARN("Only the first value of 'val' was used.")
   ## Find sample size (don't or do include NA values)
   n <- ifelse(na.rm,length(x[!is.na(x)]),length(x))
   ## Compute percentage in dir(ection) of val(ue), but return
@@ -791,7 +807,7 @@ iChkCumSum <- function(x) {
 
 #' @title Extract the coefficient of determination from a linear model object.
 #' 
-#' @description Extracts the coefficient of determination (i.e., \dQuote{r-squared} from a linear model (i.e., \code{lm}) object.
+#' @description Extracts the coefficient of determination (i.e., \dQuote{r-squared}) from a linear model (i.e., \code{lm}) object.
 #' 
 #' @details This is a convenience function to extract the \code{r.squared} part from \code{summary(lm)}.
 #' 
@@ -807,7 +823,6 @@ iChkCumSum <- function(x) {
 #' @aliases rSquared rSquared.default rSquared.lm
 #' 
 #' @examples
-#' data(Mirex)
 #' lm1 <- lm(mirex~weight, data=Mirex)
 #' rSquared(lm1)
 #' rSquared(lm1,digits=3)
@@ -828,8 +843,7 @@ rSquared <- function(object, ...) {
 #' @rdname rSquared
 #' @export
 rSquared.default <- function(object, ...) {
-  stop(paste0("'rSquared' only works with 'lm', not '",class(object),"', objects"),
-       call.=FALSE)
+  STOP("'rSquared' only works with 'lm', not '",class(object),"', objects")
 }
 
 #' @rdname rSquared
@@ -931,12 +945,15 @@ NULL
 #' @rdname Subset
 #' @export
 Subset <- function(x,subset,select,drop=FALSE,resetRownames=TRUE,...) {
-  if (!is.data.frame(x)) STOP("Subset should only be used with data frames. See ?subset for other structures.")
+  if (!is.data.frame(x)) 
+    STOP("Subset should only be used with data frames. ",
+         "See ?subset for other structures.")
   if (missing(subset)) r <- TRUE
   else {
     e <- substitute(subset)
     r <- eval(e, x, parent.frame())
-    if (!is.logical(r)) STOP("'subset' must evaluate to logical.")
+    if (!is.logical(r))
+      STOP("'subset' must evaluate to logical.")
     r <- r & !is.na(r)
   }
   if (missing(select)) vars <- TRUE
@@ -947,7 +964,8 @@ Subset <- function(x,subset,select,drop=FALSE,resetRownames=TRUE,...) {
   }
   res <- droplevels(x[r,vars,drop=drop])
   if (resetRownames) rownames(res) <- NULL
-  if (nrow(res)==0) WARN("The resultant data.frame has 0 rows. Try str() on the result.\n")
+  if (nrow(res)==0)
+    WARN("The resultant data.frame has 0 rows. Try str() on the result.\n")
   res
 }
 
@@ -956,7 +974,8 @@ Subset <- function(x,subset,select,drop=FALSE,resetRownames=TRUE,...) {
 filterD <- function(x,...,except=NULL) {
   res <- dplyr::filter(x,...)
   res <- droplevels(res,except)
-  if (nrow(res)==0) WARN("The resultant data.frame has 0 rows. Try str() on the result.\n")
+  if (nrow(res)==0)
+    WARN("The resultant data.frame has 0 rows. Try str() on the result.\n")
   res
 }
 
@@ -1038,12 +1057,14 @@ validn <- function(object) {
 #' geomean(d)
 #' geosd(d)
 #' 
+#' \dontrun{
 #' ## Demonstrate handling of zeros and negative values
-#' x <- seq(0,5)
+#' x <- seq(-1,5)
 #' # this will given an error
-#' try(geomean(x))
+#' geomean(x)
 #' # this will only give a warning, but might not be what you want
 #' geomean(x,zneg.rm=TRUE)
+#' }
 #' 
 #' @rdname geomean
 #' @export
@@ -1061,9 +1082,12 @@ geosd <- function(x,na.rm=FALSE,zneg.rm=FALSE) {
 
 
 iChk4Geos <- function(x,na.rm,zneg.rm) {
-  if (!is.vector(x)) STOP("'x' must be a vector.")
-  if (!is.numeric(x)) STOP("'x' must be a numeric vector.")
-  if (any(x<=0,na.rm=na.rm) & !zneg.rm) STOP("'x' must contain all positive values.")
+  if (!is.vector(x))
+    STOP("'x' must be a vector.")
+  if (!is.numeric(x))
+    STOP("'x' must be a numeric vector.")
+  if (any(x<=0,na.rm=na.rm) & !zneg.rm)
+    STOP("'x' must contain all positive values.")
   if (any(x<=0,na.rm=na.rm) & zneg.rm) {
     WARN("Some non-positive values were ignored/removed.")
     # remove non-positive values

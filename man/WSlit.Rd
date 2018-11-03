@@ -45,7 +45,6 @@ The minimum TL for the English units were derived by rounding the converted mini
 }
 
 \examples{
-data(WSlit)
 str(WSlit)
 head(WSlit)
 
@@ -56,7 +55,5 @@ Ogle, D.H.  2016.  \href{http://derekogle.com/IFAR}{Introductory Fisheries Analy
 \seealso{
 See \code{\link{wsVal}} and \code{\link{wrAdd}} for related functionality.
 }
-\concept{
-Condition 'Relative Weight' 'Standard Weight'
-}
+\concept{Condition 'Relative Weight' 'Standard Weight'}
 \keyword{datasets}

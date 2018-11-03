@@ -11,21 +11,23 @@
 \usage{
 vbFuns(param = c("Typical", "typical", "Traditional", "traditional",
   "BevertonHolt", "Original", "original", "vonBertalanffy", "GQ",
-  "GallucciQuinn", "Mooij", "Weisberg", "Ogle", "Schnute", "Francis", "Laslett",
-  "Polacheck", "Somers", "Somers2", "Pauly", "Fabens", "Fabens2", "Wang",
-  "Wang2", "Wang3", "Francis2"), simple = FALSE, msg = FALSE)
+  "GallucciQuinn", "Mooij", "Weisberg", "Ogle", "Schnute", "Francis",
+  "Laslett", "Polacheck", "Somers", "Somers2", "Pauly", "Fabens",
+  "Fabens2", "Wang", "Wang2", "Wang3", "Francis2", "Francis3"),
+  simple = FALSE, msg = FALSE)
 
 GompertzFuns(param = c("Ricker1", "Ricker2", "Ricker3", "QuinnDeriso1",
-  "QuinnDeriso2", "QuinnDeriso3", "QD1", "QD2", "QD3", "Original", "original",
-  "Troynikov1", "Troynikov2"), simple = FALSE, msg = FALSE)
+  "QuinnDeriso2", "QuinnDeriso3", "QD1", "QD2", "QD3", "Original",
+  "original", "Troynikov1", "Troynikov2"), simple = FALSE, msg = FALSE)
 
 RichardsFuns(param = 1, simple = FALSE, msg = FALSE)
 
-logisticFuns(param = c("CJ1", "CJ2", "Karkach", "Haddon", "CampanaJones1",
-  "CampanaJones2"), simple = FALSE, msg = FALSE)
+logisticFuns(param = c("CJ1", "CJ2", "Karkach", "Haddon",
+  "CampanaJones1", "CampanaJones2"), simple = FALSE, msg = FALSE)
 
-growthFunShow(type = c("vonBertalanffy", "Gompertz", "Richards", "Logistic",
-  "Schnute"), param = NULL, case = param, plot = FALSE, ...)
+growthFunShow(type = c("vonBertalanffy", "Gompertz", "Richards",
+  "Logistic", "Schnute"), param = NULL, case = param, plot = FALSE,
+  ...)
 }
 \arguments{
 \item{param}{A string (for von Bertalanffy, Gompertz, and logistic) or numeric (for Richards) that indicates the specific parameterization of the growth function. See details.}
@@ -136,11 +138,12 @@ plot(log3(ages,L0=10,Linf=800,gninf=0.5)~ages,type="b",pch=19)
 ##   However, observe the correlations in the summary() results.
 
 ## Von B
-data(SpotVA1)
-# Fitting the typical parameterization of the von B function
-fit1 <- nls(tl~vb1(age,Linf,K,t0),data=SpotVA1,start=vbStarts(tl~age,data=SpotVA1))
-summary(fit1,correlation=TRUE)
 plot(tl~age,data=SpotVA1,pch=19)
+
+# Fitting the typical parameterization of the von B function
+fit1 <- nls(tl~vb1(age,Linf,K,t0),data=SpotVA1,
+            start=vbStarts(tl~age,data=SpotVA1))
+summary(fit1,correlation=TRUE)
 curve(vb1(x,Linf=coef(fit1)),from=0,to=5,col="red",lwd=10,add=TRUE)
 
 # Fitting the Francis parameterization of the von B function
@@ -172,10 +175,11 @@ lens <- gompO(ages,Linf=450,a=1,gi=0.3)+rnorm(length(ages),0,sd)
 # put together as a data.frame
 df <- data.frame(age=ages,len=round(lens,0))
 
+plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
+  
 # Fit first Ricker parameterization
 fit1 <- nls(len~gomp1(age,Linf,gi,ti),data=df,start=list(Linf=500,gi=0.3,ti=3))
 summary(fit1,correlation=TRUE)
-plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
 curve(gomp1(x,Linf=coef(fit1)),from=0,to=15,col="red",lwd=10,add=TRUE)
 
 # Fit third Ricker parameterization
@@ -191,42 +195,54 @@ curve(gomp3(x,Linf=coef(fit3)[1],gi=coef(fit3)[2],t0=coef(fit3)[3]),
       from=0,to=15,col="green",lwd=2,add=TRUE)
 
 ## Richards
-# Fit first Richards parameterization
-fit1 <- nls(len~rich1(age,Linf,k,a,b),data=df,start=list(Linf=450,k=0.25,a=0.65,b=3))
+
+\dontrun{
+# Fit first Richards parameterization ... DOES NOT CONVERGE
+fit1 <- nls(len~rich1(age,Linf,k,a,b),data=df,
+            start=list(Linf=450,k=0.3,a=0.2,b=3))
 summary(fit1,correlation=TRUE)
-plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
 curve(rich1(x,Linf=coef(fit1)),from=0,to=15,col="red",lwd=10,add=TRUE)
 
-# Fit second Richards parameterization
-fit2 <- nls(len~rich2(age,Linf,k,ti,b),data=df,start=list(Linf=450,k=0.25,ti=3,b=3))
+# Fit second Richards parameterization ... DOES NOT CONVERGE
+fit2 <- nls(len~rich2(age,Linf,k,ti,b),data=df,
+            start=list(Linf=450,k=0.25,ti=3,b=3))
 summary(fit2,correlation=TRUE)
 curve(rich2(x,Linf=coef(fit2)),from=0,to=15,col="blue",lwd=7,add=TRUE)
+}
+
+plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
 
 # Fit third Richards parameterization
-fit3 <- nls(len~rich3(age,Linf,k,ti,b),data=df,start=list(Linf=450,k=0.25,ti=3,b=-0.3))
+fit3 <- nls(len~rich3(age,Linf,k,ti,b),data=df,
+            start=list(Linf=450,k=0.25,ti=3,b=-0.1))
 summary(fit3,correlation=TRUE)
 curve(rich3(x,Linf=coef(fit3)),from=0,to=15,col="green",lwd=4,add=TRUE)
 
 # Fit fourth Richards parameterization
-fit4 <- nls(len~rich4(age,Linf,k,ti,b),data=df,start=list(Linf=450,k=0.25,ti=3,b=0.7))
+fit4 <- nls(len~rich4(age,Linf,k,ti,b),data=df,
+            start=list(Linf=450,k=0.25,ti=3,b=0.7))
 summary(fit4,correlation=TRUE)
 curve(rich4(x,Linf=coef(fit4)),from=0,to=15,col="black",lwd=1,add=TRUE)
 
 ## Logistic
-# Fit first Campana-Jones parameterization
-fit1 <- nls(len~log1(age,Linf,gninf,ti),data=df,start=list(Linf=450,gninf=0.45,ti=4))
-summary(fit1,correlation=TRUE)
 plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
+
+# Fit first Campana-Jones parameterization
+fit1 <- nls(len~log1(age,Linf,gninf,ti),data=df,
+            start=list(Linf=450,gninf=0.45,ti=4))
+summary(fit1,correlation=TRUE)
 curve(log1(x,Linf=coef(fit1)),from=0,to=15,col="red",lwd=10,add=TRUE)
 
 # Fit second Campana-Jones parameterization
-fit2 <- nls(len~log2(age,Linf,gninf,a),data=df,start=list(Linf=450,gninf=0.45,a=7))
+fit2 <- nls(len~log2(age,Linf,gninf,a),data=df,
+            start=list(Linf=450,gninf=0.45,a=7))
 summary(fit2,correlation=TRUE)
 curve(log2(x,Linf=coef(fit2)),from=0,to=15,col="blue",lwd=5,add=TRUE)
 
 # Fit Karkach parameterization (using simple=TRUE model)
 log3 <- logisticFuns("Karkach",simple=TRUE)
-fit3 <- nls(len~log3(age,Linf,L0,gninf),data=df,start=list(Linf=450,L0=30,gninf=0.45))
+fit3 <- nls(len~log3(age,Linf,L0,gninf),data=df,
+            start=list(Linf=450,L0=30,gninf=0.45))
 summary(fit3,correlation=TRUE)
 curve(log3(x,Linf=coef(fit3)[1],L0=coef(fit3)[2],gninf=coef(fit3)[3]),
       from=0,to=15,col="green",lwd=2,add=TRUE)

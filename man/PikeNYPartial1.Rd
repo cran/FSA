@@ -32,12 +32,12 @@ Each line consists of the capture history over four samples of Northern Pike (\e
 }
 
 \examples{
-data(PikeNYPartial1)
 str(PikeNYPartial1)
 head(PikeNYPartial1)
 
 }
-\concept{
-Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' 'Schnabel' 'Capture History'
+\seealso{
+Used in \code{\link{capHistSum}} and \code{\link{mrClosed}} examples. Also see \code{\link{PikeNY}}.
 }
+\concept{Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' 'Schnabel' 'Capture History'}
 \keyword{datasets}

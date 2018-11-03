@@ -2,7 +2,7 @@
 #'
 #' @description Computes estimates, with confidence intervals, of the population size and probability of capture from the number of fish removed in k-, 3-, or 2-passes in a closed population.
 #'
-#' @details The main function computes the estimates and associated standard errors, if possible, for the initial population size, No, and probability of capture, p, for seven methods chosen with \code{method=}. The possible methods are:
+#' @details The main function computes the estimates and associated standard errors, if possible, for the initial population size, No, and probability of capture, p, for eight methods chosen with \code{method=}. The possible methods are:
 #'  \itemize{
 #'    \item \code{method="CarleStrub"}: The general weighted k-pass estimator proposed by Carle and Strub (1978). This function iteratively solves for No in equation 7 of Carle and Strub (1978).
 #'    \item \code{method="Zippin"}: The general k-pass estimator generally attributed to Zippin. This function iteratively solves for No in bias corrected version of equation 3 (page 622) of Carle and Strub (1978). These results are not yet trustworthy (see Testing section below).
@@ -10,14 +10,15 @@
 #'    \item \code{method="Seber2"}: The special case for k=2 estimator shown on page 312 of Seber(2002).
 #'    \item \code{method="RobsonRegier2"}: The special case for k=2 estimator shown by Robson and Regier (1968).
 #'    \item \code{method="Moran"}: The likelihood method of Moran (1951) as implemented by Schnute (1983).
-#'    \item \code{method="Schnute"}: The likelihood method of Schnute (1983) for the model that has a different probability of capture for the first sample but a constant probability of capture for all ensuing samples..
+#'    \item \code{method="Schnute"}: The likelihood method of Schnute (1983) for the model that has a different probability of capture for the first sample but a constant probability of capture for all ensuing samples.
+#'    \item \code{method="Burnham"}: The general k-pass estimator likelihood method created by Ken Burnham and presented by Van Deventer and Platts (1983). This method is used in the Microfish software (Van Deventer 1989).
 #'  }
 #'
 #' Confidence intervals for the first five methods are computed using standard large-sample normal distribution theory. Note that the confidence intervals for the 2- and 3-pass special cases are only approximately correct if the estimated population size is greater than 200. If the estimated population size is between 50 and 200 then a 95\% CI behaves more like a 90\% CI.
-#' 
-#' Confidence intervals for the last two methods use likelihood ratio theory as described in Schnute (1983) and are only produced for the No parameter. Standard errors are not produced with the Moran or Schnute methods..
 #'
-#' In the Carle Strub method, if the resultant No estimate is equal to the sum of the catches (T) then the estimate of No that is returned will be the sum of the catches. In this instance, and if the \dQuote{Seber} method of computing the standard error is used, then the SE will not be estimable and the confidence intervals can not be constructed.
+#' Confidence intervals for the next two methods use likelihood ratio theory as described in Schnute (1983) and are only produced for the No parameter. Standard errors are not produced with the Moran or Schnute methods.
+#'
+#' Confidence intervals for the last method are computed as per Ken Burnham's instructions for the Burnham Method (Jack Van Deventer, personal communication). Specifically, they are calculated with the t-statistic and No-1 degrees of freedom. Please note that the MicroFish software rounds the t-statistic before it calculates the confidence intervals about No and p. If you need the confidence interals produced by FSA::removal to duplicate MicroFish, please use CIMicroFish=TRUE.
 #'
 #' @param catch A numerical vector of catch at each pass.
 #' @param method A single string that identifies the removal method to use. See details.
@@ -31,7 +32,8 @@
 #' @param just.ests A logical that indicates whether just the estimates (\code{=TRUE}) or the return list (\code{=FALSE}; default; see below) is returned.
 #' @param verbose A logical that indicates whether descriptive labels should be printed from \code{summary} and if certain warnings are shown with \code{confint}.
 #' @param digits A single numeric that controls the number of decimals in the output from \code{summary} and \code{confint}.
-#' @param Tmult A single numeric that will be multiplied by the total catch in all samples to set the upper value for the range of population sizes when minimizing the log-likelihood and creating confidence intervals for the Moran and Schnute method. Large values are much slower to compute, but too low of a value can result in missing the best estimate. A warning is issued if too low of a value is suspected.
+#' @param Tmult A single numeric that will be multiplied by the total catch in all samples to set the upper value for the range of population sizes when minimizing the log-likelihood and creating confidence intervals for the Moran and Schnute methods. Large values are much slower to compute, but values that are too low may result in missing the best estimate. A warning is issued if too low of a value is suspected.
+#' @param CIMicroFish A logical that indicates whether the t value used to calculate confidence intervals when \code{method="Burnham"} should be rounded to two or three decimals and whether the confidence intervals for No should be rounded to whole numbers as done in MicroFish 3.0. The default (\code{=FALSE}) is to NOT round the t values or No confidence interval. This option is provided only so that results will exactly match MicroFish results (see testing).
 #' @param \dots Additional arguments for methods.
 #'
 #' @return A vector that contains the estimates and standard errors for No and p if \code{just.ests=TRUE} or (default) a list with at least the following items:
@@ -41,47 +43,55 @@
 #'    \item lbl A descriptive label for the method used.
 #'    \item est A matrix that contains the estimates and standard errors for No and p.
 #'  }
-#'  
+#'
 #' In addition, if the Moran or Schnute methods are used the list will also contain
 #'  \itemize{
 #'    \item min.nlogLH The minimum value of the negative log-likelihood function.
 #'    \item Tmult The Tmult value sent by the user.
 #'  }
-#' 
+#'
 #' @section testing: The Carle-Strub method matches the examples in Carle and Strub (1978) for No, p, and the variance of No. The Carle-Strub estimates of No and p match the examples in Cowx (1983) but the SE of No does not. The Carle-Strub estimates of No match the results (for estimates that they did not reject) from Jones and Stockwell (1995) to within 1 individual in most instances and within 1\% for all other instances (e.g., off by 3 individuals when the estimate was 930 individuals).
-#' 
+#'
 #' The Seber3 results for No match the results in Cowx (1983).
-#' 
+#'
 #' The Seber2 results for No, p, and the SE of No match the results in example 7.4 of Seber (2002) and in Cowx (1983).
-#' 
+#'
 #' The RobsonRegier2 results for No and the SE of NO match the results in Cowx (1983)
-#' 
+#'
 #' The Zippin method results do not match the examples in Seber (2002) or Cowx (1983) because \code{removal} uses the bias-corrected version from Carle and Strub (1978) and does not use the tables in Zippin (1958). The Zippin method is not yet trustworthy.
-#' 
+#'
 #' The Moran and Schnute methods match the examples in Schnute (1983) perfectly for all point estimates and within 0.1 units for all confidence intervals.
 #'
+#' The Burnham method was tested against the free (gratis) Demo Version of MicroFish 3.0. Powell Wheeler used R to simulate 100, three-pass removal samples with capture probabilities between 0 and 1 and population sizes <= 1000. The Burnham method implemented here exactly matched MicroFish in all 100 trials for No and p. In addition, the CIs for No exactly matched all 100 trials when CIMicroFish=TRUE. Powell was not able to check the CIs for p because the MicroFish 'Quick Population Estimate' does not report them. 
+#'
 #' @author Derek H. Ogle, \email{derek@@derekogle.com}
+#'
+#' @author A. Powell Wheeler, \email{powell.wheeler@@gmail.com}
 #'
 #' @section IFAR Chapter: 10-Abundance from Depletion Data.
 #'
 #' @seealso See \code{\link{depletion}} for related functionality.
-#' 
+#'
 #' @references Ogle, D.H. 2016. \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}. Chapman & Hall/CRC, Boca Raton, FL.
-#' 
+#'
 #' Carle, F.L. and M.R. Strub. 1978. A new method for estimating population size from removal data. Biometrics, 34:621-630.
 #'
 #' Cowx, I.G. 1983. Review of the methods for estimating fish population size from survey removal data. Fisheries Management, 14:67-82.
-#' 
+#'
 #' Moran, P.A.P. 1951. A mathematical theory of animal trapping. Biometrika 38:307-311.
 #'
 #' Robson, D.S., and H.A. Regier. 1968. Estimation of population number and mortality rates. pp. 124-158 in Ricker, W.E. (editor) Methods for Assessment of Fish Production in Fresh Waters. IBP Handbook NO. 3 Blackwell Scientific Publications, Oxford.
-#' 
+#'
 #' Schnute, J. 1983. A new approach to estimating populations by the removal method. Canadian Journal of Fisheries and Aquatic Sciences, 40:2153-2169.
 #'
 #' Seber, G.A.F. 2002. The Estimation of Animal Abundance. Edward Arnold, second edition (Reprint).
-#' 
+#'
 #' van Dishoeck, P. 2009. Effects of catchability variation on performance of depletion estimators: Application to an adaptive management experiment. Masters Thesis, Simon Fraser University. [Was (is?) from http://rem-main.rem.sfu.ca/theses/vanDishoeckPier_2009_MRM483.pdf.]
-#' 
+#'
+#' Van Deventer, J.S. 1989. Microcomputer Software System for Generating Population Statistics from Electrofishing Data--User's Guide for MicroFish 3.0. USDA Forest Service, General Technical Report INT-254. 29 p. [Was (is?) from https://relicensing.pcwa.net/documents/Library/PCWA-L%20460.pdf].
+#'
+#' Van Deventer, J.S., and W.S. Platts. 1983. Sampling and estimating fish populations from streams. Transactions of the 48th North American Wildlife and Natural Resource Conference. pp. 349-354.
+#'
 #' @keywords manip
 #'
 #' @aliases removal summary.removal confint.removal
@@ -99,7 +109,7 @@
 #' confint(p1)
 #' confint(p1,parm="No")
 #' confint(p1,parm="p")
-#' 
+#'
 #' # Moran method
 #' p2 <- removal(ct3,method="Moran")
 #' summary(p2,verbose=TRUE)
@@ -110,7 +120,16 @@
 #' summary(p3,verbose=TRUE)
 #' confint(p3,verbose=TRUE)
 #'
-#'
+#' # Burnham method
+#' p4 <- removal(ct3,method="Burnham")
+#' summary(p4)
+#' summary(p4,verbose=TRUE)
+#' summary(p4,parm="No")
+#' summary(p4,parm="p")
+#' confint(p4)
+#' confint(p4,parm="No")
+#' confint(p4,parm="p")
+
 #' ## Second example -- 2 passes
 #' ct2 <- c(77,37)
 #'
@@ -134,8 +153,8 @@
 #' chi2.val <- 2*(p2a$min.nlogLH-p3a$min.nlogLH)  # 4.74 in Schnute(1983)
 #' pchisq(chi2.val,df=1,lower.tail=FALSE)         # significant difference (catchability differs)
 #' summary(p3a)
-#' 
-#' 
+#'
+#'
 #' ### Using lapply() to use removal() on many different groups
 #' ###   with the removals in a single variable ("long format")
 #' ## create a dummy data frame
@@ -176,14 +195,14 @@
 #' ## put names together with values
 #' rownames(fnl1) <- NULL
 #' fnl1
-#' 
+#'
 #' @rdname removal
 #' @export
 removal <- function(catch,
                     method=c("CarleStrub","Zippin","Seber3","Seber2",
-                             "RobsonRegier2","Moran","Schnute"),
+                             "RobsonRegier2","Moran","Schnute","Burnham"),
                     alpha=1,beta=1,CS.se=c("Zippin","alternative"),
-                    conf.level=0.95,just.ests=FALSE,Tmult=3) {
+                    conf.level=0.95,just.ests=FALSE,Tmult=3,CIMicroFish=FALSE) {
   # some initial checks
   method <- match.arg(method)
   if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
@@ -197,11 +216,11 @@ removal <- function(catch,
       # otherwise send an error
       STOP("'catch' must be a vector.")
     }
-  } 
+  }
   if (any(is.na(catch))) {
     WARN("'NA's removed from 'catch' to continue.")
     catch <- catch[!is.na(catch)]
-  }  
+  }
   if (length(catch)<2) STOP("Cannot perform calculations with one catch value.")
   if (Tmult<1) STOP("'Tmult' should be greater than 1.")
   # intermediate calculations
@@ -210,10 +229,11 @@ removal <- function(catch,
     Zippin=        { tmp <- iZippin(catch,conf.level) },
     CarleStrub=    { tmp <- iCarleStrub(catch,conf.level,alpha,beta,CS.se) },
     Seber3=        { tmp <- iSeber3(catch,conf.level) },
-    Seber2=        { tmp <- iSeber2(catch,conf.level) },        
+    Seber2=        { tmp <- iSeber2(catch,conf.level) },
     RobsonRegier2= { tmp <- iRobsonRegier2(catch,conf.level) },
     Moran=         { tmp <- iMoran(catch,conf.level,Tmult) },
-    Schnute=       { tmp <- iSchnute(catch,conf.level,Tmult) }
+    Schnute=       { tmp <- iSchnute(catch,conf.level,Tmult) },
+    Burnham=       { tmp <- iBurnham(catch,conf.level,Tmult,CIMicroFish) }
   )
   if (just.ests) { tmp <- tmp$est }
   else {
@@ -251,10 +271,10 @@ iRemovalNCI <- function(est,se,conf.level) {
 # INTERNAL -- Calculate CIs with likelihood theory for the
 #             Moran and Schnute methods.
 #=============================================================
-iRemovalLHCI <- function(method,catch,conf.level,k,T,X,min.nlogLH,Tmult){ 
+iRemovalLHCI <- function(method,catch,conf.level,k,T,X,min.nlogLH,Tmult){
   ## critical negative log-likelihood value
   nlogLHcrit <- min.nlogLH+stats::qchisq(conf.level,df=1)/2
-  
+
   ## Determine if the upper limit is going to fail.
   UCImsg <- LCImsg <- NA
   if (method=="Moran") {
@@ -278,7 +298,7 @@ iRemovalLHCI <- function(method,catch,conf.level,k,T,X,min.nlogLH,Tmult){
     UCImsg <- "An upper confidence value for 'No' cannot be determined."
     UCI <- Inf
   }
-  
+
   ## Determine if the lower limit should be the total catch
   # find negative log LH at total catch (internal functions are further below)
   if (method=="Moran") { tmp <- iLHMoran(T,catch,k=k,T=T,XX=X) }
@@ -290,8 +310,8 @@ iRemovalLHCI <- function(method,catch,conf.level,k,T,X,min.nlogLH,Tmult){
     LCImsg <- "The lower confidence value for 'No' has been set at the total catch."
     LCI <- T
   }
-  
-  ## Find LCI or UCI if need be (i.e., at least one did not fail above) 
+
+  ## Find LCI or UCI if need be (i.e., at least one did not fail above)
   if (!LCIfail | !UCIfail) {
     # create a matrix of N values to compute the negative log likelihood at
     Ntrys <- matrix(seq(T,ceiling(Tmult*T),0.02),ncol=1)
@@ -304,7 +324,8 @@ iRemovalLHCI <- function(method,catch,conf.level,k,T,X,min.nlogLH,Tmult){
     tmp <- range(which(nlogLHvals<=nlogLHcrit))
     # If the last position in the last N tried then the Ns tried were
     #   probably not adequate. Tell the user to up the Tmult value.
-    if (max(tmp)==length(Ntrys) & !UCIfail) WARN("Upper confidence value is ill-formed; try increasing 'Tmult' in 'removal()'.")
+    if (max(tmp)==length(Ntrys) & !UCIfail)
+      WARN("Upper confidence value is ill-formed; try increasing 'Tmult' in 'removal()'.")
     # The LCI is N in the lower position, UCI is N in the higher position.
     if (!LCIfail) LCI <- Ntrys[tmp[1]]
     if (!UCIfail) UCI <- Ntrys[tmp[2]]
@@ -339,7 +360,7 @@ iMoran <- function(catch,conf.level,Tmult) {
   ##   Note q, Tk in Schnute are p, T here
   # Intermediate Calculations
   int <- iRemovalKTX(catch)
-  k <- int[["k"]] 
+  k <- int[["k"]]
   T <- int[["T"]]
   X <- int[["X"]]
   # A check
@@ -395,7 +416,7 @@ iSchnute <- function(catch,conf.level,Tmult) {
   ##   Note q, Tk in Schnute are p, T here
   # Intermediate Calculations
   int <- iRemovalKTX(catch)
-  k <- int[["k"]] 
+  k <- int[["k"]]
   T <- int[["T"]]
   X <- int[["X"]]
   # A check
@@ -459,7 +480,7 @@ iZippin <- function(catch,conf.level) {
     # capture probability formula from Zippin (1956) according to Sweka (2006)
     p <- T/(k*N0-X)
     # compute variances
-    p.var <- iZippinpVar(N0,p,k) 
+    p.var <- iZippinpVar(N0,p,k)
     N0.var <- iZippinNoVar(N0,p,k)
     # compute CIs
     N0.ci <- iRemovalNCI(N0,sqrt(N0.var),conf.level)
@@ -490,11 +511,11 @@ iCarleStrub <- function(catch,conf.level,alpha,beta,CS.se=c("Zippin","alternativ
   N0 <- T
   while (((N0+1)/(N0-T+1))*prod((k*N0-X-T+beta+k-i)/(k*N0-X+alpha+beta+k-i)) >= 1.0) { N0 <- N0+1 }
   p <- T/(k*N0-X)
-  p.var <- iZippinpVar(N0,p,k) 
+  p.var <- iZippinpVar(N0,p,k)
   if (CS.se=="Zippin") {
     # PE variance ... Seber notes that this works under certain conditions
     N0.var <- iZippinNoVar(N0,p,k)
-  } else {  
+  } else {
     # Have yet to find a solid reference for this
     N0.var <- (N0*(N0-T)*T)/((T^2)-N0*(N0-T)*(((k*p)^2)/(1-p)))
   }
@@ -531,7 +552,7 @@ iSeber3 <- function(catch,conf.level) {
     N0 <- (6*X^2 - 3*X*T - T^2 + T*sqrt(T^2 + 6*X*T - 3*X^2))/(18*(X-T))
     # capture probability estimate (equation 7.24 (bottom) (p.315) of Seber (2002) ... note that T=Y)
     p <- (3*X - T - sqrt(T^2 + 6*X*T - 3*X^2))/(2*X)
-    p.var <- iZippinpVar(N0,p,k) 
+    p.var <- iZippinpVar(N0,p,k)
     N0.var <- iZippinNoVar(N0,p,k)
     # compute CIs
     N0.ci <- iRemovalNCI(N0,sqrt(N0.var),conf.level)
@@ -603,6 +624,81 @@ iRobsonRegier2 <- function(catch,conf.level) {
   list(est=tmp,catch=catch,lbl="Robson & Regier (1968) 2-Pass Removal Method")
 }
 
+#=============================================================
+# INTERNAL -- Calculate Burnham k-pass estimates
+#
+# Note in notes below that V&P refers to Van Deventer and Platts (1983)
+#=============================================================
+iBurnham <- function(catch,conf.level,Tmult,CIMicroFish){
+  # Get intermediate calculations
+  int <- iRemovalKTX(catch)
+  k <- int[["k"]] # T in V&P
+  T <- int[["T"]] # S in V&P
+  i <- 1:k
+  # An additional intermediate value from step 2 equation (page 352 in V&P)
+  C <- sum(catch*i)
+
+  # Create data.frame for iterative search that finds the No and p
+  #   First, check that Burnham is not going to break
+  #     the non descending removal pattern must be checked for last.
+  if (T==0) {
+    WARN("No catches on any pass results in model failure for Burnham method.")
+    tmp <- rep(NA,8)
+  } else if (T==1) {
+    WARN("Total catch of one fish results in model failure for Burnham method.")
+    tmp <- rep(NA,8)
+  } else if (T==catch[1]) {
+    WARN("All fish captured on first pass results in model failure for Burnham method.")
+    tmp <- rep(NA,8)
+  } else {
+    # Note: MicroFish uses Tmult=5 (Van Deventer 1989), whereas FSA::removal defaults
+    #       to Tmult=3. This formula is a little convoluted but it forces the iteration
+    #       to stop on Tmult+1. We have to explore through Tmult+1 to discover if
+    #       Tmult is the population estimate.
+    search.df <- data.frame(I=0:(((T*Tmult)-T)+1))
+    search.df$N <- T+search.df$I        # Equation in step 3a (page 352 in V&P)
+    search.df$P <-T/(C+k*search.df$I)   # Equation in step 3b (page 352 in V&P)
+    for (i in 1:length(search.df[,1])) {
+      # An exception to the equation in step 3c for the initial row in search.df
+      #   from page 352 in V&P. Note that search.df$I=0 when the loop counter 'i'=1.
+      if (i==1) search.df$H[i] <- 0+log(1+T/(search.df$I[i]+1))
+      # Equivalent to the equation in step 3c from page 352 in V&P
+      if (i>1) search.df$H[i] <- search.df$H[i-1]+log(1+T/(search.df$I[i-1]+1))
+    }
+    # The likelihood function: Equation 3d from page 352 in V&P
+    search.df$L <- search.df$H+T*log(search.df$P)+(C-T+(k*search.df$I))*log(1-search.df$P)
+    # Find the iteration (row) that has the maximum likelihood
+    max.like <- grep(max(search.df$L),search.df$L)
+    N0 <- T+search.df$I[max.like]
+    p <- search.df$P[max.like]
+    N0.var <- ((N0*(1-p)^k)*(1-(1-p)^k))/(((1-(1-p)^k)^2)-((k*p)^2)*((1-p)^(k-1)))
+    p.var <- ((p/N0)^2)*((N0.var)/((1-p)^(k-1)))
+    # Compute CIs ... Note that (N0-1) is how Ken Burnham recommends calculating
+    #   df (Jack Van Deventer, personal correspondance)
+    t.statistic <- stats::qt((1-conf.level)/2,N0-1)
+    # If asked round t for CI calcs according to MicroFish way
+    if (CIMicroFish) t.statistic <- round(t.statistic,digits=ifelse(N0<=100,3,2))
+    N0.ci <- N0+c(1,-1)*sqrt(N0.var)*t.statistic
+    # If asked for MicroFish confidence intervals, round N0.ci to avoid fractional fish
+    if (CIMicroFish) N0.ci <- round(N0.ci,digits=0)
+    p.ci <- p+c(1,-1)*sqrt(p.var)*t.statistic
+    # Organize the results into a vector
+    tmp <- c(N0,sqrt(N0.var),N0.ci,p,sqrt(p.var),p.ci)
+    # Check if N0=Tmult+1. If so, the Burnham approach searched from T to Tmult
+    #   without finding a population estimate.
+    if (N0==(Tmult*T)+1) {
+      WARN("The Burnham method failed to find estimates for population size and capture\n",
+           " probability. It may help to increase the Tmult option to a value greater\n",
+           " than the default (3), but that is unlikely to make a difference. This problem\n",
+           " is characteristic of a non-depleting catch pattern.")
+      tmp <- rep(NA,8)   # empty the vector of estimates
+    }
+  }
+  # Name the values in the results vector and return them
+  names(tmp) <- c("No","No.se","No.LCI","No.UCI","p","p.se","p.LCI","p.UCI")
+  list(est=tmp,int=c(int,C=C),catch=catch,
+       lbl="Burnham K-Pass Removal Method (Van Deventer and Platts 1983)")
+}
 
 #' @rdname removal
 #' @export
@@ -618,10 +714,10 @@ summary.removal <- function(object,parm=c("No","p","p1"),digits=getOption("digit
     parm <- parm[-which(parm=="p1")]
   }
   if (verbose) {
-    if (object$method %in% c("Moran","Schnute")) message("The ",object$lbl," method was used (SEs not computed).")
-    else message("The ",object$lbl," method was used.")
+    if (object$method %in% c("Moran","Schnute")) message("The ",object$lbl," was used (SEs not computed).")
+    else message("The ",object$lbl," was used.")
   }
-  if (object$method %in% c("Zippin","CarleStrub","Seber3","Seber2","RobsonRegier2")) {
+  if (object$method %in% c("Zippin","CarleStrub","Seber3","Seber2","RobsonRegier2","Burnham")) {
     res <- matrix(object$est[c("No","No.se","p","p.se")],nrow=2,byrow=TRUE)
     colnames(res) <- c("Estimate","Std. Error")
     rownames(res) <- c("No","p")
@@ -645,7 +741,7 @@ confint.removal <- function(object,parm=c("No","p"),
                             digits=getOption("digits"),verbose=FALSE,...) {
   if (!is.null(level)) WARN("The confidence level is not set here, it is set with 'conf.level=' in 'removal()'.")
   parm <- match.arg(parm,several.ok=TRUE)
-  if (object$method %in% c("Zippin","CarleStrub","Seber3","Seber2","RobsonRegier2")) {
+  if (object$method %in% c("Zippin","CarleStrub","Seber3","Seber2","RobsonRegier2","Burnham")) {
     res <- matrix(object$est[c("No.LCI","No.UCI","p.LCI","p.UCI")],nrow=2,byrow=TRUE)
     rownames(res) <- c("No","p")
     res <- res[which(rownames(res) %in% parm),,drop=FALSE]
@@ -663,7 +759,7 @@ confint.removal <- function(object,parm=c("No","p"),
     }
     res <- matrix(object$est[c("No.LCI","No.UCI")],nrow=1)
     rownames(res) <- c("No")
-  }  
+  }
   colnames(res) <- iCILabel(object$conf.level)
   round(res,digits)
 }

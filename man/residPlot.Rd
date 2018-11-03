@@ -9,13 +9,6 @@
 \alias{residPlot.ONEWAY}
 \alias{residPlot.TWOWAY}
 \alias{residPlot.nls}
-\alias{residPlot.lm}
-\alias{residPlot.SLR}
-\alias{residPlot.POLY}
-\alias{residPlot.IVR}
-\alias{residPlot.ONEWAY}
-\alias{residPlot.TWOWAY}
-\alias{residPlot.nls}
 \alias{residPlot.nlme}
 \title{Construct a residual plot from lm or nls objects.}
 \usage{
@@ -23,12 +16,13 @@ residPlot(object, ...)
 
 \method{residPlot}{lm}(object, ...)
 
-\method{residPlot}{SLR}(object, xlab = "Fitted Values", ylab = "Residuals",
-  main = "", pch = 16, col = "black", lty.ref = 3, lwd.ref = 1,
-  col.ref = "black", resid.type = c("raw", "standardized", "studentized"),
+\method{residPlot}{SLR}(object, xlab = "Fitted Values",
+  ylab = "Residuals", main = "", pch = 16, col = "black",
+  lty.ref = 3, lwd.ref = 1, col.ref = "black",
+  resid.type = c("raw", "standardized", "studentized"),
   outlier.test = TRUE, alpha = 0.05, loess = FALSE, lty.loess = 2,
-  lwd.loess = 1, col.loess = "black", trans.loess = 8, inclHist = TRUE,
-  ...)
+  lwd.loess = 1, col.loess = "black", trans.loess = 8,
+  inclHist = TRUE, ...)
 
 \method{residPlot}{POLY}(object, ...)
 
@@ -36,29 +30,33 @@ residPlot(object, ...)
   box.lty.leg = 0, ...)
 
 \method{residPlot}{ONEWAY}(object, xlab = "Fitted Values",
-  ylab = "Residuals", main = "", pch = 16, col = "black", lty.ref = 3,
-  lwd.ref = 1, col.ref = "black", resid.type = c("raw", "standardized",
-  "studentized"), bp = TRUE, outlier.test = TRUE, alpha = 0.05,
-  loess = FALSE, lty.loess = 2, lwd.loess = 1, col.loess = "black",
-  trans.loess = 8, inclHist = TRUE, ...)
+  ylab = "Residuals", main = "", pch = 16, col = "black",
+  lty.ref = 3, lwd.ref = 1, col.ref = "black",
+  resid.type = c("raw", "standardized", "studentized"), bp = TRUE,
+  outlier.test = TRUE, alpha = 0.05, loess = FALSE, lty.loess = 2,
+  lwd.loess = 1, col.loess = "black", trans.loess = 8,
+  inclHist = TRUE, ...)
 
 \method{residPlot}{TWOWAY}(object, xlab = "Fitted Values",
-  ylab = "Residuals", main = "", pch = 16, col = "black", lty.ref = 3,
-  lwd.ref = 1, col.ref = "black", resid.type = c("raw", "standardized",
-  "studentized"), bp = TRUE, outlier.test = TRUE, alpha = 0.05,
-  loess = FALSE, lty.loess = 2, lwd.loess = 1, col.loess = "black",
+  ylab = "Residuals", main = "", pch = 16, col = "black",
+  lty.ref = 3, lwd.ref = 1, col.ref = "black",
+  resid.type = c("raw", "standardized", "studentized"), bp = TRUE,
+  outlier.test = TRUE, alpha = 0.05, loess = FALSE, lty.loess = 2,
+  lwd.loess = 1, col.loess = "black", trans.loess = 8,
+  inclHist = TRUE, ...)
+
+\method{residPlot}{nls}(object, xlab = "Fitted Values",
+  ylab = "Residuals", main = "", pch = 16, col = "black",
+  lty.ref = 3, lwd.ref = 1, col.ref = "black",
+  resid.type = c("raw", "standardized", "studentized"), loess = FALSE,
+  lty.loess = 2, lwd.loess = 1, col.loess = "black",
   trans.loess = 8, inclHist = TRUE, ...)
 
-\method{residPlot}{nls}(object, xlab = "Fitted Values", ylab = "Residuals",
-  main = "", pch = 16, col = "black", lty.ref = 3, lwd.ref = 1,
-  col.ref = "black", resid.type = c("raw", "standardized", "studentized"),
-  loess = FALSE, lty.loess = 2, lwd.loess = 1, col.loess = "black",
-  trans.loess = 8, inclHist = TRUE, ...)
-
-\method{residPlot}{nlme}(object, xlab = "Fitted Values", ylab = "Residuals",
-  main = "", pch = 16, col = "black", lty.ref = 3, lwd.ref = 1,
-  col.ref = "black", resid.type = c("raw", "standardized", "studentized"),
-  loess = FALSE, lty.loess = 2, lwd.loess = 1, col.loess = "black",
+\method{residPlot}{nlme}(object, xlab = "Fitted Values",
+  ylab = "Residuals", main = "", pch = 16, col = "black",
+  lty.ref = 3, lwd.ref = 1, col.ref = "black",
+  resid.type = c("raw", "standardized", "studentized"), loess = FALSE,
+  lty.loess = 2, lwd.loess = 1, col.loess = "black",
   trans.loess = 8, inclHist = TRUE, ...)
 }
 \arguments{
@@ -129,10 +127,8 @@ If the user chooses to add a legend without identifying coordinates for the uppe
 This function is meant to allow newbie students the ability to easily construct residual plots for one-way ANOVA, two-way ANOVA, simple linear regression, and indicator variable regressions. The plots can be constructed by submitting a saved linear model to this function which allows students to interact with and visualize moderately complex linear models in a fairly easy and efficient manner.
 }
 \examples{
-data(Mirex)
-# create year as a factor variable
+# create year factor variable & reduce number of years for visual simplicity
 Mirex$fyear <- factor(Mirex$year)
-# reduce number of years for visual simplicity
 Mirex2 <- filterD(Mirex,fyear \%in\% c(1977,1992))
 
 ## Indicator variable regression with two factors

@@ -27,16 +27,13 @@ Final length measurements were simulated by adding a uniform error to the value 
 }
 
 \examples{
-data(SpotVA1)
 str(SpotVA1)
 head(SpotVA1)
 plot(tl~age,data=SpotVA1)
 
 }
 \seealso{
-See \code{\link[FSAdata]{SpotVA2}} in \pkg{FSAdata} for related data.
+Used in \code{\link{vbFuns}}, \code{\link{vbStarts}}, and \code{\link{nlsTracePlot}} examples. Also see \code{\link[FSAdata]{SpotVA2}} in \pkg{FSAdata} for related data.
 }
-\concept{
-Growth 'von Bertalanffy'
-}
+\concept{Growth 'von Bertalanffy'}
 \keyword{datasets}

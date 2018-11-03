@@ -155,11 +155,12 @@
 #' ##   However, observe the correlations in the summary() results.
 #' 
 #' ## Von B
-#' data(SpotVA1)
-#' # Fitting the typical parameterization of the von B function
-#' fit1 <- nls(tl~vb1(age,Linf,K,t0),data=SpotVA1,start=vbStarts(tl~age,data=SpotVA1))
-#' summary(fit1,correlation=TRUE)
 #' plot(tl~age,data=SpotVA1,pch=19)
+#' 
+#' # Fitting the typical parameterization of the von B function
+#' fit1 <- nls(tl~vb1(age,Linf,K,t0),data=SpotVA1,
+#'             start=vbStarts(tl~age,data=SpotVA1))
+#' summary(fit1,correlation=TRUE)
 #' curve(vb1(x,Linf=coef(fit1)),from=0,to=5,col="red",lwd=10,add=TRUE)
 #'
 #' # Fitting the Francis parameterization of the von B function
@@ -190,11 +191,12 @@
 #' lens <- gompO(ages,Linf=450,a=1,gi=0.3)+rnorm(length(ages),0,sd)
 #' # put together as a data.frame
 #' df <- data.frame(age=ages,len=round(lens,0))
-#' 
+#'
+#' plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
+#'   
 #' # Fit first Ricker parameterization
 #' fit1 <- nls(len~gomp1(age,Linf,gi,ti),data=df,start=list(Linf=500,gi=0.3,ti=3))
 #' summary(fit1,correlation=TRUE)
-#' plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
 #' curve(gomp1(x,Linf=coef(fit1)),from=0,to=15,col="red",lwd=10,add=TRUE)
 #'
 #' # Fit third Ricker parameterization
@@ -210,42 +212,54 @@
 #'       from=0,to=15,col="green",lwd=2,add=TRUE)
 #' 
 #' ## Richards
-#' # Fit first Richards parameterization
-#' fit1 <- nls(len~rich1(age,Linf,k,a,b),data=df,start=list(Linf=450,k=0.25,a=0.65,b=3))
+#' 
+#' \dontrun{
+#' # Fit first Richards parameterization ... DOES NOT CONVERGE
+#' fit1 <- nls(len~rich1(age,Linf,k,a,b),data=df,
+#'             start=list(Linf=450,k=0.3,a=0.2,b=3))
 #' summary(fit1,correlation=TRUE)
-#' plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
 #' curve(rich1(x,Linf=coef(fit1)),from=0,to=15,col="red",lwd=10,add=TRUE)
 #'
-#' # Fit second Richards parameterization
-#' fit2 <- nls(len~rich2(age,Linf,k,ti,b),data=df,start=list(Linf=450,k=0.25,ti=3,b=3))
+#' # Fit second Richards parameterization ... DOES NOT CONVERGE
+#' fit2 <- nls(len~rich2(age,Linf,k,ti,b),data=df,
+#'             start=list(Linf=450,k=0.25,ti=3,b=3))
 #' summary(fit2,correlation=TRUE)
 #' curve(rich2(x,Linf=coef(fit2)),from=0,to=15,col="blue",lwd=7,add=TRUE)
+#' }
+#'
+#' plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
 #' 
 #' # Fit third Richards parameterization
-#' fit3 <- nls(len~rich3(age,Linf,k,ti,b),data=df,start=list(Linf=450,k=0.25,ti=3,b=-0.3))
+#' fit3 <- nls(len~rich3(age,Linf,k,ti,b),data=df,
+#'             start=list(Linf=450,k=0.25,ti=3,b=-0.1))
 #' summary(fit3,correlation=TRUE)
 #' curve(rich3(x,Linf=coef(fit3)),from=0,to=15,col="green",lwd=4,add=TRUE)
 #' 
 #' # Fit fourth Richards parameterization
-#' fit4 <- nls(len~rich4(age,Linf,k,ti,b),data=df,start=list(Linf=450,k=0.25,ti=3,b=0.7))
+#' fit4 <- nls(len~rich4(age,Linf,k,ti,b),data=df,
+#'             start=list(Linf=450,k=0.25,ti=3,b=0.7))
 #' summary(fit4,correlation=TRUE)
 #' curve(rich4(x,Linf=coef(fit4)),from=0,to=15,col="black",lwd=1,add=TRUE)
 #' 
 #' ## Logistic
-#' # Fit first Campana-Jones parameterization
-#' fit1 <- nls(len~log1(age,Linf,gninf,ti),data=df,start=list(Linf=450,gninf=0.45,ti=4))
-#' summary(fit1,correlation=TRUE)
 #' plot(len~age,data=df,pch=19,col=rgb(0,0,0,1/5))
+#' 
+#' # Fit first Campana-Jones parameterization
+#' fit1 <- nls(len~log1(age,Linf,gninf,ti),data=df,
+#'             start=list(Linf=450,gninf=0.45,ti=4))
+#' summary(fit1,correlation=TRUE)
 #' curve(log1(x,Linf=coef(fit1)),from=0,to=15,col="red",lwd=10,add=TRUE)
 #'
 #' # Fit second Campana-Jones parameterization
-#' fit2 <- nls(len~log2(age,Linf,gninf,a),data=df,start=list(Linf=450,gninf=0.45,a=7))
+#' fit2 <- nls(len~log2(age,Linf,gninf,a),data=df,
+#'             start=list(Linf=450,gninf=0.45,a=7))
 #' summary(fit2,correlation=TRUE)
 #' curve(log2(x,Linf=coef(fit2)),from=0,to=15,col="blue",lwd=5,add=TRUE)
 #'
 #' # Fit Karkach parameterization (using simple=TRUE model)
 #' log3 <- logisticFuns("Karkach",simple=TRUE)
-#' fit3 <- nls(len~log3(age,Linf,L0,gninf),data=df,start=list(Linf=450,L0=30,gninf=0.45))
+#' fit3 <- nls(len~log3(age,Linf,L0,gninf),data=df,
+#'             start=list(Linf=450,L0=30,gninf=0.45))
 #' summary(fit3,correlation=TRUE)
 #' curve(log3(x,Linf=coef(fit3)[1],L0=coef(fit3)[2],gninf=coef(fit3)[3]),
 #'       from=0,to=15,col="green",lwd=2,add=TRUE)
@@ -282,7 +296,8 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
                           "GQ","GallucciQuinn","Mooij","Weisberg","Ogle",
                           "Schnute","Francis","Laslett","Polacheck",
                           "Somers","Somers2","Pauly",
-                          "Fabens","Fabens2","Wang","Wang2","Wang3","Francis2"),
+                          "Fabens","Fabens2","Wang","Wang2","Wang3",
+                          "Francis2","Francis3"),
                    simple=FALSE,msg=FALSE) {
   Ogle <- function(t,Linf,K=NULL,tr=NULL,Lr=NULL) {
     if (length(Linf)==4) {
@@ -442,13 +457,25 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
   SWang3 <- function(Lm,dt,K,a,b) {
     Lm+(a+b*Lm)*(1-exp(-K*dt))
   }
-  Francis2 <- function(Lm,dt,g1,g3=NULL,L1,L3=NULL) {
-    if (length(g1)==2) { g3 <- g1[[2]]; g1 <- g1[[1]] }
-    if (length(L1)==2) { L3 <- L1[[2]]; L1 <- L1[[1]] }
-    ((L3*g1-L1*g3)/(g1-g3)-Lm)*(1-(1+(g1-g3)/(L1-L3))^dt)
+  Francis2 <- function(Lm,dt,g1,g2=NULL,L1,L2=NULL) {
+    if (length(g1)==2) { g2 <- g1[[2]]; g1 <- g1[[1]] }
+    if (length(L1)==2) { L2 <- L1[[2]]; L1 <- L1[[1]] }
+    ((L2*g1-L1*g2)/(g1-g2)-Lm)*(1-(1+(g1-g2)/(L1-L2))^dt)
   }
-  sFrancis2 <- function(Lm,dt,g1,g3,L1,L3) {
-    ((L3*g1-L1*g3)/(g1-g3)-Lm)*(1-(1+(g1-g3)/(L1-L3))^dt)
+  sFrancis2 <- function(Lm,dt,g1,g2,L1,L2) {
+    ((L2*g1-L1*g2)/(g1-g2)-Lm)*(1-(1+(g1-g2)/(L1-L2))^dt)
+  }
+  Francis3 <- function(Lm,t1,t2,g1,g2=NULL,w=NULL,u=NULL,L1,L2=NULL) {
+    if (length(g1)==2) { g2 <- g1[[2]]; g1 <- g1[[1]] }
+    if (length(L1)==2) { L2 <- L1[[2]]; L1 <- L1[[1]] }
+    S1 <- u*sin(2*pi*(t1-w))/(2*pi)
+    S2 <- u*sin(2*pi*(t2-w))/(2*pi)
+    ((L2*g1-L1*g2)/(g1-g2)-Lm)*(1-(1+(g1-g2)/(L1-L2))^((t2-t1)+S2-S1))
+  }
+  sFrancis3 <- function(Lm,t1,t2,g1,g2,w,u,L1,L2) {
+    S1 <- u*sin(2*pi*(t1-w))/(2*pi)
+    S2 <- u*sin(2*pi*(t2-w))/(2*pi)
+    ((L2*g1-L1*g2)/(g1-g2)-Lm)*(1-(1+(g1-g2)/(L1-L2))^((t2-t1)+S2-S1))
   }
   
   param <- match.arg(param)
@@ -484,7 +511,7 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
                 "       L1 = the mean length at the first (small) reference age\n",
                 "       L2 = the mean length at the intermediate reference age\n",
                 "       L3 = the mean length at the third (large) reference age\n\n",
-                "You must also supply the constant values (i.e., they are NOT model parameters) for\n",
+                "You must also give values (i.e., they are NOT model parameters) for\n",
                 "       t1 = the first (usually a younger) reference age\n",
                 "       t3 = the third (usually an older) reference age\n\n")
       },
@@ -515,7 +542,7 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
                 "  where L1 = the mean length at the youngest age in the sample\n",
                 "        L2 = the mean length at the oldest age in the sample\n",
                 "         K = exponential rate of approach to Linf\n\n",
-                "  You must also supply the constant values (i.e., they are NOT model parameters) for\n",
+                "  You must also give values (i.e., they are NOT model parameters) for\n",
                 "        t1 = the youngest age in the sample\n",
                 "        t2 = the oldest age in the sample\n\n")
       },
@@ -611,13 +638,35 @@ vbFuns <- function(param=c("Typical","typical","Traditional","traditional","Beve
       },
       Francis2={
         message("You have chosen the 'Francis2' parameterization for tag-return data.\n\n",
-                "  E[dL|Lm,dt] = ((L3g1-L1g3)/(g1-g3)-Lm)*(1-(1+(g1-g3)/(L1-L3))^dt)\n\n",
+                "  E[dL|Lm,dt] = ((L2g1-L1g2)/(g1-g2)-Lm)*(1-(1+(g1-g2)/(L1-L2))^dt)\n\n",
                 "  where g1 = mean growth rate at the first (small) reference length L1\n",
-                "        g3 = mean growth rate the second (large) reference length L3\n\n",
-                "  and the data are dL = change in length (from mark to recapture)\n",
+                "        g2 = mean growth rate at the second (large) reference length L2\n\n",
+                "You must also give values (i.e., they are NOT model parameters) for\n",
+                "       L1 = the first (usually a shorter) reference length\n",
+                "       L2 = the second (usually a longer) reference length\n",
+                "The data are dL = change in length (from mark to recapture)\n",
+                "             Lm = length at time of marking\n",
+                "             dt = time between marking and recapture.\n\n")
+      },
+      Francis3={
+        message("You have chosen the 'Francis3' parameterization for tag-return data\n",
+                "  with a seasonal component.\n\n",
+                "  E[dL|Lm,t1,t2] = ((L2g1-L1g2)/(g1-g2)-Lm)*(1-(1+(g1-g2)/(L1-L2))^((t2-t1)+S2-S1))\n\n",
+                "  where S1 = u*sin(2*pi*(t1-w))/(2*pi) and\n",
+                "        S2 = u*sin(2*pi*(t2-w))/(2*pi) and\n\n",
+                "  where g1 = mean growth rate at the first (small) reference length L1\n",
+                "        g2 = mean growth rate at the second (large) reference length L2\n",
+                "        w  = time of year when the growth rate is maximum\n",
+                "        u  = describes the extent of seasonality.\n\n",
+                "You must also give values (i.e., they are NOT model parameters) for\n",
+                "       L1 = the first (usually a shorter) reference length\n",
+                "       L2 = the second (usually a longer) reference length\n",
+                "The data are dL = change in length (from mark to recapture)\n",
                 "                   Lm = length at time of marking\n",
-                "                   dt = time between marking and recapture.\n\n")
+                "                   t1 = time at marking\n",
+                "                   t2 = time at recapture.\n\n")
       }
+      
     )
   }
   if (simple) param <- paste0("S",param)
@@ -1065,11 +1114,10 @@ growthFunShow <- function(type=c("vonBertalanffy","Gompertz","Richards",
          Logistic = { expr <- iSGF_LOGISTIC(param) },
          Schnute = { expr <- iSGF_SCHNUTE(case) })
   if (plot) {
-    op <- graphics::par(mar=c(0.1,0.1,0.1,0.1))
+    withr::local_par(list(mar=c(0.1,0.1,0.1,0.1)))
     graphics::plot(0,type="n",ylim=c(0,1),xlim=c(0,1),xaxt="n",yaxt="n",
                    xlab="",ylab="",bty="n",...)
     graphics::text(0.5,0.5,expr,...)
-    graphics::par(op)
   }
   expr
 }

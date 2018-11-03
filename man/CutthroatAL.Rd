@@ -39,15 +39,12 @@ Entered into \dQuote{RMark} format (see \code{\link[FSAdata]{CutthroatALf}} in \
 }
 
 \examples{
-data(CutthroatAL)
 str(CutthroatAL)
 head(CutthroatAL)
 
 }
 \seealso{
-See \code{\link{mrOpen}} for an example analysis.
+Used in \code{\link{mrOpen}} examples.
 }
-\concept{
-Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' 'Jolly-Seber' 'Capture History'
-}
+\concept{Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' 'Jolly-Seber' 'Capture History'}
 \keyword{datasets}

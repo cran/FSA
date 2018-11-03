@@ -5,10 +5,11 @@
 \title{Plots to visualize age-length keys.}
 \usage{
 alkPlot(key, type = c("barplot", "area", "lines", "splines", "bubble"),
-  xlab = "Length", ylab = ifelse(type != "bubble", "Proportion", "Age"),
-  xlim = NULL, ylim = NULL, showLegend = FALSE, lbl.cex = 1.25,
-  leg.cex = 1, lwd = 2, span = 0.25, pal = paletteChoices(),
-  grid = TRUE, col = "gray80", buf = 0.45, add = FALSE, ...)
+  xlab = "Length", ylab = ifelse(type != "bubble", "Proportion",
+  "Age"), xlim = NULL, ylim = NULL, showLegend = FALSE,
+  lbl.cex = 1.25, leg.cex = 1, lwd = 2, span = 0.25,
+  pal = paletteChoices(), grid = TRUE, col = "gray80", buf = 0.45,
+  add = FALSE, ...)
 }
 \arguments{
 \item{key}{A numeric matrix that contains the age-length key.}
@@ -64,10 +65,9 @@ Note that all plots are \dQuote{vertically conditional} -- i.e., each represents
 
 \examples{
 ## Make an example age-length key
-data(WR79)
-WR.age <- subset(WR79, !is.na(age))      # isolate the age sample
-WR.age$LCat <- lencat(WR.age$len,w=5)    # add length intervals (width=5)
-raw <- xtabs(~LCat+age,data=WR.age)      # create age-length key
+WR.age <- subset(WR79, !is.na(age))
+WR.age$LCat <- lencat(WR.age$len,w=5)
+raw <- xtabs(~LCat+age,data=WR.age)
 ( WR.key <- prop.table(raw, margin=1) )
 
 ## Various visualizations of the age-length key

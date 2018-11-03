@@ -30,12 +30,12 @@ Summary results of capture histories (number captured, number of recaptured fish
 }
 
 \examples{
-data(PikeNY)
 str(PikeNY)
 head(PikeNY)
 
 }
-\concept{
-Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' 'Schnabel'
+\seealso{
+Used in \code{\link{mrClosed}} examples. Also see \code{\link{PikeNYPartial1}}.
 }
+\concept{Abundance 'Population Size' 'Mark-Recapture' 'Capture-Recapture' 'Schnabel'}
 \keyword{datasets}

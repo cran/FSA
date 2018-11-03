@@ -7,11 +7,6 @@
 \alias{summary.mrClosed2}
 \alias{confint.mrClosed2}
 \alias{plot.mrClosed2}
-\alias{summary.mrClosed1}
-\alias{confint.mrClosed1}
-\alias{summary.mrClosed2}
-\alias{confint.mrClosed2}
-\alias{plot.mrClosed2}
 \title{Estimate initial population size for single or multiple census mark-recapture data.}
 \usage{
 mrClosed(M = NULL, n = NULL, m = NULL, R = NULL,
@@ -36,8 +31,8 @@ mrClosed(M = NULL, n = NULL, m = NULL, R = NULL,
 
 \method{plot}{mrClosed2}(x, pch = 19, col.pt = "black",
   xlab = "Marked in Population", ylab = "Prop. Recaptures in Sample",
-  loess = FALSE, lty.loess = 2, lwd.loess = 1, col.loess = "gray20",
-  trans.loess = 10, span = 0.9, ...)
+  loess = FALSE, lty.loess = 2, lwd.loess = 1,
+  col.loess = "gray20", trans.loess = 10, span = 0.9, ...)
 }
 \arguments{
 \item{M}{A numeric representing the number of marked fish from the first sample (single-census), an object from \code{capHistSum()} (single- or multiple-census), or numeric vector of marked fish prior to ith samples (multiple-census).}
@@ -184,7 +179,6 @@ summary(mr2,incl.SE=TRUE,verbose=TRUE)
 
 ### Single census, using capHistSum() results
 ## data in capture history format
-data(BluegillJL)
 str(BluegillJL)
 ch1 <- capHistSum(BluegillJL)
 mr3 <- mrClosed(ch1)
@@ -206,10 +200,7 @@ confint(mr4,verbose=TRUE)
 confint(mr4,incl.all=FALSE,verbose=TRUE)
 
 ### Multiple Census
-## Data in summarized form
-data(PikeNY)
-
-## Schnabel method
+## Data in summarized form ... Schnabel method
 mr5 <- with(PikeNY,mrClosed(n=n,m=m,R=R,method="Schnabel"))
 plot(mr5)
 plot(mr5,loess=TRUE)
@@ -224,7 +215,6 @@ summary(mr6)
 confint(mr6)
 
 ### Capture history data summarized by capHistSum()
-data(PikeNYPartial1)
 # ignore first column of ID numbers
 ch2 <- capHistSum(PikeNYPartial1,cols2ignore="id")
 

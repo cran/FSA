@@ -27,7 +27,6 @@ Age-length data in 5-cm increments taken exactly from Table 2A of the source whi
 }
 
 \examples{
-data(WR79)
 str(WR79)
 head(WR79)
 
@@ -40,7 +39,5 @@ WR79.length <- subset(WR79,is.na(age))
 str(WR79.length)
 
 }
-\concept{
-'Age-Length Key'
-}
+\concept{'Age-Length Key'}
 \keyword{datasets}

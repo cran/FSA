@@ -5,9 +5,6 @@
 \alias{mrOpen}
 \alias{summary.mrOpen}
 \alias{confint.mrOpen}
-\alias{mrOpen}
-\alias{summary.mrOpen}
-\alias{confint.mrOpen}
 \title{Jolly-Seber analysis from multiple mark-recapture events from an open population.}
 \usage{
 jolly(...)
@@ -18,8 +15,8 @@ mrOpen(mb.top, mb.bot = NULL, type = c("Jolly", "Manly"),
 \method{summary}{mrOpen}(object, parm = c("N", "phi", "B", "M"),
   verbose = FALSE, ...)
 
-\method{confint}{mrOpen}(object, parm = c("N", "phi", "B"), level = NULL,
-  conf.level = NULL, verbose = FALSE, ...)
+\method{confint}{mrOpen}(object, parm = c("N", "phi", "B"),
+  level = NULL, conf.level = NULL, verbose = FALSE, ...)
 }
 \arguments{
 \item{\dots}{Additional arguments for methods.}
@@ -85,7 +82,6 @@ For comparing to Jolly's data as presented in Tables 5.1 and 5.2 of Seber (2002)
 
 \examples{
 ## First example -- capture histories summarized with capHistSum()
-data(CutthroatAL)
 ch1 <- capHistSum(CutthroatAL,cols2use=-1)  # ignore first column of fish ID
 ex1 <- mrOpen(ch1)
 summary(ex1)

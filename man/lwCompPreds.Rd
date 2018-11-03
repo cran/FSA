@@ -4,13 +4,13 @@
 \alias{lwCompPreds}
 \title{Constructs plots of predicted weights at given lengths among different groups.}
 \usage{
-lwCompPreds(object, lens = NULL, qlens = c(0.05, 0.25, 0.5, 0.75, 0.95),
-  qlens.dec = 1, base = exp(1), interval = c("confidence", "prediction",
-  "both"), center.value = 0, lwd = 1, connect.preds = TRUE,
-  show.preds = FALSE, col.connect = "gray50", ylim = NULL,
-  main.pre = "Length==", cex.main = 0.8, xlab = "Groups",
-  ylab = "Predicted Weight", yaxs = "r", rows = round(sqrt(num)),
-  cols = ceiling(sqrt(num)))
+lwCompPreds(object, lens = NULL, qlens = c(0.05, 0.25, 0.5, 0.75,
+  0.95), qlens.dec = 1, base = exp(1), interval = c("confidence",
+  "prediction", "both"), center.value = 0, lwd = 1,
+  connect.preds = TRUE, show.preds = FALSE, col.connect = "gray50",
+  ylim = NULL, main.pre = "Length==", cex.main = 0.8,
+  xlab = "Groups", ylab = "Predicted Weight", yaxs = "r",
+  rows = round(sqrt(num)), cols = ceiling(sqrt(num)))
 }
 \arguments{
 \item{object}{An \code{lm} object (i.e., returned from fitting a model with \code{lm}). This model should have log(weight) as the response and log(length) as the explanatory covariate and an explanatory factor variable that describes the different groups.}
@@ -64,17 +64,15 @@ Constructs plots of predicted weights at given lengths among different groups. T
 }
 
 \examples{
-# load weight-length data
-data(ChinookArg)
-# add log length and weight data
+# add log length and weight data to ChinookArg data
 ChinookArg$logtl <- log(ChinookArg$tl)
 ChinookArg$logwt <- log(ChinookArg$w)
 # fit model to assess equality of slopes
 lm1 <- lm(logwt~logtl*loc,data=ChinookArg)
 anova(lm1)
 
-# set par so that the plots will look decent
-par(mar=c(3.5,3.5,1,1),mgp=c(1.8,0.4,0),tcl=-0.2)
+# set graphing parameters so that the plots will look decent
+op <- par(mar=c(3.5,3.5,1,1),mgp=c(1.8,0.4,0),tcl=-0.2)
 # show predicted weights (w/ CI) at the default quantile lengths for each year
 lwCompPreds(lm1,xlab="Location")
 # show predicted weights (w/ CI) at the quartile lengths for each year
@@ -111,6 +109,9 @@ if (interactive()) {
   lm3 <- lm(logwt~loc,data=ChinookArg)
   lwCompPreds(lm3)   
 }
+
+## return graphing parameters to original state
+par(op)
 
 }
 \references{

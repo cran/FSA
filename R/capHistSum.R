@@ -51,7 +51,6 @@
 #' 
 #' @examples
 #' # data.frame with IDs in the first column
-#' data(PikeNYPartial1)
 #' head(PikeNYPartial1)
 #' 
 #' # Three ways to ignore first column of ID numbers
@@ -66,6 +65,8 @@
 #'
 #' # An examle with only two sample events (for demonstration only)
 #' ( ch2 <- capHistSum(PikeNYPartial1,cols2use=-c(1,4:5)) )
+#' ( ch2 <- capHistSum(PikeNYPartial1,cols2use=2:3) )
+#' ( ch2 <- capHistSum(PikeNYPartial1,cols2ignore=c(1,4:5)) )
 #'
 #' @rdname capHistSum
 #' @export
@@ -289,7 +290,6 @@ iMarray <- function(mb,smry) {
 #' @rdname capHistSum
 #' @export
 plot.CapHist <- function(x,what=c("u","f"),pch=19,cex.pch=0.7,lwd=1,...) { # nocov start
-  opar <- graphics::par()
   what <- match.arg(what,several.ok=TRUE)
   tmp <- x$sum[,c("n","u","f")]
   t <- nrow(tmp)
@@ -301,7 +301,7 @@ plot.CapHist <- function(x,what=c("u","f"),pch=19,cex.pch=0.7,lwd=1,...) { # noc
   tmp$su <- log(tmp$u)
   tmp$su[which(tmp$u==0)] <- NA
   # catch if two plots are being made
-  if (length(what)==2) opar <- graphics::par(mfrow=c(1,2))
+  if (length(what)==2) withr::local_par(list(mfrow=c(1,2)))
   # make the fi plot
   if ("f" %in% what) {
     tmp2 <- tmp[!is.na(tmp$sf),]
@@ -317,5 +317,4 @@ plot.CapHist <- function(x,what=c("u","f"),pch=19,cex.pch=0.7,lwd=1,...) { # noc
          xlab="Capture Event (i)",...)
     graphics::points(su~i,data=tmp,pch=pch,cex=cex.pch)
   }
-  graphics::par(opar)
 } # nocov end

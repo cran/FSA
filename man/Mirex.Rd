@@ -26,15 +26,16 @@ The \code{year} variable should be converted to a factor as shown in the example
    \item Linear models
    \item Other
  }
- 
- @concept 'Linear Models' Other
 }
 
 \examples{
-data(Mirex)
 Mirex$year <- factor(Mirex$year)
 lm1 <- lm(mirex~weight*year*species,data=Mirex)
 anova(lm1)
 
 }
+\seealso{
+Used in \code{\link{fitPlot}}, \code{\link{residPlot}}, \code{\link{compSlopes}}, \code{\link{compIntercepts}}, \code{\link{hoCoef}}, and \code{\link{rSquared}} examples.
+}
+\concept{'Linear Models' Other}
 \keyword{datasets}

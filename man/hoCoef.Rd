@@ -4,7 +4,8 @@
 \alias{hoCoef}
 \title{Performs a hypothesis test that a linear model parameter is equal to a specific value.}
 \usage{
-hoCoef(object, term = 2, bo = 0, alt = c("two.sided", "less", "greater"))
+hoCoef(object, term = 2, bo = 0, alt = c("two.sided", "less",
+  "greater"))
 }
 \arguments{
 \item{object}{A \code{lm} object.}
@@ -27,7 +28,6 @@ The \dQuote{direction} of the alternative hypothesis is identified by a string i
 If the \code{lm} object is from a simple linear regression with an intercept then \code{term=1} will use the intercept and \code{term=2} will use the slope in the hypothesis test.
 }
 \examples{
-data(Mirex)
 # Simple linear regression test HA:slope!=0.1
 lm1 <- lm(mirex~weight, data=Mirex)
 hoCoef(lm1,2,0.1)

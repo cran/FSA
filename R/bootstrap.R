@@ -51,10 +51,6 @@
 #' @keywords htest
 #' 
 #' @examples
-#' \dontrun{
-#' #### This does not run with car v3.0.0, but the error will be fixed
-#' #### when car v3.0.1 is submitted to CRAN.
-#' data(Ecoli)
 #' fnx <- function(days,B1,B2,B3) {
 #'   if (length(B1) > 1) {
 #'     B2 <- B1[2]
@@ -65,23 +61,24 @@
 #' }
 #' nl1 <- nls(cells~fnx(days,B1,B2,B3),data=Ecoli,
 #'            start=list(B1=6,B2=7.2,B3=-1.45))
-#' nl1.bootc <- bootCase(nl1,B=99)  # B=99 too few to be useful
+#' nl1.bootc <- bootCase(nl1,coef,B=99)  # B=99 too few to be useful
 #' confint(nl1.bootc,"B1")
 #' confint(nl1.bootc,c(2,3))
 #' confint(nl1.bootc,conf.level=0.90)
+#' confint(nl1.bootc,plot=TRUE)
 #' predict(nl1.bootc,fnx,days=1:3)
 #' predict(nl1.bootc,fnx,days=3)
 #' htest(nl1.bootc,1,bo=6,alt="less")
 #' hist(nl1.bootc)
 #' plot(nl1.bootc)
 #' cor(nl1.bootc)
-#' }
 #' 
 #' @rdname bootCase
 #' @export
 bootCase <- function(object,f.=stats::coef,B=R,R=999) {
   # Tell user to use Boot instead
-  message("'bootCase' is provided here only for backward compatibility.\nConsider using 'Boot' from the 'car' package instead.")
+  message("'bootCase' is provided here only for backward compatibility.\n",
+          "Consider using 'Boot' from the 'car' package instead.")
   # Use Boot, making sure the case method is used
   tmp <- car::Boot(object,f=f.,R=B,method="case")
   # Return matrix of results (like bootCase used to) and remove NAs
@@ -120,19 +117,17 @@ htest.bootCase <- function(object,parm=NULL,bo=0,
 hist.bootCase <- function(x,same.ylim=TRUE,ymax=NULL,
                           rows=round(sqrt(ncol(x))),
                           cols=ceiling(sqrt(ncol(x))),...){ # nocov start
-  ## Set parameters
-  op <- graphics::par("mfrow")
-  graphics::par(mfrow=c(rows,cols))
+  ## Set graphing parameters
+  withr::local_par(list(mfrow=c(rows,cols)))
 	## If not given ymax, then find highest count on all histograms
   if (is.null(ymax)) {
-    for (i in seq_len(ncol(x))) ymax[i] <- max(hist.formula(~x[,i],
-                              plot=FALSE,warn.unused=FALSE,...)$counts)
+    for (i in seq_len(ncol(x)))
+      ymax[i] <- max(hist.formula(~x[,i],plot=FALSE,warn.unused=FALSE,...)$counts)
   }
   if (same.ylim) ymax <- rep(max(ymax),length(ymax))
 	## Make the plots
-	for(i in seq_len(ncol(x))) hist.formula(~x[,i],xlab=colnames(x)[i],
-	                                        ylim=c(0,ymax[i]),...)
-  graphics::par(mfrow=op)
+	for(i in seq_len(ncol(x)))
+	  hist.formula(~x[,i],xlab=colnames(x)[i],ylim=c(0,ymax[i]),...)
 } # nocov end
 
 #' @rdname bootCase
@@ -193,7 +188,6 @@ plot.bootCase <- function(x,...){ #nocov start
 #' @keywords htest
 #'
 #' @examples
-#' data(Ecoli)
 #' fnx <- function(days,B1,B2,B3) {
 #'   if (length(B1) > 1) {
 #'     B2 <- B1[2]
@@ -209,6 +203,7 @@ plot.bootCase <- function(x,...){ #nocov start
 #'   confint(nl1.bootn,"B1")
 #'   confint(nl1.bootn,c(2,3))
 #'   confint(nl1.bootn,conf.level=0.90)
+#'   confint(nl1.bootn,plot=TRUE)
 #'   predict(nl1.bootn,fnx,days=3)
 #'   predict(nl1.bootn,fnx,days=1:3)
 #'   htest(nl1.bootn,1,bo=6,alt="less")
@@ -266,15 +261,19 @@ iCIBoot <- function(object,parm,conf.level,plot,err.col,err.lwd,rows,cols,...) {
   else {
     if (is.numeric(parm)) {
       # check numeric parm
-      if (any(parm<0) & any(parm>0)) STOP("Numbers in 'parm' cannot be both positive and negative.")
-      if (max(abs(parm))>ncol(object)) STOP("Number in 'parm' exceeds number of columns.")
+      if (any(parm<0) & any(parm>0))
+        STOP("Numbers in 'parm' cannot be both positive and negative.")
+      if (max(abs(parm))>ncol(object))
+        STOP("Number in 'parm' exceeds number of columns.")
     } else {
       # check named parm
-      if (!all(parm %in% colnames(object))) STOP("Name in 'parm' does not exist in 'object'.")
+      if (!all(parm %in% colnames(object)))
+        STOP("Name in 'parm' does not exist in 'object'.")
     }
   }
   ## Check on conf.level
-  if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
+  if (conf.level<=0 | conf.level>=1)
+    STOP("'conf.level' must be between 0 and 1")
   ## Reduce object to have only the parm columns in it
   object <- object[,parm,drop=FALSE]
   ## Compute CIs for each column, but handle differently if vector or matrix
@@ -287,15 +286,13 @@ iCIBoot <- function(object,parm,conf.level,plot,err.col,err.lwd,rows,cols,...) {
     np <- ncol(object)
     if (is.null(rows)) rows <- round(sqrt(np))
     if (is.null(cols)) cols <- ceiling(sqrt(np))
-    op <- graphics::par("mfrow")
-    graphics::par(mfrow=c(rows,cols))
+    withr::local_par(list(mfrow=c(rows,cols)))
     for (i in seq_len(np)) {
       h <- hist.formula(~object[,i],xlab=colnames(object)[i],...)
       plotrix::plotCI(mean(object[,i]),y=0.95*max(h$counts),
                       li=res[i,1],ui=res[i,2],err="x",
                       pch=19,col=err.col,lwd=err.lwd,add=TRUE)
     }
-    graphics::par(mfrow=op)
   } # nocov end
   ## Return CI result
   res
@@ -307,8 +304,10 @@ iCIBoot <- function(object,parm,conf.level,plot,err.col,err.lwd,rows,cols,...) {
 ## ===========================================================
 iPredictBoot <- function(object,FUN,MARGIN,conf.level,digits,...) {
   ## Some checks
-  if (!inherits(FUN,"function")) STOP("'FUN' is not a function.")
-  if (conf.level<=0 | conf.level>=1) STOP("'conf.level' must be between 0 and 1")
+  if (!inherits(FUN,"function"))
+    STOP("'FUN' is not a function.")
+  if (conf.level<=0 | conf.level>=1)
+    STOP("'conf.level' must be between 0 and 1")
   ## Get items in the dots
   tmp <- list(...)
   ## Prep the results matrix
@@ -355,11 +354,13 @@ iHTestBoot <- function(object,parm,bo=0,
       else {
         if (is.numeric(parm)) {
           # the column number was too small or too big
-          if (parm>ncol(object)) STOP("Number in 'parm' exceeds number of columns.")
+          if (parm>ncol(object))
+            STOP("Number in 'parm' exceeds number of columns.")
           if (parm<=0) STOP("Number in 'parm' must be positive.")
         } else {
           # column name does not exist in the matrix
-          if (!parm %in% colnames(object)) STOP("Name in 'parm' does not exist in 'object'.")
+          if (!parm %in% colnames(object))
+            STOP("Name in 'parm' does not exist in 'object'.")
         }
       }
     }

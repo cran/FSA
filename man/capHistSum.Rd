@@ -4,15 +4,14 @@
 \alias{capHistSum}
 \alias{plot.CapHist}
 \alias{is.CapHist}
-\alias{plot.CapHist}
 \title{Summarize capture histories in individual fish format.}
 \usage{
 capHistSum(df, cols2use = NULL, cols2ignore = NULL)
 
 is.CapHist(x)
 
-\method{plot}{CapHist}(x, what = c("u", "f"), pch = 19, cex.pch = 0.7,
-  lwd = 1, ...)
+\method{plot}{CapHist}(x, what = c("u", "f"), pch = 19,
+  cex.pch = 0.7, lwd = 1, ...)
 }
 \arguments{
 \item{df}{A data.frame that contains the capture histories (and, perhaps, other information) in \dQuote{individual} fish format. See details.}
@@ -68,7 +67,6 @@ This function assumes that all unmarked captured fish are marked and returned to
 
 \examples{
 # data.frame with IDs in the first column
-data(PikeNYPartial1)
 head(PikeNYPartial1)
 
 # Three ways to ignore first column of ID numbers
@@ -83,6 +81,8 @@ plot(ch1,what="u")
 
 # An examle with only two sample events (for demonstration only)
 ( ch2 <- capHistSum(PikeNYPartial1,cols2use=-c(1,4:5)) )
+( ch2 <- capHistSum(PikeNYPartial1,cols2use=2:3) )
+( ch2 <- capHistSum(PikeNYPartial1,cols2ignore=c(1,4:5)) )
 
 }
 \references{

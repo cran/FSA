@@ -36,12 +36,11 @@
 #' 
 #' @note Entered into \dQuote{RMark} format (see \code{\link[FSAdata]{CutthroatALf}} in \pkg{FSAdata}) and then converted to individual format with \code{\link{capHistConvert}}
 #' 
-#' @seealso See \code{\link{mrOpen}} for an example analysis.
+#' @seealso Used in \code{\link{mrOpen}} examples.
 #' 
 #' @keywords datasets
 #' 
 #' @examples
-#' data(CutthroatAL)
 #' str(CutthroatAL)
 #' head(CutthroatAL)
 #'

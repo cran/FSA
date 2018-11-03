@@ -4,16 +4,14 @@
 \alias{rSquared}
 \alias{rSquared.default}
 \alias{rSquared.lm}
-\alias{rSquared.default}
-\alias{rSquared.lm}
 \title{Extract the coefficient of determination from a linear model object.}
 \usage{
 rSquared(object, ...)
 
 \method{rSquared}{default}(object, ...)
 
-\method{rSquared}{lm}(object, digits = getOption("digits"), percent = FALSE,
-  ...)
+\method{rSquared}{lm}(object, digits = getOption("digits"),
+  percent = FALSE, ...)
 }
 \arguments{
 \item{object}{An object saved from \code{lm}.}
@@ -28,13 +26,12 @@ rSquared(object, ...)
 A numeric, as either a proportion or percentage, that is the coefficient of determination for a linear model.
 }
 \description{
-Extracts the coefficient of determination (i.e., \dQuote{r-squared} from a linear model (i.e., \code{lm}) object.
+Extracts the coefficient of determination (i.e., \dQuote{r-squared}) from a linear model (i.e., \code{lm}) object.
 }
 \details{
 This is a convenience function to extract the \code{r.squared} part from \code{summary(lm)}.
 }
 \examples{
-data(Mirex)
 lm1 <- lm(mirex~weight, data=Mirex)
 rSquared(lm1)
 rSquared(lm1,digits=3)

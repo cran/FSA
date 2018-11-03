@@ -3,7 +3,6 @@
 \name{compIntercepts}
 \alias{compIntercepts}
 \alias{print.compIntercepts}
-\alias{print.compIntercepts}
 \title{Tests for significant differences among all pairs of intercepts in a dummy variable regression.}
 \usage{
 compIntercepts(mdl, common.cov = mean(x), conf.level = 0.95,
@@ -51,10 +50,8 @@ This function provides a statistical comparison of all pairs of intercepts by fi
 The default is to compute the adjusted values at the mean value of the covariate (i.e., \code{common.cov=mean(x)}. However, if interest is in the intercepts (i.e., at X=0) then \code{common.cov=0} should be used instead.
 }
 \examples{
-## Reduce Mirex data to years where slopes don't differ to
-##   illustrate this function ... see compSlopes() for
-##   analysis of full data set. 
-data(Mirex)
+## Reduce Mirex data to years where slopes don't differ to illustrate this
+##   function ... see compSlopes() for analysis of full data set. 
 Mirex <- Mirex[Mirex$year!="1996" & Mirex$year!="1999",]
 Mirex$year <- factor(Mirex$year)
 ## Fit DVR, see that slopes don't differ, 

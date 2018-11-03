@@ -1,6 +1,6 @@
 context("Age Precision and Bias VALIDATE")
 
-test_that("ageBias() symmetry tests match the results in Evans and Hoenig (2008)",{
+test_that("ageBias() symmetry tests match results in Evans and Hoenig (2008)",{
   ######## Create Evans & Hoenig (2008) X, Y, and Z matrices and check
   ########   against the results in table 1.
   X.dat <- data.frame(ageR=c(2,2,2,2,2,2,2,2),
@@ -51,23 +51,29 @@ test_that("ageBias() symmetry tests match the results in Evans and Hoenig (2008)
 
 test_that("test ageBias() against compare2() with AlewifeLH data",{
   if (require(FSAdata) & require(fishmethods)) {
-    data(AlewifeLH)
+    data(AlewifeLH,package="FSAdata")
     ab2 <- compare2(AlewifeLH,barplot=FALSE)
     ## no continuity correction
-    suppressWarnings(ab1 <- ageBias(scales~otoliths,data=AlewifeLH,ref.lab="Otolith Age",nref.lab="Scale Age"))
+    suppressWarnings(ab1 <- ageBias(scales~otoliths,data=AlewifeLH,
+                                    ref.lab="Otolith Age",nref.lab="Scale Age"))
     junk <- capture.output( ab1sum <- summary(ab1) )
     expect_equal(ab1sum[ab1sum$symTest=="McNemar","chi.sq"], ab2$McNemar$Chisq)
     expect_equal(ab1sum[ab1sum$symTest=="McNemar","p"], ab2$McNemar$pvalue)
-    expect_equal(ab1sum[ab1sum$symTest=="EvansHoenig","chi.sq"], ab2$Evans_Hoenig$Chisq)
-    expect_equal(ab1sum[ab1sum$symTest=="EvansHoenig","p"], ab2$Evans_Hoenig$pvalue)
-    expect_equal(ab1sum[ab1sum$symTest=="EvansHoenig","df"], ab2$Evans_Hoenig$df)
+    expect_equal(ab1sum[ab1sum$symTest=="EvansHoenig","chi.sq"],
+                 ab2$Evans_Hoenig$Chisq)
+    expect_equal(ab1sum[ab1sum$symTest=="EvansHoenig","p"],
+                 ab2$Evans_Hoenig$pvalue)
+    expect_equal(ab1sum[ab1sum$symTest=="EvansHoenig","df"],
+                 ab2$Evans_Hoenig$df)
     ## Yates continuity correction
-    junk <- capture.output( ab1sum2 <- summary(ab1,what="McNemar",cont.corr="Yates") )
+    junk <- capture.output( ab1sum2 <- summary(ab1,what="McNemar",
+                                               cont.corr="Yates") )
     expect_equal(ab1sum2[1,"chi.sq"], ab2$McNemar_continuity_correction$Chisq)
     expect_equal(ab1sum2[1,"p"], ab2$McNemar_continuity_correction$pvalue)
     ## Edwards continuity correction
     ab3 <- compare2(AlewifeLH,correct="Edwards",barplot=FALSE)
-    junk <- capture.output( ab1sum3 <- summary(ab1,what="McNemar",cont.corr="Edwards") )
+    junk <- capture.output( ab1sum3 <- summary(ab1,what="McNemar",
+                                               cont.corr="Edwards") )
     expect_equal(ab1sum3[1,"chi.sq"], ab3$McNemar_continuity_correction$Chisq)
     expect_equal(ab1sum3[1,"p"], ab3$McNemar_continuity_correction$pvalue)
   }
@@ -75,8 +81,9 @@ test_that("test ageBias() against compare2() with AlewifeLH data",{
 
 test_that("ageBias() compared to http://www.nefsc.noaa.gov/fbp/age-prec/ calculations for AlewifeLH data",{
   if (require(FSAdata)) {
-    data(AlewifeLH)
-    suppressWarnings(ab1 <- ageBias(scales~otoliths,data=AlewifeLH,ref.lab="Otolith Age",nref.lab="Scale Age"))
+    data(AlewifeLH,package="FSAdata")
+    suppressWarnings(ab1 <- ageBias(scales~otoliths,data=AlewifeLH,
+                                    ref.lab="Otolith Age",nref.lab="Scale Age"))
     expect_equal(ab1$bias$n, c(2,18,20,13,18,10,8,7,5,1,2))
     ## the fbp result is actually 4.62 for age-6
     expect_equal(round(ab1$bias$mean,2), c(0.00,1.11,2.20,2.85,3.78,4.20,4.62,5.00,4.80,6.00,6.00))
@@ -84,10 +91,7 @@ test_that("ageBias() compared to http://www.nefsc.noaa.gov/fbp/age-prec/ calcula
 })
 
 test_that("agePrecision() gives correct precision values -- First Example",{
-  data(WhitefishLC)
   ap1 <- agePrecision(~otolithC+scaleC,data=WhitefishLC)
-  expect_is(ap1,"agePrec")
-  expect_is(ap1$detail,"data.frame")
   expect_equal(ap1$n, 151)
   expect_equal(ap1$R, 2)
   expect_equal(length(ap1$rawdiff), 17)
@@ -98,13 +102,9 @@ test_that("agePrecision() gives correct precision values -- First Example",{
 })
 
 test_that("agePrecision() gives correct precision values -- Second Example",{
-  data(WhitefishLC)
   ap2 <- agePrecision(~otolithC+finrayC+scaleC,data=WhitefishLC)
-  expect_is(ap2,"agePrec")
-  expect_is(ap2$detail,"data.frame")
   expect_equal(ap2$n, 151)
   expect_equal(ap2$R, 3)
-  expect_is(ap2$absdiff,"table")
   expect_equal(dim(ap2$absdiff), c(3,15))
   expect_equal(dim(ap2$rawdiff), c(3,19))
   expect_equal(round(ap2$APE,5), 16.1851)
@@ -131,7 +131,7 @@ test_that("agePrecision() gives correct precision values -- Second Example",{
 
 test_that("agePrecision() compared to http://www.nefsc.noaa.gov/fbp/age-prec/ calculations for AlewifeLH data",{
   if (require(FSAdata)) {
-    data(AlewifeLH)
+    data(AlewifeLH,package="FSAdata")
     ap3 <- agePrecision(~otoliths+scales,data=AlewifeLH)
     expect_equal(ap3$n, 104)
     expect_equal(ap3$R, 2)
@@ -150,6 +150,10 @@ test_that("agePrecision() differences for simple data",{
   expect_equal(as.numeric(ap4$rawdiff), c(3,3))
   expect_equal(names(ap4$absdiff), c("0","1"))
   expect_equal(as.numeric(ap4$absdiff), c(3,3))
+  tmp2 <- ap4$detail
+  expect_equal(tmp2$mode,c(1,1,NA,NA,2,NA))
+  expect_equal(tmp2$mean,as.vector(rowMeans(tmp[,1:2])))
+  expect_equal(tmp2$mean,tmp2$median)
 })
 
 test_that("agePrecision() differences for simple data with NA values",{
@@ -180,6 +184,7 @@ test_that("agePrecision() differences for simple data with NA values",{
   expect_equal(ap45$PercAgree,100)
   ap123 <- agePrecision(~age1+age2+age3,data=tmp)
   expect_equal(round(ap123$PercAgree,4),66.6667)
+  expect_equal(ap123$detail$mode,c(1,1,2,NA,2,2,3,NA,3,3,4,NA))
   ap125 <- agePrecision(~age1+age2+age5,data=tmp)
   expect_equal(round(ap125$PercAgree,4),33.3333)
   ap135 <- agePrecision(~age1+age3+age5,data=tmp)
