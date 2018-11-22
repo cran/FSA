@@ -1,7 +1,7 @@
 46aaf69a91703493b666f212a04f2d8d *COPYING
-3f416d2e7c1ccbc8f60e78eec1cad7ac *DESCRIPTION
+19de54673af34ed94a7c4d9cef51c395 *DESCRIPTION
 2bd241c653cd3637c6e209d7f256e6ae *NAMESPACE
-b80ea7b8f5e00ba798102b1d318f6b1d *NEWS.md
+62019375b53738808474bec1f0c88d3f *NEWS.md
 df788bfea139117fb836ec6a7ab6cf7c *R/BluegillJL.R
 7b05f807f9a2c605f6bc1e80437824f9 *R/BrookTroutTH.R
 8d2ab4b72bb47d1fe30f61d4761f063d *R/CIDists.R
@@ -83,7 +83,7 @@ d16ec2f62023390fae05260c24435ec2 *data/SMBassLS.rdata
 ddbcac46ee6e69d3e16daa24c3b03bf2 *data/WR79.rdata
 16d872854e5e1c4c3a587a60cd993f89 *data/WSlit.rdata
 a414199717ec1058199e9a899dcd934d *data/WhitefishLC.rdata
-35b66b67cf2a8ad1155283b280229c10 *inst/CITATION
+4b4e7cecb87b61c3dda5f5f3828d93ec *inst/CITATION
 3d7fd0f1b43bf127ff4d61ff2c840b65 *inst/extdata/PSDWR_testdata.csv
 e4a7f515307617d7416c26ce5d10858a *inst/extdata/bootCase1.RData
 2d8925fbdeecdc31b7111c5b649a30fb *inst/extdata/nlsBoot1.RData
@@ -195,7 +195,7 @@ feac9b5bd5d83b1c7f5cdb9fd0b990a6 *tests/testthat/EXS_growthFuns.R
 726a0a47eb2851154fd903d512301a21 *tests/testthat/EXS_lencat.R
 22d76d7faff4ed5df32c6d6423c281d6 *tests/testthat/EXS_mrOpen.R
 79a6ea9d02ba24744549bbe2fc370703 *tests/testthat/EXS_sumTable.R
-9df2c5b5475b45eb48a45841c9a0d994 *tests/testthat/Rplots.pdf
+bdb9dbdb6d6a8a9a08fa4adcbe4ae281 *tests/testthat/Rplots.pdf
 51f769ae71c12d62290cca6db659c8ee *tests/testthat/test_AgeComparisons_MSG.R
 22e2a3d50601042e022b6e31355dfe9d *tests/testthat/test_AgeComparisons_OUT.R
 2837cfd9e2818f10c71e01915d798966 *tests/testthat/test_AgeComparisons_VALIDATE.R
@@ -219,7 +219,7 @@ bea1696f1490a9149eedecd00032fb8c *tests/testthat/test_StockRecruit_MSG.R
 585a15969d0b5c29a9ce24de2b299681 *tests/testthat/test_Summarize_OUT_VALIDATE.R
 d1cbcca9f647319e1532742052b087e9 *tests/testthat/test_VonBertalanffy_MSG.R
 1565c3cc413d1b62c712ea6e60a8c8e9 *tests/testthat/test_VonBertalanffy_OUT.R
-03f8abafd168618c59d5b639bd628f17 *tests/testthat/test_VonBertalanffy_VALIDATE.R
+4b09955918d58f42322e13c0b47556be *tests/testthat/test_VonBertalanffy_VALIDATE.R
 f1e10321c7cacfcb8e85d6f352065c99 *tests/testthat/test_WSWR_MSG.R
 06e309ec7fcd7036d7ed7dff519188f4 *tests/testthat/test_WSWR_OUT.R
 02f49c8826aa909e871da46b09719a8b *tests/testthat/test_WSWR_VALIDATE.R
@@ -265,7 +265,7 @@ f478295ed04a9af59d7d9c973b6db608 *tests/testthat/test_lencat_MSG.R
 6139a2db798a30f66ff147fe1d00c67d *tests/testthat/test_lencat_VALIDATE.R
 394a5470a753555638ce845f5d5d2995 *tests/testthat/test_metaM_MSG.R
 15744323bbc11ea46cb383e99e3350a5 *tests/testthat/test_metaM_OUT.R
-5c13e082324b5a0432e2e971b4b0780b *tests/testthat/test_metaM_VALIDATE.R
+4ed43da3aef0460d2d037d44c800b796 *tests/testthat/test_metaM_VALIDATE.R
 9e579006b97b386064062f7f17cbd4e9 *tests/testthat/test_mrClosed_MSG.R
 99a666933f0a9003d7990e376eab0be6 *tests/testthat/test_mrClosed_OUT.R
 9ee46055d8252e236661107836ab5d7f *tests/testthat/test_mrClosed_VALIDATE.R

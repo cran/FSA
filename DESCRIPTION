@@ -1,6 +1,6 @@
 Package: FSA
-Version: 0.8.21
-Date: 2018-11-2
+Version: 0.8.22
+Date: 2018-11-22
 Title: Simple Fisheries Stock Assessment Methods
 Description: A variety of simple fish stock assessment methods.
     Detailed vignettes are available on the fishR website <http://derekogle.com/fishR/>.
@@ -23,12 +23,12 @@ Imports: graphics, grDevices, stats, tools, utils, car, dplyr,
 Suggests: asbio, DescTools, fishmethods, FSAdata, knitr, marked, nlme,
         nlstools, pkgdown, psych, Rcapture, testthat, rmarkdown
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 NeedsCompilation: no
-Packaged: 2018-11-03 02:06:59 UTC; dogle
+Packaged: 2018-11-22 13:50:32 UTC; dogle
 Author: Derek Ogle [aut, cre] (<https://orcid.org/0000-0002-0370-9299>),
   Powell Wheeler [aut] (Added method='Burnham' to removal()),
   Alexis Dinno [aut] (Provided base functionality of dunnTest())
 Maintainer: Derek Ogle <derek@derekogle.com>
 Repository: CRAN
-Date/Publication: 2018-11-03 05:10:05 UTC
+Date/Publication: 2018-11-22 16:30:06 UTC
