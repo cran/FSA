@@ -1,7 +1,7 @@
 46aaf69a91703493b666f212a04f2d8d *COPYING
-04fcc1d94ef3878d9d45aad5c3370403 *DESCRIPTION
-6d17a4e1b44f5c243cfee11c060c3b94 *NAMESPACE
-e4f6e625829b88fff5b19e7d2d49acf7 *NEWS.md
+194f8f68b2d318aeb3bbea32e574fd7f *DESCRIPTION
+9289f1b64c7c037de0b778181f0d8524 *NAMESPACE
+282017abd441cecd3eca68ff033af91f *NEWS.md
 3240a634aadf972dce8e3e1671ec33ac *R/BluegillJL.R
 0c195892eacac62466931af02ec37462 *R/BrookTroutTH.R
 8d2ab4b72bb47d1fe30f61d4761f063d *R/CIDists.R
@@ -9,9 +9,9 @@ c019765687d80349ed490ba307fccdd6 *R/ChinookArg.R
 e6bd6911a0814e47d15f52cd50f9525a *R/CodNorwegian.R
 bdd9a2803144473a62a03c5d4225266c *R/CutthroatAL.R
 233c851e1dd2e4685dd0f22e30fd7cb2 *R/Ecoli.R
-c197302536652c5e8584f62d72ccf06a *R/FSA-internals.R
+228eccf164fe40a801b3aeb4cffe3ad0 *R/FSA-internals.R
 dda511789b56f42dbf881dd69f13ea6a *R/FSA.R
-611923f17d0a0807ba370c106d72b548 *R/FSAUtils.R
+7adbb3d50b6ace2a55830f7b443dd733 *R/FSAUtils.R
 183fc9a9ee88b2598dc72f9e35f6b4d4 *R/Mirex.R
 da9171298a2999763391260e13e92033 *R/PSDlit.R
 d0f1d55ded5862badee869e08955246d *R/PikeNY.R
@@ -24,7 +24,7 @@ b0bb6fdeeb279444d3560b2ab7654604 *R/SpotVA1.R
 6eddd1dcb3818e7880e38f8af58fd8e0 *R/WSlit.R
 3ebe7b6759fe17383f364ff928added2 *R/WhitefishLC.R
 3c7cb68e3309390a86043ea894ceedaa *R/addZeroCatch.R
-9fd82ba621ca828e9c11148db94f88ad *R/ageComparisons.R
+b108f17b73a0555cf42526185faf268e *R/ageComparisons.R
 08ffc992f8d15d084e57854ebe123f66 *R/alkIndivAge.R
 88577b74973e6db785ec475897f6f53a *R/alkPlot.R
 7dcc937407afe4fb6f3584979bfa158e *R/alkSummaries.R
@@ -64,7 +64,7 @@ c94621922a12050689162019848c166d *R/srStarts.R
 ed205c089306edac38f3bd4484e9afcf *R/stockRecruitment.R
 205aa44263aa0bac3e87ecc80c9f2af1 *R/sumTable.R
 cf86abd189ed0b624c28c5a9aa35fdfc *R/tictactoe.R
-41326ee940571cc53b5f17c92de3e652 *R/vbStarts.R
+8892b9f6c44b1cbe4e21789b3859e407 *R/vbStarts.R
 5f82b54eb8b5c6f63f5aa2dff0cf8f78 *R/wrAdd.R
 af031e269f91a90f2d7c5155c216906f *R/wsVal.R
 4a5ed92fa451d3b77eb226ecff7fe4a6 *data/BluegillJL.rdata
@@ -170,6 +170,7 @@ bb303bd65d124af1d3d8ebed5e924f2c *man/psdCalc.Rd
 4d95414a5ec9e1df2d2ebaa1087c8e27 *man/rSquared.Rd
 39b43395fe17a0f5c1add70221dbbc8c *man/rcumsum.Rd
 257f992b678b0fc800c69a6fe3828e66 *man/removal.Rd
+b21cd3e68ab1a94f1cd0ef9a95e3612d *man/repeatedRows2Keep.Rd
 53c894de0cb556f6ff30e4ec4c7ebad8 *man/residPlot.Rd
 dad83001d138b1c237f93e929c476325 *man/se.Rd
 5c25bf354ef38e55e706d1e721e47a9c *man/srStarts.Rd
@@ -181,11 +182,11 @@ f02c655bce05b6a5f142c222460b4e69 *man/vbStarts.Rd
 a411727f7b2042572cd9f565e4c1efd0 *man/wrAdd.Rd
 407e0ab4c59d4bfd3e8a2c81c70100b9 *man/wsVal.Rd
 1f015cda362b7f2dd73103d3eb48d4b3 *tests/test-all.R
-ff8c2ac22eaefd452cb24d0b7b64521b *tests/testthat/Rplots.pdf
+09270afbe73e17161c7c635393b2d9e8 *tests/testthat/Rplots.pdf
 bd186ddb00cf3885f0b35b2ec6b9e5f2 *tests/testthat/testthat_AgeComparisons.R
 9a9ae8e4cc2cd8ab520e1789dc69131e *tests/testthat/testthat_AgeLengthKey.R
-a53c27f717e64a96eca2c1e1bc9790b8 *tests/testthat/testthat_FSAUtils.R
-a79f2706c438b40c8eb593ab076f21c8 *tests/testthat/testthat_Internals.R
+ee3e15f97c9bc31f1e9492b2a1962d54 *tests/testthat/testthat_FSAUtils.R
+606f60516fcc68fb6c30e591d304a483 *tests/testthat/testthat_Internals.R
 1a503da6f0f9f9070b53ed161df7af0a *tests/testthat/testthat_LWCompPreds.R
 e876d2663bae3ad5dcb0c5cca2250be8 *tests/testthat/testthat_PSD.R
 615bea429f1c899e9e1519847830b8d3 *tests/testthat/testthat_StockRecruit.R
