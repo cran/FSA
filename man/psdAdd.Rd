@@ -8,7 +8,7 @@
 \usage{
 psdAdd(len, ...)
 
-\method{psdAdd}{default}(len, spec, units = c("mm", "cm", "in"),
+\method{psdAdd}{default}(len, species, units = c("mm", "cm", "in"),
   use.names = TRUE, addSpec = NULL, addLens = NULL, verbose = TRUE,
   ...)
 
@@ -21,7 +21,7 @@ psdAdd(len, ...)
 
 \item{\dots}{Not used.}
 
-\item{spec}{A character or factor vector that contains the species names. Ignored if \code{len} is a formula.}
+\item{species}{A character or factor vector that contains the species names. Ignored if \code{len} is a formula.}
 
 \item{units}{A string that indicates the type of units used for the lengths. Choices are \code{mm} for millimeters (DEFAULT), \code{cm} for centimeters, and \code{in} for inches.}
 
@@ -98,7 +98,7 @@ df
 \references{
 Ogle, D.H. 2016. \href{http://derekogle.com/IFAR}{Introductory Fisheries Analyses with R}. Chapman & Hall/CRC, Boca Raton, FL.
 
-Guy, C.S., R.M. Neumann, and D.W. Willis. 2006. New terminology for proportional stock density (PSD) and relative stock density (RSD): proportional size structure (PSS). Fisheries 31:86-87.   [Was (is?) from http://pubstorage.sdstate.edu/wfs/415-F.pdf.]
+Guy, C.S., R.M. Neumann, and D.W. Willis. 2006. New terminology for proportional stock density (PSD) and relative stock density (RSD): proportional size structure (PSS). Fisheries 31:86-87. [Was (is?) from http://pubstorage.sdstate.edu/wfs/415-F.pdf.]
 
 Guy, C.S., R.M. Neumann, D.W. Willis, and R.O. Anderson. 2006. Proportional size distribution (PSD): A further refinement of population size structure index terminology. Fisheries 32:348. [Was (is?) from http://pubstorage.sdstate.edu/wfs/450-F.pdf.]
 

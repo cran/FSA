@@ -42,11 +42,11 @@ capFirst <- function(x,which=c("all","first")) {
   ## Get the class of the object
   cls <- class(x)
   ## Perform a check
-  if (!inherits(cls,c("character","factor"))) STOP("'capFirst' only works with 'character' or 'class' objects.")
+  if (!inherits(cls,c("character","factor"))) STOP("'capFirst' only works with 'character' or 'factor' objects.")
   ## Capitalize the one word or the words in the vector
   if (length(x)==1) x <- iCapFirst(x,which)
   else x <- apply(matrix(x),MARGIN=1,FUN=iCapFirst,which=which)
-  ## Change the case to what the original was
+  ## Change the class to what the original was
   if (cls=="factor") x <- as.factor(x)
   ## Return the object
   x
@@ -56,21 +56,25 @@ capFirst <- function(x,which=c("all","first")) {
 iCapFirst<- function(x,which=c("all","first")) {
   # See whether all or just the first word should have the first letter capitalized
   which <- match.arg(which)
-  # convert entire string to lower case ...
-  x <- tolower(x)
-  # then split on space if more than one word
-  s <- strsplit(x, " ")[[1]]
-  if (which=="first") {
-    # convert first letters of first word to upper-case    
-    s1 <- toupper(substring(s, 1,1)[1])
-    # attach capitalized first letter to rest of lower-cased original string
-    paste(s1,substring(x,2),sep="",collapse=" ")
-  } else {
-    # convert first letters of all words to upper-case
-    s1 <- toupper(substring(s, 1,1))
-    # attach capitalized first letter to rest of lower-cased separated strings
-    paste(s1,substring(s,2),sep="",collapse=" ")
+  # Only process if not NA
+  if (!is.na(x)) {
+    # convert entire string to lower case ...
+    x <- tolower(x)
+    # then split on space if more than one word
+    s <- strsplit(x, " ")[[1]]
+    if (which=="first") {
+      # convert first letters of first word to upper-case    
+      s1 <- toupper(substring(s, 1,1)[1])
+      # attach capitalized first letter to rest of lower-cased original string
+      x <- paste(s1,substring(x,2),sep="",collapse=" ")
+    } else {
+      # convert first letters of all words to upper-case
+      s1 <- toupper(substring(s, 1,1))
+      # attach capitalized first letter to rest of lower-cased separated strings
+      x <- paste(s1,substring(s,2),sep="",collapse=" ")
+    }
   }
+  x
 }
 
 
@@ -386,8 +390,8 @@ FSANews <- function () {
 #' @description Shows rows from the head and tail of a data frame or matrix.
 #'
 #' @param x A data frame or matrix.
-#' @param which A numeric or string vector that contains the column numbers or names to display. Defaults to showing all columns.
 #' @param n A single numeric that indicates the number of rows to display from each of the head and tail of structure.
+#' @param which A numeric or string vector that contains the column numbers or names to display. Defaults to showing all columns.
 #' @param addrownums If there are no row names for the MATRIX, then create them from the row numbers.
 #' @param \dots Arguments to be passed to or from other methods.
 #'
@@ -396,6 +400,8 @@ FSANews <- function () {
 #' @author Derek H. Ogle, \email{derek@@derekogle.com}
 #'
 #' @note If \code{n} is larger than the number of rows in \code{x} then all of \code{x} is displayed.
+#'
+#' @seealso \code{peek}
 #'
 #' @keywords manip
 #'
@@ -433,7 +439,6 @@ headtail <- function(x,n=3L,which=NULL,addrownums=TRUE,...) {
   if ("tbl_df" %in% class(x)) x <- as.data.frame(x)
   ## Process data.frame
   N <- nrow(x)
-  n <- ifelse(n<0L,max(N+n,0L),min(n,N))
   if (n>=N) tmp <- x
   else {
     h <- utils::head(x,n,...)
@@ -718,6 +723,74 @@ perc <- function(x,val,dir=c("geq","gt","leq","lt"),na.rm=TRUE,
 }
 
 
+#' @title Peek into (show a subset of) a data frame or matrix.
+#'
+#' @description Shows the first, last, and approximately evenly spaced rows from a data frame or matrix.
+#'
+#' @param x A data frame or matrix.
+#' @param n A single numeric that indicates the number of rows to display.
+#' @param which A numeric or string vector that contains the column numbers or names to display. Defaults to showing all columns.
+#' @param addrownums If there are no row names for the MATRIX, then create them from the row numbers.
+#'
+#' @return A matrix or data.frame with n rows.
+#'
+#' @author Derek H. Ogle, \email{derek@@derekogle.com}
+#'
+#' @author A. Powell Wheeler, \email{powell.wheeler@@gmail.com}
+#'
+#' @seealso \code{headtail}
+#' 
+#' @note If \code{n} is larger than the number of rows in \code{x} then all of \code{x} is displayed.
+#'
+#' @keywords manip
+#'
+#' @examples
+#' peek(iris)
+#' peek(iris,n=6)
+#' peek(iris,n=6,which=c("Sepal.Length","Sepal.Width","Species"))
+#' peek(iris,n=6,which=grep("Sepal",names(iris)))
+#' peek(iris,n=200)
+#'
+#' ## Make a matrix for demonstration purposes only
+#' miris <- as.matrix(iris[,1:4])
+#' peek(miris)
+#' peek(miris,n=6)
+#' peek(miris,n=6,addrownums=FALSE)
+#' peek(miris,n=6,which=2:4)
+#'
+#' ## Make a tbl_df type from dplyr ... note how peek() is not limited by
+#' ## the tbl_df restriction on number of rows to show (but head() is).
+#' if (require(dplyr)) {
+#'   iris2 <- tbl_df(iris)
+#'   class(iris2)
+#'   peek(iris2,n=6)
+#'   head(iris2,n=15)
+#' }
+#' @export
+peek <- function(x,n=20L,which=NULL,addrownums=TRUE) {
+  ## Some checks
+  if (!(is.matrix(x) | is.data.frame(x))) 
+    STOP("'x' must be a matrix or data.frame.")
+  if (length(n)!=1L) STOP("'n' must be a single number.")
+  if (n<1L) STOP("'n' must be greater than 0.")
+  ## Remove tbl_df class if it exists
+  if ("tbl_df" %in% class(x)) x <- as.data.frame(x)
+  ## Get number of rows in x
+  N <- nrow(x)
+  ## If asked for is greater than size then just return x
+  if (n>=N) tmp <- x
+  else {
+    rows <- c(1,round((1:(n-2))*(N/(n-1)),0),N)
+    tmp <- x[rows,]
+    if (addrownums) {
+      if (is.null(rownames(tmp))) rownames(tmp) <- rows
+    } else rownames(tmp) <- NULL
+  }
+  if (!is.null(which)) tmp <- tmp[,which]
+  tmp
+}
+
+
 #' @name rcumsum
 #' 
 #' @title Computes the prior to or reverse cumulative sum of a vector.
@@ -889,30 +962,33 @@ repeatedRows2Keep <- function(df,cols2use=NULL,cols2ignore=NULL,
   keep <- match.arg(keep)
   # make sure df is a data.frame (could be sent as a matrix)
   df <- as.data.frame(df)
-  # change data.frame based on cols2use or cols2ignore
-  df <- iHndlCols2UseIgnore(df,cols2use,cols2ignore)
-  ## get data.frames offset by 1 indice for comparisons
-  df1 <- df[1:(nrow(df)-1),]
-  df2 <- df[2:nrow(df),]
-  ## compare data.frames
-  if (keep=="first") { # returns first of the repeats
-    # find rows where all are TRUE (consecutive rows repeat)
-    # first row cannot be a repeat so put FALSE in its place
-    res <- df1==df2
-    if (is.matrix(res)) res <- apply(res,MARGIN=1,FUN=all)
-    res <- c(FALSE,res)
-  } else { # returns last of the repeats
-    # reverse the order of the data.frames
-    df1a <- df1[nrow(df1):1,]
-    df2a <- df2[nrow(df2):1,]
-    # find rows where all are TRUE (consecutive row repeats), but reverse the
-    # order to return; last row can't be a repeat so put FALSE in its place
-    res <- df2a==df1a
-    if (is.matrix(res)) res <- apply(res,MARGIN=1,FUN=all)
-    res <- c(rev(res),FALSE)
+  if (nrow(df)==1) res <- FALSE
+  else {
+    # change data.frame based on cols2use or cols2ignore
+    df <- iHndlCols2UseIgnore(df,cols2use,cols2ignore)
+    ## get data.frames offset by 1 indice for comparisons
+    df1 <- df[1:(nrow(df)-1),]
+    df2 <- df[2:nrow(df),]
+    ## compare data.frames
+    if (keep=="first") { # returns first of the repeats
+      # find rows where all are TRUE (consecutive rows repeat)
+      # first row cannot be a repeat so put FALSE in its place
+      res <- df1==df2
+      if (is.matrix(res)) res <- apply(res,MARGIN=1,FUN=all)
+      res <- c(FALSE,res)
+    } else { # returns last of the repeats
+      # reverse the order of the data.frames
+      df1a <- df1[nrow(df1):1,]
+      df2a <- df2[nrow(df2):1,]
+      # find rows where all are TRUE (consecutive row repeats), but reverse the
+      # order to return; last row can't be a repeat so put FALSE in its place
+      res <- df2a==df1a
+      if (is.matrix(res)) res <- apply(res,MARGIN=1,FUN=all)
+      res <- c(rev(res),FALSE)
+    }
+    # remove names attribute
+    names(res) <- NULL    
   }
-  # remove names attribute
-  names(res) <- NULL
   # reverse the TRUE/FALSEs so that TRUE means rows to keep (not rows repeated)
   !res
 }
