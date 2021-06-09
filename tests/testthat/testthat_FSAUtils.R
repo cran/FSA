@@ -1,10 +1,4 @@
 ## Test Messages ----
-test_that("chooseColors() messages",{
-  ## check error messages
-  expect_error(chooseColors("Derek"),"should be one of")
-  expect_error(chooseColors(num=0),"positive")
-})
-
 test_that("col2rgbt() messages",{
   expect_error(col2rgbt("black",-1),"must be greater than 0")
   expect_error(col2rgbt("black",0),"must be greater than 0")
@@ -12,35 +6,11 @@ test_that("col2rgbt() messages",{
                "must be 1 or same as length")
 })
 
-test_that("diags() messages",{
-  mat1 <- matrix(1:16,nrow=4)
-  mat2 <- matrix(1:20,nrow=4)
-  expect_error(diags(0:5),"only works with matrices")
-  expect_error(diags(matrix(0:5,nrow=6)),"more than 1 column")
-  expect_error(diags(matrix(0:5,ncol=6)),"more than 1 row")
-  expect_error(diags(mat1,which=-4),"diagonal does not exist")
-  expect_error(diags(mat1,which=4),"diagonal does not exist")
-  expect_error(diags(mat2,which=-5),"diagonal does not exist")
-  expect_error(diags(mat1,which=4),"diagonal does not exist")
-})
-
 test_that("fact2num() messages",{
   expect_error(fact2num(0:5),"purpose")
   expect_error(fact2num(data.frame(x=0:5)),"purpose")
   expect_error(fact2num(factor(c("A","B","C"))),"aborted")
 })
-
-test_that("filterD() messages",{
-  expect_error(filterD(0:5),"no applicable method")
-  expect_error(filterD(matrix(0:5,ncol=2)),"no applicable method")
-  expect_warning(filterD(iris,Species=="DEREK"),"resultant data.frame")
-})  
-
-test_that("Subset() messages",{
-  expect_error(Subset(0:5),"with data.frames")
-  expect_error(Subset(matrix(0:5,ncol=2)),"with data.frames")
-  expect_warning(Subset(iris,Species=="DEREK"),"resultant data.frame")
-})  
 
 test_that("fishR() messages",{
   expect_error(fishR("Derek"),"should be one of")
@@ -76,31 +46,6 @@ test_that("headtail() messages",{
   expect_error(FSA::headtail(1:10),"matrix")
   expect_error(FSA::headtail(iris,n=c(1,2)),"single number")
 })  
-
-test_that("hoCoef() messages",{
-  ## fit some linear regression results
-  lm1 <- lm(mirex~weight,data=Mirex)
-  lm2 <- lm(mirex~weight+year,data=Mirex)
-  # bad alt=
-  expect_error(hoCoef(lm1,term=2,bo=0.1,alt="derek"),"should be one of")
-  # bad term
-  expect_error(hoCoef(lm1,term=-1,bo=0.1),"positive")
-  expect_error(hoCoef(lm1,term=5,bo=0.1),"greater")
-  expect_error(hoCoef(lm2,term=5,bo=0.1),"greater")
-  
-  ## fit some non-linear regression results
-  fnx <- function(days,B1,B2,B3) {
-    if (length(B1) > 1) {
-      B2 <- B1[2]
-      B3 <- B1[3]
-      B1 <- B1[1]
-    }
-    B1/(1+exp(B2+B3*days))
-  }
-  nl1 <- nls(cells~fnx(days,B1,B2,B3),data=Ecoli,start=list(B1=6,B2=7.2,B3=-1.45))
-  # bad model type
-  expect_error(hoCoef(nl1,term=-1,bo=0.1),"lm")
-})
 
 test_that("lagratio() messages",{
   ## check error messages
@@ -214,156 +159,12 @@ test_that("capFirst() returned classes",{
   expect_equivalent(class(fvec1),"factor")
 })
 
-test_that("chooseColors() return values",{
-  ## check return values
-  n <- 10
-  tmp <- chooseColors(num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp2 <- chooseColors(num=n,rev=TRUE)
-  expect_equal(length(tmp2),n)
-  expect_is(tmp2,"character")
-  expect_equal(tmp2,rev(tmp))
-  n <- 20
-  tmp <- chooseColors("gray",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp2 <- chooseColors("gray",num=n,rev=TRUE)
-  expect_equal(length(tmp2),n)
-  expect_is(tmp2,"character")
-  expect_equal(tmp2,rev(tmp))
-  ## check each
-  n <- 10
-  tmp <- chooseColors("gray",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("rich",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("cm",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("heat",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("jet",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("rainbow",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("topo",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("terrain",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"character")
-  tmp <- chooseColors("default",num=n)
-  expect_equal(length(tmp),n)
-  expect_is(tmp,"integer")
-})
-
 test_that("col2rgbt() results",{
   expect_equal(col2rgbt("black",10),rgb(0,0,0,1/10))
   expect_equal(col2rgbt("black",1/10),rgb(0,0,0,1/10))
   expect_equal(col2rgbt("red",10),rgb(1,0,0,1/10))
   expect_equal(col2rgbt("blue",1/10),rgb(0,0,1,1/10))
   expect_equal(col2rgbt("black",1),rgb(0,0,0,1))
-})
-
-test_that("diags() results",{
-  mat1 <- matrix(seq_len(16),nrow=4)
-  colnames(mat1) <- LETTERS[seq_len(ncol(mat1))]
-  rownames(mat1) <- seq_len(nrow(mat1))
-  mat2 <- matrix(seq_len(20),nrow=4)
-  colnames(mat2) <- LETTERS[seq_len(ncol(mat2))]
-  rownames(mat2) <- seq_len(nrow(mat2))
-  # main diagonal, no labels
-  tmp <- diags(mat1)
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat1))
-  expect_equal(ncol(tmp),1)
-  expect_equal(tmp$value,c(1,6,11,16))
-  tmp <- diags(mat2)
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat2))
-  expect_equal(ncol(tmp),1)
-  expect_equal(tmp$value,c(1,6,11,16))
-  # main diagonal, labels
-  tmp <- diags(mat1,incl.labels="row")
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat1))
-  expect_equal(ncol(tmp),2)
-  expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,seq_len(4))
-  tmp <- diags(mat1,incl.labels="column")
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat1))
-  expect_equal(ncol(tmp),2)
-  expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,LETTERS[seq_len(4)])
-  tmp <- diags(mat2,incl.labels="row")
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat2))
-  expect_equal(ncol(tmp),2)
-  expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,seq_len(4))
-  tmp <- diags(mat2,incl.labels="column")
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat2))
-  expect_equal(ncol(tmp),2)
-  expect_equal(tmp$value,c(1,6,11,16))
-  expect_equal(tmp$label,LETTERS[seq_len(4)])
-  ## Off diagonal, no labels
-  tmp <- diags(mat1,which=-1)
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat1)-1)
-  expect_equal(ncol(tmp),1)
-  expect_equal(tmp$value,c(5,10,15))
-  tmp <- diags(mat2,which=-1)
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat2))
-  expect_equal(ncol(tmp),1)
-  expect_equal(tmp$value,c(5,10,15,20))
-  tmp <- diags(mat1,which=3)
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),1)
-  expect_equal(ncol(tmp),1)
-  expect_equal(tmp$value,4)
-  tmp <- diags(mat2,which=-3)
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),2)
-  expect_equal(ncol(tmp),1)
-  expect_equal(tmp$value,c(13,18))
-  ## Off diagonal, with labels
-  tmp <- diags(mat1,which=1,incl.labels="row")
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),nrow(mat1)-1)
-  expect_equal(ncol(tmp),2)
-  expect_equal(tmp$value,c(2,7,12))
-  expect_equal(tmp$label,2:4)
-  tmp <- diags(mat2,which=-2,incl.labels="col")
-  expect_is(tmp,"data.frame")
-  expect_equal(nrow(tmp),3)
-  expect_equal(ncol(tmp),2)
-  expect_equal(tmp$value,c(9,14,19))
-  expect_equal(tmp$label,c("C","D","E"))
-  ## Make sure data types are OK
-  tmp <- diags(mat1,incl.labels="row")
-  expect_is(tmp$value,"integer")
-  expect_is(tmp$label,"numeric")
-  tmp <- diags(mat1,incl.labels="col")
-  expect_is(tmp$value,"integer")
-  expect_is(tmp$label,"character")
-  mat3 <- matrix(LETTERS[seq_len(24)],nrow=3)
-  rownames(mat3) <- letters[seq_len(nrow(mat3))]
-  colnames(mat3) <- seq_len(ncol(mat3))
-  tmp <- diags(mat3,incl.labels="row")
-  expect_is(tmp$value,"character")
-  expect_is(tmp$label,"character")
-  tmp <- diags(mat3,incl.labels="col")
-  expect_is(tmp$value,"character")
-  expect_is(tmp$label,"numeric")
 })
 
 test_that("fact2num() results",{
@@ -373,56 +174,6 @@ test_that("fact2num() results",{
   expect_is(tmp,"numeric")
   expect_true(is.vector(tmp))
 })
-
-test_that("filterD() results",{
-  # limit to two groups
-  grp <- c("setosa","versicolor")
-  tmp <- filterD(iris,Species %in% grp)
-  expect_equal(levels(tmp$Species),grp)
-  expect_equal(nrow(tmp),100)
-  # limit to one group
-  grp <- c("versicolor")
-  tmp <- filterD(iris,Species %in% grp)
-  expect_equal(levels(tmp$Species),grp)
-  expect_equal(nrow(tmp),50)
-  # make sure that levels are not reordered
-  iris$Species1 <- factor(iris$Species,levels=c("virginica","versicolor","setosa"))
-  grp <- c("setosa","versicolor")
-  tmp <- filterD(iris,Species1 %in% grp)
-  expect_equal(levels(tmp$Species1),rev(grp))
-  # check usage of except
-  tmp <- filterD(iris,Species1 %in% grp,except="Species")
-  expect_equal(levels(tmp$Species1),rev(grp))
-  expect_equal(levels(tmp$Species),c("setosa","versicolor","virginica"))
-})  
-
-test_that("Subset() results",{
-  # limit to two groups
-  grp <- c("setosa","versicolor")
-  tmp <- Subset(iris,Species %in% grp)
-  expect_equal(levels(tmp$Species),grp)
-  expect_equal(nrow(tmp),100)
-  # limit to one group
-  grp <- c("versicolor")
-  tmp <- Subset(iris,Species %in% grp)
-  expect_equal(levels(tmp$Species),grp)
-  expect_equal(nrow(tmp),50)
-  # does Subset still work if columns are selected
-  tmp <- Subset(iris,Species %in% grp,select=4:5)
-  expect_equal(levels(tmp$Species),grp)
-  expect_equal(nrow(tmp),50)
-  expect_equal(ncol(tmp),2)
-  # does Subset still work if rows are not renumbered
-  tmp <- Subset(iris,Species %in% grp,resetRownames=FALSE)
-  expect_equal(levels(tmp$Species),grp)
-  expect_equal(nrow(tmp),50)
-  expect_equal(rownames(tmp),as.character(51:100))
-  # make sure that levels are not reordered
-  iris$Species1 <- factor(iris$Species,levels=c("virginica","versicolor","setosa"))
-  grp <- c("setosa","versicolor")
-  tmp <- Subset(iris,Species1 %in% grp)
-  expect_equal(levels(tmp$Species1),rev(grp))
-})  
 
 test_that("fishR() return values",{
   expect_equal(fishR(open=FALSE),
@@ -668,10 +419,10 @@ test_that("repeatedRows2Keep() return values",{
   keepLast <- repeatedRows2Keep(test1,cols2use=3:4,keep="last")
   expect_is(keepFirst,"logical")
   expect_is(keepLast,"logical")
-  tmp <- filterD(test1,keepFirst)
+  tmp <- droplevels(subset(test1,keepFirst))
   expect_equal(tmp$ID,c(1,3:7,10))
   expect_true(all(tmp$KEEP %in% c("First","Both")))
-  tmp <- filterD(test1,keepLast)
+  tmp <- droplevels(subset(test1,keepLast))
   expect_equal(tmp$ID,c(2:6,9,10))
   expect_true(all(tmp$KEEP %in% c("Last","Both")))
   
@@ -683,10 +434,10 @@ test_that("repeatedRows2Keep() return values",{
                       stringsAsFactors=FALSE)
   keepFirst <- repeatedRows2Keep(test2,cols2ignore=1:2)
   keepLast <- repeatedRows2Keep(test2,cols2use=3:4,keep="last")
-  tmp <- filterD(test2,keepFirst)
+  tmp <- droplevels(subset(test2,keepFirst))
   expect_equal(tmp$ID,c(1:7))
   expect_true(all(tmp$KEEP %in% c("First","Both")))
-  tmp <- filterD(test2,keepLast)
+  tmp <- droplevels(subset(test2,keepLast))
   expect_equal(tmp$ID,c(1:6,10))
   expect_true(all(tmp$KEEP %in% c("Last","Both")))
   
@@ -698,20 +449,20 @@ test_that("repeatedRows2Keep() return values",{
                       stringsAsFactors=FALSE)
   keepFirst <- repeatedRows2Keep(test3,cols2ignore=1:2)
   keepLast <- repeatedRows2Keep(test3,cols2use=3:4,keep="last")
-  tmp <- filterD(test3,keepFirst)
+  tmp <- droplevels(subset(test3,keepFirst))
   expect_equal(tmp$ID,c(1,4,7))
   expect_true(all(tmp$KEEP %in% c("First","Both")))
-  tmp <- filterD(test3,keepLast)
+  tmp <- droplevels(subset(test3,keepLast))
   expect_equal(tmp$ID,c(3,6,10))
   expect_true(all(tmp$KEEP %in% c("Last","Both")))
   
   ## Use just one column
   keepFirst <- repeatedRows2Keep(test3,cols2ignore=1:3)
   keepLast <- repeatedRows2Keep(test3,cols2use=3:4,keep="last")
-  tmp <- filterD(test3,keepFirst)
+  tmp <- droplevels(subset(test3,keepFirst))
   expect_equal(tmp$ID,c(1,4,7))
   expect_true(all(tmp$KEEP %in% c("First","Both")))
-  tmp <- filterD(test3,keepLast)
+  tmp <- droplevels(subset(test3,keepLast))
   expect_equal(tmp$ID,c(3,6,10))
   expect_true(all(tmp$KEEP %in% c("Last","Both")))
   
@@ -721,10 +472,10 @@ test_that("repeatedRows2Keep() return values",{
                       stringsAsFactors=FALSE)
   keepFirst <- repeatedRows2Keep(test4,cols2ignore=1:2)
   keepLast <- repeatedRows2Keep(test4,cols2use=3:4,keep="last")
-  tmp <- filterD(test4,keepFirst)
+  tmp <- droplevels(subset(test4,keepFirst))
   expect_equal(tmp$ID,1:10)
   expect_true(all(tmp$KEEP %in% c("First","Both")))
-  tmp <- filterD(test4,keepLast)
+  tmp <- droplevels(subset(test4,keepLast))
   expect_equal(tmp$ID,1:10)
   expect_true(all(tmp$KEEP %in% c("Last","Both")))
   
@@ -738,10 +489,10 @@ test_that("repeatedRows2Keep() return values",{
   test5$V2 <- factor(test5$V2)
   keepFirst <- repeatedRows2Keep(test5,cols2ignore=1:2)
   keepLast <- repeatedRows2Keep(test5,cols2use=3:4,keep="last")
-  tmp <- filterD(test5,keepFirst)
+  tmp <- droplevels(subset(test5,keepFirst))
   expect_equal(tmp$ID,c(1:7))
   expect_true(all(tmp$KEEP %in% c("First","Both")))
-  tmp <- filterD(test5,keepLast)
+  tmp <- droplevels(subset(test5,keepLast))
   expect_equal(tmp$ID,c(1:6,10))
   expect_true(all(tmp$KEEP %in% c("Last","Both")))
 })

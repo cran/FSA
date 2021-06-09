@@ -1,5 +1,3 @@
-#' @name FSAUtils
-#' 
 #' @title Capitalizes the first letter of first or all words in a string.
 #' 
 #' @description Capitalizes the first letter of first or all words in a string.
@@ -78,69 +76,6 @@ iCapFirst<- function(x,which=c("all","first")) {
 }
 
 
-#' @name chooseColors
-#' 
-#' @title Create a list of colors from among a variety of color palettes.
-#'
-#' @description Create a list of colors from among a variety of color palettes.
-#'
-#' @param pal A character that is the name of a palette. Must be one of \dQuote{rich}, \dQuote{cm}, \dQuote{default}, \dQuote{grey}, \dQuote{gray}, \dQuote{heat}, \dQuote{jet}, \dQuote{rainbow}, \dQuote{topo}, or \dQuote{terrain}, which are given in \code{paletteChoices}.
-#' @param num The number of colors to be returned.
-#' @param rev A logical that indicates if the default order of colors should be reversed (\code{=TRUE}) or not (\code{=FALSE}).
-#' @param \dots Other arguments to the various palette functions.
-#'
-#' @return A vector of colors of length \code{num}.
-#'
-#' @author Derek H. Ogle, \email{derek@@derekogle.com}
-#'
-#' @seealso See \code{\link{cm.colors}}, \code{\link{heat.colors}}, \code{\link{topo.colors}}, \code{\link{terrain.colors}}, \code{\link{rainbow}}, \code{\link{colorRampPalette}}, and \code{\link{colors}}.
-#'
-#' @keywords manip
-#'
-#' @examples
-#' n <- 20
-#' # Color Wheels
-#' pie(rep(1,n), col=chooseColors("rich",n))
-#' pie(rep(1,n), col=chooseColors("rainbow",n))
-#' pie(rep(1,n), col=chooseColors("topo",n))
-#' pie(rep(1,n), col=chooseColors("gray",n))
-#' pie(rep(1,n), col=chooseColors("jet",n))
-#' # colors reversed order
-#' pie(rep(1,n), col=chooseColors("jet",n,rev=TRUE))
-#'
-#' @rdname chooseColors
-#' @export
-chooseColors <- function(pal=paletteChoices(),num,rev=FALSE,...) {
-  ## Some checks
-  pal <- match.arg(pal)
-  if (!num>0) STOP("'num' must be positive.")
-  ## Generate jet and grey colors
-  jet.colors <- grDevices::colorRampPalette(c("#00007F","blue","#007FFF",
-                                              "cyan","#7FFF7F","yellow",
-                                              "#FF7F00", "red", "#7F0000"))
-  grey.colors <- grDevices::colorRampPalette(c("grey20","grey80"))
-  ## Get the colors according to the palette
-  switch(pal,
-         rich={clrs <- iRichColors(num,...)},
-         cm={clrs <- grDevices::cm.colors(num,...)},
-         default={clrs <- seq_len(num)},
-         gray=,grey={clrs <- grey.colors(num)},
-         heat={clrs <- grDevices::heat.colors(num,...)},
-         jet={clrs <- jet.colors(num)},
-         rainbow={clrs <- grDevices::rainbow(num,...)},
-         topo={clrs <- grDevices::topo.colors(num,...)},
-         terrain={clrs <- grDevices::terrain.colors(num,...)}
-  )
-  if (rev) clrs <- rev(clrs)
-  clrs
-}
-
-#' @rdname chooseColors
-#' @export
-paletteChoices <- function() c("rich","cm","default","grey","gray","heat",
-                               "jet","rainbow","topo","terrain")
-
-
 #' @title Converts an R color to RGB (red/green/blue) including a transparency (alpha channel).
 #'
 #' @description Converts an R color to RGB (red/green/blue) including a transparency (alpha channel). Similar to \code{\link[grDevices]{col2rgb}} except that a transparency (alpha channel) can be included.
@@ -173,102 +108,6 @@ col2rgbt <- function(col,transp=1) {
   mapply(iMakeColor,col,transp,USE.NAMES=FALSE)
 }
 
-
-#' @title Extract diagonals from a matrix.
-#' 
-#' @description Extract diagonals from a matrix.
-#' 
-#' @param x A matrix with more than one row AND more than one column.
-#' @param which A single numeric that indicates which diagonal to extract. A value of zero extracts the main diagonal, whereas negative values extract diagonals from the upper triangle and positive values extract diagonals from the lower triangle. Diagonals further from the main diagonal have \code{which} values further from zero. If \code{is.null(which)}, then a matrix of diagonal indices for \code{which} is shown.
-#' @param incl.labels A single string that indicates whether \code{"row"}, \code{"column"}, or no (\code{"none"}) labels from \code{x} should be returned with the values on the diagonal. Will return numeric values if the labels are all diagonal, otherwise character labels are returned.
-#' @param val.name A single string to name the variable that contains the values from the diagonal in the returned data.frame.
-#' @param label.name A single string to name the variable that contains the labels in the returned data.frame (see \code{incl.labels})
-#'
-#' @return A data.frame with one variable that contains the values from the chosen diagonal of \code{x} and, optionally, a second variable that contains the chosen labels for those values.
-#'
-#' @author Derek H. Ogle, \email{derek@@derekogle.com}, but relied heavily on \url{https://stackoverflow.com/a/27935808/1123933/}.
-#'
-#' @keywords manip
-#'
-#' @examples
-#' ## Square numeric matrix
-#' mat1 <- matrix(1:16,nrow=4)
-#' colnames(mat1) <- LETTERS[1:ncol(mat1)]
-#' rownames(mat1) <- 1:nrow(mat1)
-#' mat1
-#' diags(mat1,which=NULL)
-#' diags(mat1)
-#' diags(mat1,which=-1)
-#' diags(mat1,which=2)
-#' diags(mat1,incl.labels="row")
-#' diags(mat1,which=2,incl.labels="row")
-#' diags(mat1,which=2,incl.labels="col")
-#' ( tmp <- diags(mat1,which=2,incl.labels="row",val.name="Freq",label.name="age") )
-#' str(tmp)
-#' 
-#' ## Rectangular numeric matrix
-#' mat2 <- matrix(1:20,nrow=4)
-#' colnames(mat2) <- LETTERS[1:ncol(mat2)]
-#' rownames(mat2) <- 1:nrow(mat2)
-#' mat2
-#' diags(mat2,which=NULL)
-#' diags(mat2,which=-1,incl.labels="row")
-#' diags(mat2,which=2,incl.labels="row")
-#' diags(mat2,which=-4,incl.labels="col")
-#' 
-#' ## Rectangular character matrix
-#' mat3 <- matrix(LETTERS[1:24],nrow=3)
-#' colnames(mat3) <- letters[1:ncol(mat3)]
-#' rownames(mat3) <- 1:nrow(mat3)
-#' mat3
-#' diags(mat3,which=NULL)
-#' diags(mat3,which=-1,incl.labels="row")
-#' diags(mat3,which=2,incl.labels="row")
-#' diags(mat3,which=-4,incl.labels="col")
-#' 
-#' @export
-diags <- function(x,which=0,incl.labels=c("none","row","column"),
-                  val.name="value",label.name="label") {
-  ## check if matrix
-  if (!is.matrix(x))
-    STOP("'diags' only works with matrices.")
-  if (nrow(x)==1 | ncol(x)==1)
-    STOP("'x' must have more than 1 row and more than 1 column.")
-  ## find indices of diagonals for the matrix
-  ## idea from https://stackoverflow.com/a/27935808/1123933/
-  ind <- row(x)-col(x)
-  if (is.null(which)) { # nocov start
-    ## Simply show the matrix of indices
-    cat("Indices matrix corresponding to 'x'.\n")
-    rownames(ind) <- rownames(x)
-    colnames(ind) <- colnames(x)
-    print(ind)
-    cat("\n") # nocov end
-  } else {
-    ## extract diagonal from x according to which
-    if (which>max(ind) | which<min(ind))
-      STOP("The 'which' diagonal does not exist in 'x'.")
-    res <- x[ind==which]
-    ## handle adding names
-    incl.labels <- match.arg(incl.labels)
-    if (incl.labels=="row")
-      res2 <- rownames(x)[apply(ind,MARGIN=1,FUN=function(x) any(x==which))]
-    else if (incl.labels=="column")
-      res2 <- colnames(x)[apply(ind,MARGIN=2,FUN=function(x) any(x==which))]
-    else res2 <- NULL
-    ## put together as data.frame and return
-    if (!is.null(res2)) {
-      suppressWarnings(tmp <- as.numeric(res2))
-      if (all(!is.na(tmp))) res2 <- tmp
-      res <- data.frame(res2,res,stringsAsFactors=FALSE)
-      names(res) <- c(label.name,val.name)
-    } else {
-      res <- data.frame(res)
-      names(res) <- c(val.name)
-    }
-    res
-  }
-}
 
 #' @title Converts "numeric" factor levels to numeric values.
 #'
@@ -355,7 +194,8 @@ fishR <- function(where=c("home","IFAR","general","books",
   invisible(tmp)
 }
 
-
+#' @name fsaNews
+#' 
 #' @title Read news and changes for the 'FSA' package.
 #'
 #' @description Opens up the \href{https://github.com/droglenc/FSA/blob/master/NEWS.md}{News.md GitHub file} for the \sQuote{FSA} package in an external browser.
@@ -453,59 +293,6 @@ headtail <- function(x,n=3L,which=NULL,addrownums=TRUE,...) {
   if (!is.null(which)) tmp <- tmp[,which]
   tmp
 }
-
-
-#' @title Performs a hypothesis test that a linear model parameter is equal to a specific value.
-#'
-#' @description Performs a hypothesis test that a linear model parameter is equal to a specific value. Useful for testing that a parameter is equal to a value other than 0.
-#'
-#' @details The \dQuote{direction} of the alternative hypothesis is identified by a string in the \code{alt} argument. 
-#'
-#' If the \code{lm} object is from a simple linear regression with an intercept then \code{term=1} will use the intercept and \code{term=2} will use the slope in the hypothesis test.
-#'
-#' @param object A \code{lm} object.
-#' @param term A single numeric that indicates which term in the model to use in the hypothesis test.
-#' @param bo The null hypothesized parameter value.
-#' @param alt A string that identifies the \dQuote{direction} of the alternative hypothesis. The strings may be \code{"less"} for a \dQuote{less than} alternative, \code{"greater"} for a \dQuote{greater than} alternative, or \code{"two.sided"} (DEFAULT) for a \dQuote{not equals} alternative.
-#'
-#' @return A matrix that contains the term number, hypothesized value, parameter estimate, standard error of the parameter estimate, t test statistic, degrees-of-freedom, and corresponding p-value.
-#'
-#' @author Derek H. Ogle, \email{derek@@derekogle.com}
-#'
-#' @seealso \code{\link{htest.nlsBoot}}.
-#'
-#' @keywords htest
-#'
-#' @examples
-#' # Simple linear regression test HA:slope!=0.1
-#' lm1 <- lm(mirex~weight, data=Mirex)
-#' hoCoef(lm1,2,0.1)
-#'
-#' @export
-hoCoef <- function(object,term=2,bo=0,alt=c("two.sided","less","greater")) {
-  alt <- match.arg(alt)
-  if (!"lm" %in% class(object))
-    STOP("'object' must be from 'lm'.")
-  if (!term>0)
-    STOP("'term' must be a positive number.")
-  tmp <- summary(object)$coefficients
-  if (term>length(rownames(tmp)))
-    STOP("'term' is greater than number of terms in the model.")
-  est <- tmp[term,"Estimate"]
-  se <- tmp[term,"Std. Error"]
-  t <- (est-bo)/se
-  df <- object$df.residual
-  switch(alt,
-         less=     { p.value <- stats::pt(t,df,lower.tail=TRUE) },
-         greater=  { p.value <- stats::pt(t,df,lower.tail=FALSE) },
-         two.sided={ p.value <- 2*stats::pt(abs(t),df,lower.tail=FALSE) }
-  )
-  res <- cbind(term,bo,est,se,t,df,p.value)
-  colnames(res) <- c("term","Ho Value","Estimate","Std. Error","T","df","p value")
-  rownames(res) <- ""
-  res
-}
-
 
 
 #' @title Ratio of lagged observations.
@@ -616,7 +403,7 @@ logbtcf <- function(obj,base=exp(1)) {
 }
 
 
-#' @name oddeven
+#' @name is.odd
 #' 
 #' @title Determine if a number is odd or even.
 #' 
@@ -630,6 +417,8 @@ logbtcf <- function(obj,base=exp(1)) {
 #' 
 #' @keywords manip
 #' 
+#' @aliases is.odd is.even
+#' 
 #' @examples
 #' ## Individual values
 #' is.odd(1)
@@ -642,11 +431,11 @@ logbtcf <- function(obj,base=exp(1)) {
 #' data.frame(d,odd=is.odd(d),even=is.even(d))
 NULL
 
-#' @rdname oddeven
+#' @rdname is.odd
 #' @export
 is.odd <- function (x) iOddEven(x,1)
 
-#' @rdname oddeven
+#' @rdname is.odd
 #' @export
 is.even <- function(x) iOddEven(x,0)
 
@@ -955,8 +744,8 @@ rSquared.lm <- function(object,digits=getOption("digits"),
 #' keepLast <- repeatedRows2Keep(test1,cols2use=3:4,keep="last")
 #' data.frame(test1,keepFirst,keepLast)
 #' 
-#' filterD(test1,keepFirst)  # should be all "First" or "Both" (7 items)
-#' filterD(test1,keepLast)   # should be all "Last" or "Both" (7 items)
+#' droplevels(subset(test1,keepFirst))  # should be all "First" or "Both" (7 items)
+#' droplevels(subset(test1,keepLast))   # should be all "Last" or "Both" (7 items)
 #' 
 #' @export
 repeatedRows2Keep <- function(df,cols2use=NULL,cols2ignore=NULL,
@@ -1040,28 +829,23 @@ se <- function (x,na.rm=TRUE) {
   sqrt(stats::var(x)/length(x))
 }
 
-
-#' @name Subset
+#' @name filterD-deprecated
 #' 
-#' @title Subsets/filters a data frame and drops the unused levels.
-#'
+#' @title DEPRECATED - Subsets/filters a data frame and drops the unused levels.
+#' 
 #' @description Subsets/filters a data frame and drops the unused levels.
-#'
-#' @details Newbie students using R expect that when a factor variable is subsetted with \code{\link{subset}} or filtered with \code{\link[dplyr]{filter}} that any original levels that are no longer used after the subsetting or filtering will be ignored. This, however, is not the case and often results in tables with empty cells and figures with empty bars. One remedy is to use \code{drop.levels} from \pkg{gdata} immediately following the \code{\link{subset}} or \code{\link[dplyr]{filter}} call. This generally becomes a repetitive sequence for most newbie students; thus, \code{Subset} and \code{filterD} incorporate these two functions into one function.
 #' 
-#' \code{Subset} is a wrapper to \code{\link{subset}} with a catch for non-data.frames and a specific call to \code{drop.levels} just before the data.frame is returned. I also added an argument to allow resetting the row names. \code{filterD} is a wrapper for \code{\link[dplyr]{filter}} from \pkg{dplyr} followed by \code{drop.levels} just before the data.frame is returned. Otherwise, there is no new code here.
+#' @details Newbie students using R expect that when a factor variable is filtered with \code{\link[dplyr]{filter}} that any original levels that are no longer used after the filtering will be ignored. This, however, is not the case and often results in tables with empty cells and figures with empty bars. One remedy is to use \code{\link[base]{droplevels}} immediately following \code{\link[dplyr]{filter}}. This generally becomes a repetitive sequence for most newbie students; thus, \code{filterD} incorporate these two functions into one function.
 #' 
-#' These functions are used only for data frames.
+#' \code{filterD} is a wrapper for \code{\link[dplyr]{filter}} from \pkg{dplyr} followed by \code{\link[base]{droplevels}} just before the data.frame is returned. Otherwise, there is no new code here.
+#' 
+#' This function is only used for data frames.
 #' 
 #' @param x A data frame.
-#' @param subset A logical expression that indicates elements or rows to keep: missing values are taken as false.
-#' @param select An expression, that indicates columns to select from a data frame.
-#' @param drop passed on to \code{[} indexing operator.
-#' @param resetRownames A logical that indicates if the rownames should be reset after the subsetting (\code{TRUE}; default). Resetting rownames will simply number the rows from 1 to the number of rows in the result.
 #' @param except Indices of columns from which NOT to drop levels.
-#' @param \dots further arguments to be passed to or from other methods.
+#' @param \dots further arguments to be passed to \code{\link[dplyr]{filter}}.
 #'
-#' @return A data frame with the subsetted rows and selected variables.
+#' @return A data frame with the filtered rows.
 #'
 #' @author Derek H. Ogle, \email{derek@@derekogle.com}
 #' 
@@ -1076,50 +860,17 @@ se <- function (x,na.rm=TRUE) {
 #' levels(iris$Species)
 #' iris.set1 <- subset(iris,Species=="setosa" | Species=="versicolor")
 #' levels(iris.set1$Species)
-#' xtabs(~Species,data=iris)
+#' xtabs(~Species,data=iris.set1)
 #'
-#' ## A simpler fix using Subset
-#' iris.set2 <- Subset(iris,Species=="setosa" | Species=="versicolor")
-#' levels(iris.set2$Species)
-#' xtabs(~Species,data=iris.set2)
-#' 
-#' ## A simpler fix using filterD
+#' ## A fix using filterD
 #' iris.set3 <- filterD(iris,Species=="setosa" | Species=="versicolor")
 #' levels(iris.set3$Species)
 #' xtabs(~Species,data=iris.set3)
-#'
-NULL
-
-#' @rdname Subset
-#' @export
-Subset <- function(x,subset,select,drop=FALSE,resetRownames=TRUE,...) {
-  if (!is.data.frame(x)) 
-    STOP("Subset should only be used with data frames. ",
-         "See ?subset for other structures.")
-  if (missing(subset)) r <- TRUE
-  else {
-    e <- substitute(subset)
-    r <- eval(e, x, parent.frame())
-    if (!is.logical(r))
-      STOP("'subset' must evaluate to logical.")
-    r <- r & !is.na(r)
-  }
-  if (missing(select)) vars <- TRUE
-  else {
-    nl <- as.list(seq_len(ncol(x)))
-    names(nl) <- names(x)
-    vars <- eval(substitute(select),nl,parent.frame())
-  }
-  res <- droplevels(x[r,vars,drop=drop])
-  if (resetRownames) rownames(res) <- NULL
-  if (nrow(res)==0)
-    WARN("The resultant data.frame has 0 rows. Try str() on the result.\n")
-  res
-}
-
-#' @rdname Subset
+#' 
+#' @rdname filterD
 #' @export
 filterD <- function(x,...,except=NULL) {
+  .Deprecated(msg="'filter' is deprecated and will soon be removed from 'FSA'; please use 'droplevels' after 'subset' or 'dplyr::filter' for the same result (see fishR post from 26-May-2021).")
   res <- dplyr::filter(x,...)
   res <- droplevels(res,except)
   if (nrow(res)==0)
