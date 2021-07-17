@@ -1,7 +1,7 @@
 46aaf69a91703493b666f212a04f2d8d *COPYING
-7d143ce4688868a90e4682081c454863 *DESCRIPTION
+f3da6da9fffd1c4fa4bf86aa3eb7872d *DESCRIPTION
 d4e4db2ba35c3fed96f570dc815e5cd5 *NAMESPACE
-1deb248b473025b819311b6d3543fb61 *NEWS.md
+9c49781c3d9f1933ba9a3ad6d3060c1d *NEWS.md
 d1d834c463b1e76fd9c34a8b495a5b6e *R/BluegillJL.R
 0c195892eacac62466931af02ec37462 *R/BrookTroutTH.R
 9aa63df096f5191ecfe72485924274b6 *R/CIDists.R
@@ -81,7 +81,7 @@ d16ec2f62023390fae05260c24435ec2 *data/SMBassLS.rdata
 ddbcac46ee6e69d3e16daa24c3b03bf2 *data/WR79.rdata
 ff8b96fe99ff4a2de69a689055e3ef68 *data/WSlit.rdata
 a414199717ec1058199e9a899dcd934d *data/WhitefishLC.rdata
-4b4e7cecb87b61c3dda5f5f3828d93ec *inst/CITATION
+454cef80c6a401df046f28003306c9a3 *inst/CITATION
 3d7fd0f1b43bf127ff4d61ff2c840b65 *inst/extdata/PSDWR_testdata.csv
 ccf8b7fa2c11c543106d79d0d17c7eca *inst/extdata/bootCase1.RData
 2d8925fbdeecdc31b7111c5b649a30fb *inst/extdata/nlsBoot1.RData
@@ -189,7 +189,7 @@ bb824ed436973a54d5cca323fa63196d *tests/testthat/testthat_Summarize.R
 4d4bec4c36065886d354271bbbc6b41d *tests/testthat/testthat_addZeroCatch.R
 84a07a89b6f9bed906717fcc3e975f0a *tests/testthat/testthat_bootstrap.R
 d47fc1a10aad27cf1e864cbaddbb4293 *tests/testthat/testthat_capHist.R
-d575257afad210dbe8e8ac726565e540 *tests/testthat/testthat_catchCurve.R
+001928c64cf245bcecc1609aafb29b38 *tests/testthat/testthat_catchCurve.R
 6f2146840092956e826f7a750655402b *tests/testthat/testthat_ciDists.R
 a81ed61211dd2c160ed8ae99d7863afc *tests/testthat/testthat_depletion.R
 4fd24bb042483d18c5713796e2a85336 *tests/testthat/testthat_dunnTest.R
