@@ -39,7 +39,7 @@
 #'
 #' \code{predict} returns a matrix with one row and three columns, with the first column holding the predicted value (i.e., the median prediction) and the last two columns holding the approximate confidence interval.
 #'
-#' @author Derek H. Ogle, \email{derek@@derekogle.com}
+#' @author Derek H. Ogle, \email{DerekOgle51@gmail.com}
 #'
 #' @seealso \code{\link[car]{Boot}} in \pkg{car}.
 #'
@@ -74,7 +74,8 @@
 #' 
 #' @rdname boot
 #' @export
-confint.boot <- function(object,parm=NULL,level=conf.level,conf.level=0.95,
+confint.boot <- function(object,parm=NULL,
+                         level=conf.level,conf.level=0.95,
                          type=c("bca","norm","basic","perc"),
                          plot=FALSE,err.col="black",err.lwd=2,
                          rows=NULL,cols=NULL,...) {
@@ -95,7 +96,7 @@ confint.boot <- function(object,parm=NULL,level=conf.level,conf.level=0.95,
     }
   }
   res <- car::Confint(object,parm=parm,level=conf.level,type=type)
-  colnames(res)[2:3] <- iCILabel(conf.level)
+  colnames(res)[grep("%",colnames(res))] <- iCILabel(conf.level)
   if (plot) {
     tmp <- object$t
     np <- ncol(tmp)
@@ -182,7 +183,7 @@ hist.boot <- function(x,same.ylim=TRUE,ymax=NULL,
 #' 
 #' \code{predict} returns a matrix with one row and three columns, with the first column holding the predicted value (i.e., the median prediction) and the last two columns holding the approximate confidence interval.
 #'
-#' @author Derek H. Ogle, \email{derek@@derekogle.com}
+#' @author Derek H. Ogle, \email{DerekOgle51@gmail.com}
 #'
 #' @seealso \code{\link[car]{Boot}} and related methods in \pkg{car} and \code{summary.\link[nlstools]{nlsBoot}} in \pkg{nlstools}.
 #'
